@@ -1,0 +1,329 @@
+{
+	"version":"0.1.0",
+	"talkSofts":[
+		{
+			"id":"0",
+			"name":"標準トーク",
+			"hidden":false,
+			"enabledPreview":true,
+			"enabledExport":true,
+			"voices":[
+				{
+					"id":"m001",
+					"name":"標準男声",
+					"path":"dic/nitech_jp_atr503_m001.htsvoice",
+					"styles":[
+						{
+							"id":"standard",
+							"name":"標準",
+							"path":"dic/nitech_jp_atr503_m001.htsvoice"
+						}
+					]
+				},
+				{
+					"id":"tohoku_f001",
+					"name":"標準女声",
+					"path":"dic/tohoku-f01-neutral.htsvoice",
+					"styles":[
+						{
+							"id":"neutral",
+							"name":"普通",
+							"path":"dic/tohoku-f01-neutral.htsvoice"
+						},
+						{
+							"id":"happy",
+							"name":"喜び",
+							"path":"./dic/tohoku-f01-happy.htsvoice"
+						},
+						{
+							"id":"angry",
+							"name":"怒り",
+							"path":"./dic/tohoku-f01-angry.htsvoice"
+						},
+						{
+							"id":"sad",
+							"name":"悲しみ",
+							"path":"./dic/tohoku-f01-sad.htsvoice"
+						}
+					]
+				}
+			],
+			"dic":"dic/open_jtalk_dic_utf_8-1.11",
+			"voiceParam":[
+				{
+					"id":"Volume",
+					"name":"大きさ",
+					"min":0.0,
+					"max":50.0,
+					"defaultValue":1.0
+				},
+				{
+					"id":"Speed",
+					"name":"話速",
+					"min":0.0,
+					"max":5.0,
+					"defaultValue":1.0
+				},
+				{
+					"id":"HarfTone",
+					"name":"高さ",
+					"min":-5.0,
+					"max":10.0,
+					"defaultValue":0.0
+				},
+				{
+					"id":"Alpha",
+					"name":"声質",
+					"min":0.0,
+					"max":1.0,
+					"defaultValue":0.5
+				},
+				{
+					"id":"GVWeightLF0",
+					"name":"抑揚",
+					"min":0.0,
+					"max":2.0,
+					"defaultValue":1.0
+				}
+			]
+		},
+		{
+			"id":"1",
+			"name":"CeVIO AI",
+			"hidden":false,
+			"enabledPreview":true,
+			"enabledExport":true,
+			"interface":{
+				"type":"API",
+				"engine":"CeVIO",
+				"dll":"CeVIO.Talk.RemoteService2.dll",
+				"dll_dir":"/CeVIO/CeVIO AI/",
+				"env_prog":"%ProgramW6432%",
+				"service":"CeVIO.Talk.RemoteService2.ServiceControl2",
+				"talker":"CeVIO.Talk.RemoteService2.Talker2",
+				"agent":"CeVIO.Talk.RemoteService2.TalkerAgent2"
+			},
+			"voiceParam":[
+				{
+					"id":"Volume",
+					"name":"大きさ",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"Speed",
+					"name":"速さ",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"Tone",
+					"name":"高さ",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"Alpha",
+					"name":"声質",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"ToneScale",
+					"name":"抑揚",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				}
+			]
+		},
+		{
+			"id":"2",
+			"name":"CeVIO CS",
+			"hidden":false,
+			"enabledPreview":true,
+			"enabledExport":true,
+			"interface":{
+				"type":"API",
+				"engine":"CeVIO",
+				"dll":"CeVIO.Talk.RemoteService.dll",
+				"dll_dir":"/CeVIO/CeVIO Creative Studio (64bit)/",
+				"env_prog":"%ProgramW6432%",
+				"service":"CeVIO.Talk.RemoteService.ServiceControl",
+				"talker":"CeVIO.Talk.RemoteService.Talker",
+				"agent":"CeVIO.Talk.RemoteService.TalkerAgent"
+			},
+			"voiceParam":[
+				{
+					"id":"Volume",
+					"name":"大きさ",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"Speed",
+					"name":"速さ",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"Tone",
+					"name":"高さ",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"Alpha",
+					"name":"声質",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				},
+				{
+					"id":"ToneScale",
+					"name":"抑揚",
+					"min":0,
+					"max":100,
+					"defaultValue":50
+				}
+			]
+		},
+		{
+			"id":"3",
+			"name":"⚠VOICEVOX",
+			"hidden":false,
+			"enabledPreview":true,
+			"enabledExport":true,
+			"interface":{
+				"type":"REST",
+				"engine":"VOICEVOX",
+				"restHost":"http://localhost:50021/"
+			},
+			"voiceParam":[
+			]
+		},
+		{
+			"id":"4",
+			"name":"⚠COEIROINK",
+			"hidden":false,
+			"enabledPreview":true,
+			"enabledExport":false,
+			"interface":{
+				"type":"REST",
+				"engine":"VOICEVOX",
+				"restHost":"http://localhost:50031/"
+			},
+			"voiceParam":[
+			]
+		}
+	],
+	"exportSongCasts":[
+		{
+			"id":"CSNV-JPF-THR1",
+			"name":"KAFU",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-JPF-A",
+			"name":"さとうささら",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-JPF-VCLMK1",
+			"name":"結月ゆかり麗",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-JPF-AHS1",
+			"name":"東北きりたん",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-JPF-FP5",
+			"name":"IA",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-ENF-FP5",
+			"name":"IA (ENG)",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-JPF-FP4",
+			"name":"OИE",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-JPF-AHS2",
+			"name":"⚠東北ずん子",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"CSNV-JPF-AHS3",
+			"name":"⚠東北イタコ",
+			"songSoft":"CeVIO AI"
+		},
+		{
+			"id":"A",
+			"name":"さとうささら",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"ONE",
+			"name":"OИE",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"CSV-ENF-FP3-N",
+			"name":"IA (En) Natural",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"CSV-ENF-FP3-P",
+			"name":"IA (En) Powerful",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"XSV-JPM-HRM-P",
+			"name":"ハルオロイド",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"XSV-JPM-P",
+			"name":"赤咲 湊",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"XSV-JPF-W",
+			"name":"緑咲 香澄",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"XSV-JPM-E",
+			"name":"銀咲 大和",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"XSV-JPF-E",
+			"name":"金咲 小春",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"XSV-JPM-W",
+			"name":"白咲 優大",
+			"songSoft":"⚠CeVIO CS"
+		},
+		{
+			"id":"XSV-JPF-P",
+			"name":"黄咲 愛里",
+			"songSoft":"⚠CeVIO CS"
+		}
+	]
+}

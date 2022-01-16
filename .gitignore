@@ -1,0 +1,11 @@
+rest_test.md
+*.pdf
+/bin/*
+/obj/*
+/out/*
+/out_/*
+/dic/*.tar.gz
+/dic/hts_voice_nitech_jp_atr503_m001-1.04/*
+/dic/open_jtalk_dic_utf_8-1.11/*
+NodoAme.net48.csproj.tmp
+template/temp.track - コピー.ccst
