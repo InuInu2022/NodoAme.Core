@@ -142,6 +142,7 @@ namespace NodoAme
 		public TalkSoftVoice? TalkVoice { get; set; }
 		public TalkSoftVoiceStylePreset? VoiceStyle { get; set; }
 		public TalkSoft TalkSoft { get; set; }
+		public bool IsActive { get; set; }
 
 		private dynamic? engine;
 		/// <summary>
@@ -185,6 +186,8 @@ namespace NodoAme
 			var voice = TalkVoice;
 			var style = VoiceStyle;
 
+			IsActive = false;
+
 			switch(engineType){
 				case TalkEngine.CEVIO:
 					if(soft.Interface is null)break;
@@ -206,6 +209,7 @@ namespace NodoAme
                         );
 						logger
 							.Error($"CeVIO Dll not found:{engineType}の呼び出しに失敗");
+						
 						return;
 					}
 					try{
@@ -278,9 +282,25 @@ namespace NodoAme
 					}
 
 					//Type.GetTypeFromProgID(soft.Interface.Talker);
-					Type? talker = assembly.GetType(soft.Interface.Talker);
-					this.engine = Activator.CreateInstance(talker,new object[]{names[0]});
+					try
+					{
+						Type? talker = assembly.GetType(soft.Interface.Talker);
+						this.engine = Activator.CreateInstance(talker, new object[] { names[0] });
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(
+								ex.Message,
+								$"{engineType}の起動に失敗",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+						logger
+							.Error($"can't awake cevio talker. {ex.Message}");
+						throw;
+					}
 
+					IsActive = true;
 					Debug.WriteLine($"engine:{engine.GetType()}");
 
 					break;
@@ -296,6 +316,7 @@ namespace NodoAme
 								.Add(new TalkSoftVoice{Id=$"Cast_{n}", Name=$"{n}"});
 						}
 					}
+					IsActive = vv.IsActive;
 					break;
 				case TalkEngine.OPENJTALK:
 				default:
@@ -305,7 +326,8 @@ namespace NodoAme
 							//voice!.Styles.ElementAt()
 							style?.Path ?? voice!.Path
 						) ?? false;
-
+					IsActive = isInitialized;
+					
 					if (!isInitialized)
 					{
 						var msg = $"{engineType} Initialize Failed";

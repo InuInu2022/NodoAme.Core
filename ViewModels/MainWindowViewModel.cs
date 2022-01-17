@@ -462,7 +462,10 @@ namespace NodoAme.ViewModels
 				this.currentEngine = TalkEngine.OPENJTALK;
 
 				IsPreviewButtonEnabled = true;
-				EnableSerifButtons(TalkSoftSelected);
+				EnableSerifButtons(
+					TalkSoftSelected,
+					!this.talkEngine.IsActive
+				);
 			}
 			else if (ts.Interface != null)
 			{
@@ -484,7 +487,10 @@ namespace NodoAme.ViewModels
 					TalkVoiceSelected = 0;
 
 					IsPreviewButtonEnabled = true;
-					EnableSerifButtons(TalkSoftSelected);
+					EnableSerifButtons(
+						TalkSoftSelected,
+						!this.talkEngine.IsActive
+					);
 				}
 				if(ts.Interface.Type == "REST"
 					&& ts.Interface.Engine == TalkEngine.VOICEVOX){
@@ -507,7 +513,10 @@ namespace NodoAme.ViewModels
 					TalkVoiceSelected = 0;
 
 					IsPreviewButtonEnabled = true;
-					EnableSerifButtons(TalkSoftSelected);
+					EnableSerifButtons(
+						TalkSoftSelected,
+						!this.talkEngine.IsActive
+					);
 				}
 			}
 			else
