@@ -356,20 +356,23 @@ namespace NodoAme.ViewModels
 
 
 				//enable preview & export
-				EnableSerifButtons(index);
+				//EnableSerifButtons(index);
 			}
 
 			//return new ValueTask();
 		}
 
-		private void EnableSerifButtons(int index)
+		private void EnableSerifButtons(
+			int index,
+			bool isForceDisable = false
+		)
 		{
 			var canPreview = TalkSoftItems[index].EnabledPreview ?? false;
 			var canExport = TalkSoftItems[index].EnabledExport ?? false;
 			foreach (var item in Serifs)
 			{
-				item.EnabledPreview = canPreview;
-				item.EnabledExport = canExport;
+				item.EnabledPreview = !isForceDisable && canPreview;
+				item.EnabledExport = !isForceDisable && canExport;
 			}
 		}
 
@@ -439,6 +442,7 @@ namespace NodoAme.ViewModels
 		{
 			IsPreviewComboEnabled = false;
 			IsPreviewButtonEnabled = false;
+			EnableSerifButtons(TalkSoftSelected,true);
 
 			var ts = _talksofts
 				.ElementAt(TalkSoftSelected);
@@ -458,6 +462,7 @@ namespace NodoAme.ViewModels
 				this.currentEngine = TalkEngine.OPENJTALK;
 
 				IsPreviewButtonEnabled = true;
+				EnableSerifButtons(TalkSoftSelected);
 			}
 			else if (ts.Interface != null)
 			{
@@ -479,6 +484,7 @@ namespace NodoAme.ViewModels
 					TalkVoiceSelected = 0;
 
 					IsPreviewButtonEnabled = true;
+					EnableSerifButtons(TalkSoftSelected);
 				}
 				if(ts.Interface.Type == "REST"
 					&& ts.Interface.Engine == TalkEngine.VOICEVOX){
@@ -501,6 +507,7 @@ namespace NodoAme.ViewModels
 					TalkVoiceSelected = 0;
 
 					IsPreviewButtonEnabled = true;
+					EnableSerifButtons(TalkSoftSelected);
 				}
 			}
 			else
