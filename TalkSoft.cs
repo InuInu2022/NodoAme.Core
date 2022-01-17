@@ -408,7 +408,24 @@ namespace NodoAme
 				case TalkEngine.OPENJTALK:
 				default:
 					return await Task.Run(
-						()=> engine?.GetLabels(sourceText) ?? "error"
+						() => {
+							var jtalk = engine as OpenJTalkAPI;
+
+							try
+							{
+								var s = //await Task.Run(
+									//()=>
+									jtalk?.GetLabels(sourceText)
+									//)
+									;
+								return s.ToList();
+							}
+							catch (Exception ex)
+							{
+								logger.Error(ex.Message);
+								throw;
+							}
+						}
 					);
 					//break;
 			}
