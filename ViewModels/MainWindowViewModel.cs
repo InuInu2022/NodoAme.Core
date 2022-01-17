@@ -238,7 +238,14 @@ namespace NodoAme.ViewModels
 			var assembly = Assembly.GetExecutingAssembly().GetName();
 			var version = assembly.Version;
 
-			return $"{assembly.Name} {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+			var versionInfo = Assembly
+				.GetExecutingAssembly()
+				.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute))
+				.Cast<AssemblyInformationalVersionAttribute>()
+				.FirstOrDefault();
+
+			//return $"{assembly.Name} {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+			return $"{assembly.Name} ver. {versionInfo.InformationalVersion}";
 		}
 
 		private Task ExportFileAsync(bool isTrack)
