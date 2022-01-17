@@ -20,6 +20,8 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
 		<!-- AssemblyInfo プロパティ -->
 		<AssemblyTitle>NodoAme</AssemblyTitle>
 		<SupportedCultures>en-US;ja</SupportedCultures>
+		<!-- MinVer -->
+		<MinVerTagPrefix>v</MinVerTagPrefix>
 	</PropertyGroup>
 	<Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
 		<RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)%(Filename)')"/>
@@ -71,5 +73,6 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
 		<PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0"/>
 		<PackageReference Include="RestSharp" Version="107.0.3"/>
 		<PackageReference Include="NLog" Version="4.7.13"/>
+		<PackageReference Include="MinVer" Version="2.5.0"/>
 	</ItemGroup>
 </Project>
