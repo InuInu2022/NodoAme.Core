@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Epoxy;
 using Epoxy.Synchronized;
+using Microsoft.Extensions.Configuration;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -24,7 +25,7 @@ namespace NodoAme.ViewModels
 	public class MainWindowViewModel
 	{
 		
-
+		static public Logger logger = LogManager.GetCurrentClassLogger();
 		public string WindowTitle { get; set; }
 
 		public string SourceText { get; set; }
@@ -45,6 +46,9 @@ namespace NodoAme.ViewModels
 		public ObservableCollection<SongCast> ExportCastItems { get; private set; }
 		public int ExportCastSelected { get; set; } = 0;
 
+		public IConfigurationRoot Config { get; private set; }
+		public Models.UserSettings UserSettings { get; set; }
+
 		private Settings setting;
 		private Wrapper talkEngine;
 		private string currentEngine;
@@ -64,8 +68,8 @@ namespace NodoAme.ViewModels
 
 		public bool IsStylePresetsComboEnabled { get; set; } = false;
 
-		public bool IsConvertToPhoneme { get; set; } = true;
-		public bool IsConvertToHiragana { get; set; } = false;
+		public bool IsConvertToPhoneme { get; set; }
+		public bool IsConvertToHiragana { get; set; }
 
 		public Command Test { get; set; }
 
@@ -84,7 +88,7 @@ namespace NodoAme.ViewModels
 		public bool IsCheckJapaneseSmallVowel { get; set; } = false;
 
 
-		public string PathToSaveDirectory { get; set; } = "./out/";
+		public string PathToSaveDirectory { get; set; }
 		public bool IsOpenCeVIOWhenExport { get; set; } = true;
 
 		public bool IsExportAsTrac { get; set; } = true;
@@ -94,6 +98,7 @@ namespace NodoAme.ViewModels
 		#region commands
 		//---------------------------------------------------
 		public Command Ready { get; private set; }
+		public Command Close { get; private set; }
 		public Command PreviewTalk { get; private set; }
 		/// <summary>
 		/// 変換ボタン
@@ -125,9 +130,11 @@ namespace NodoAme.ViewModels
 
 		public MainWindowViewModel()
 		{
-			
+
 			WindowTitle = GetWindowTitle();
-			MainWindow.Logger.Info($"window open: {WindowTitle}");
+			logger.Info($"window open: {WindowTitle}");
+
+			LoadUserSettings();
 
 			//this.IsPreviewButtonEnabled = true;
 			this.SourceText = "サンプル：僕らの気持ちが、明日へ向かいます。チンプンカンプンな本に大変！";
@@ -197,6 +204,10 @@ namespace NodoAme.ViewModels
 				Debug.WriteLine("ready...!");
 			}));
 
+			Close = CommandFactory.Create<RoutedEventArgs>(
+				async (e) => await this.UserSettings.SaveAsync()
+			);
+
 			//open license folder
 			this.OpenLicenses = CommandFactory.Create<RoutedEventArgs>(_ =>
 			{
@@ -211,8 +222,51 @@ namespace NodoAme.ViewModels
 
 		}
 
+		private void LoadUserSettings()
+		{
+			//UserSettings
+			//const string UserSettings.FileName = UserSettings.FileName;
+			var path = UserSettings.UserSettingsPath;
+			if(!File.Exists(path)){
+				var us = new Models.UserSettings();
+				us.CreateFile(path);
+				logger.Info($"{UserSettings.UserSettingsFileName} generated.");
+			}
 
 
+			try
+			{
+				var builder = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+					.AddJsonFile(UserSettings.UserSettingsFileName, false);
+				Config = builder.Build();
+				UserSettings = Config.Get<UserSettings>();
+				logger.Info("usersettings.json loading success");
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(
+					$"保存した設定の読み込みに失敗しました。{ex.Message}",
+					"保存した設定の読み込みに失敗",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error
+				);
+				logger.Error($"usersetting.json loading failed:{ex.Message}");
+			}
+
+			//assign
+			PathToSaveDirectory = UserSettings.PathToSaveDirectory;
+			IsUseSeparaterSpace = UserSettings.IsUseSeparaterSpace;
+			IsConvertToPhoneme = UserSettings.IsConvertToPhoneme;
+			IsConvertToHiragana = UserSettings.IsConvertToHiragana;
+			IsCheckJapaneseSyllabicNasal = UserSettings.IsCheckJapaneseSyllabicNasal;
+			IsCheckJananeseNasalGa = UserSettings.IsCheckJananeseNasalGa;
+			VowelOption = UserSettings.VowelOption;
+			IsCheckJapaneseRemoveNonSoundVowel = UserSettings.IsCheckJapaneseRemoveNonSoundVowel;
+			IsCheckJapaneseSmallVowel = UserSettings.IsCheckJapaneseSmallVowel;
+			IsOpenCeVIOWhenExport = UserSettings.IsOpenCeVIOWhenExport;
+			IsExportAsTrac = UserSettings.IsExportAsTrac;
+		}
 
 		private Func<RoutedEventArgs, ValueTask> OpenSelectExportDirDialog()
 		{
@@ -229,7 +283,11 @@ namespace NodoAme.ViewModels
 					return new ValueTask();
 				}
 
-				PathToSaveDirectory = cofd.FileName;
+				UserSettings.PathToSaveDirectory
+					= PathToSaveDirectory
+					= cofd.FileName;
+				var __ = UserSettings.SaveAsync();
+
 				return new ValueTask();
 			};
 		}
@@ -418,21 +476,31 @@ namespace NodoAme.ViewModels
 		}
 
 		[PropertyChanged(nameof(VowelOption))]
-		private ValueTask VowelOptionChangedAsync(VowelOptions option)
+		private async ValueTask VowelOptionChangedAsync(VowelOptions option)
 		{
 			IsCheckJapaneseRemoveNonSoundVowel = IsCheckJapaneseSmallVowel = false;
 			switch (option)
 			{
 				case VowelOptions.Remove:
 					IsCheckJapaneseRemoveNonSoundVowel = true;
-					return new ValueTask();
+					//return new ValueTask();
+					break;
 				case VowelOptions.Small:
 					IsCheckJapaneseSmallVowel = true;
-					return new ValueTask();
+					//return new ValueTask();
+					break;
 				case VowelOptions.DoNothing:
 				default:
-					return new ValueTask();
+					
+					
+					//return new ValueTask();
+					break;
 			}
+			if(!(UserSettings is null)){
+				UserSettings.VowelOption = option;
+				await UserSettings.SaveAsync();
+			}
+			//return new ValueTask();
 
 		}
 
@@ -770,7 +838,54 @@ namespace NodoAme.ViewModels
 		}
 
 
+		[PropertyChanged(nameof(IsConvertToHiragana))]
+		private async ValueTask IsConvertToHiraganaChangedAsync(bool value){
+			UserSettings.IsConvertToHiragana = value;
+			await UserSettings.SaveAsync();
+		}
 
+		[PropertyChanged(nameof(IsConvertToPhoneme))]
+		private async ValueTask IsConvertToPhonemeChangedAsync(bool value){
+			UserSettings.IsConvertToPhoneme = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(IsCheckJapaneseSyllabicNasal))]
+		private async ValueTask IsCheckJapaneseSyllabicNasalChangedAsync(bool value){
+			UserSettings.IsCheckJapaneseSyllabicNasal = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(IsCheckJananeseNasalGa))]
+		private async ValueTask IsCheckJananeseNasalGaChangedAsync(bool value){
+			UserSettings.IsCheckJananeseNasalGa = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(IsCheckJapaneseRemoveNonSoundVowel))]
+		private async ValueTask IsCheckJapaneseRemoveNonSoundVowelChangedAsync(bool value){
+			UserSettings.IsCheckJapaneseRemoveNonSoundVowel = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(IsCheckJapaneseSmallVowel))]
+		private async ValueTask IsCheckJapaneseSmallVowelChangedAsync(bool value){
+			UserSettings.IsCheckJapaneseSmallVowel = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(IsOpenCeVIOWhenExport))]
+		private async ValueTask IsOpenCeVIOWhenExportChangedAsync(bool value){
+			UserSettings.IsOpenCeVIOWhenExport = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(IsExportAsTrac))]
+		private async ValueTask IsExportAsTracChangedAsync(bool value){
+			UserSettings.IsExportAsTrac = value;
+			await UserSettings.SaveAsync();
+		}
+		
 
 		[PropertyChanged(nameof(IsUseSeparaterSpace))]
 		private ValueTask IsUseSeparaterSpaceChangedAsync(bool useSpace)
@@ -779,6 +894,12 @@ namespace NodoAme.ViewModels
 			{
 				ConvertedText = PhenomeConverter.ChangeSeparater(useSpace);
 			}
+			if(!(UserSettings is null)){
+				UserSettings.IsUseSeparaterSpace = useSpace;
+				var _ = UserSettings.SaveAsync();
+			}
+			
+			
 			return new ValueTask();
 		}
 	}
