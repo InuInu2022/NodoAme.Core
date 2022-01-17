@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using Epoxy;
 using Epoxy.Synchronized;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using NodoAme.Models;
 
 
@@ -20,6 +23,7 @@ namespace NodoAme.ViewModels
 	[ViewModel]
 	public class MainWindowViewModel
 	{
+		
 
 		public string WindowTitle { get; set; }
 
@@ -121,8 +125,9 @@ namespace NodoAme.ViewModels
 
 		public MainWindowViewModel()
 		{
-
+			
 			WindowTitle = GetWindowTitle();
+			MainWindow.Logger.Info($"window open: {WindowTitle}");
 
 			//this.IsPreviewButtonEnabled = true;
 			this.SourceText = "サンプル：僕らの気持ちが、明日へ向かいます。チンプンカンプンな本に大変！";
@@ -206,7 +211,8 @@ namespace NodoAme.ViewModels
 
 		}
 
-		
+
+
 
 		private Func<RoutedEventArgs, ValueTask> OpenSelectExportDirDialog()
 		{
@@ -275,6 +281,7 @@ namespace NodoAme.ViewModels
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
+				MainWindow.Logger.Error($"Jsonの中身が空です。path to json: {pathToJson}");
 				return default;//null;
 			}
 			try
@@ -299,6 +306,7 @@ namespace NodoAme.ViewModels
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
+				MainWindow.Logger.Error($"Json読み取りエラー: {e.Message}");
 				return default;
 			}
 		}
@@ -499,6 +507,8 @@ namespace NodoAme.ViewModels
 			{
 				this.currentEngine = "";
 			}
+
+			MainWindow.Logger.Info($"InitVoice finished.");
 		}
 
 		private async ValueTask InitVoiceStylesAsync()
@@ -574,6 +584,8 @@ namespace NodoAme.ViewModels
 				TalkVoiceStylePresetsItems = _styles;
 				VoiceStylePresetsSelected = 0;
 			}
+
+			MainWindow.Logger.Info("InitVoiceStyles finished.");
 		}
 
 		private async ValueTask PreviewTalkAsync()
@@ -626,6 +638,7 @@ namespace NodoAme.ViewModels
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory);
 
+			MainWindow.Logger.Info($"File export finished: {PathToSaveDirectory}\n{serifText}");
 			//return new ValueTask();
 		}
 
@@ -659,6 +672,8 @@ namespace NodoAme.ViewModels
 					IsOpenCeVIOWhenExport,
 					PathToSaveDirectory
 				);
+
+				MainWindow.Logger.Info($"Special file export finished: {PathToSaveDirectory}");
 				//return new ValueTask();
 			};
 		}

@@ -13,6 +13,7 @@ using RestSharp.Extensions;
 using System.IO;
 using NAudio.Wave;
 using System.Threading;
+using NLog;
 
 namespace NodoAme.Models
 {
@@ -62,6 +63,8 @@ namespace NodoAme.Models
 		private readonly RestClient? restClient;
 		private readonly string engineType;
 
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
 		internal Voicevox(
             string engineType,
             TalkSoft talkSoft,
@@ -74,9 +77,21 @@ namespace NodoAme.Models
 			this.style = style;
 
             host = talkSoft.Interface!.RestHost;
-            if(string.IsNullOrEmpty(host)) return;
+            if(string.IsNullOrEmpty(host)) {
+				logger.Error($"host:{host} not found");
+                MessageBox.Show(
+                    $"{engineType}が見つかりませんでした。\n{host}は無効な文字列です。",
+                    $"{engineType}の呼び出しに失敗",
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error
+                );
+				return;
+			};
             restClient = new RestClient();
-            if(restClient is null) return;
+            if(restClient is null){
+                logger.Error("restClient is null!");
+				return;
+			};
 		}
 
         /// <summary>
@@ -173,6 +188,7 @@ namespace NodoAme.Models
 			}else{
 				const string? msg = "ERROR: response is null!";
 				Debug.WriteLine(msg);
+				logger.Error(msg);
 				throw new NullReferenceException(msg);
 			}
         }
@@ -250,7 +266,10 @@ namespace NodoAme.Models
 				CheckResponce(sRes);
 				throw new Exception("response error!");
 			}
-            if(sRes is null){throw new Exception("response error!");}
+            if(sRes is null){
+				logger.Error("voicevox synthesis responce is null");
+				throw new Exception("response error!");
+            }
 
 			return sRes;
 		}
@@ -262,7 +281,9 @@ namespace NodoAme.Models
 			RestResponse res = await InternalGetRequest("version");
 			if (res.IsSuccessful)
 			{
-				Debug.WriteLine("Voicevox REST connect success!");
+				const string Message = "Voicevox REST connect success!";
+				Debug.WriteLine(Message);
+				logger.Info(Message);
 				IsActive = true;
 			}
 			else
@@ -273,6 +294,7 @@ namespace NodoAme.Models
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
+				logger.Error($"checkversion:{engineType}が起動していない、または見つかりません。\n{res.ErrorMessage}");
 				IsActive = false;
 			}
 		}
@@ -335,13 +357,15 @@ namespace NodoAme.Models
 		{
 			if (!res.IsSuccessful)
 			{
+				var msg = $"エラーコード:{res.StatusCode}\nエラー内容：{res.ErrorException}\n{res.ErrorMessage}";
 				MessageBox.Show(
-					$"エラーコード:{res.StatusCode}\nエラー内容：{res.ErrorException}\n{res.ErrorMessage}",
+					msg,
 					$"{engineType} への通信失敗",
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
 				Debug.WriteLine($"REST responce:\n{res}");
+				logger.Error(msg);
 			}
 		}
 
@@ -355,6 +379,7 @@ namespace NodoAme.Models
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
+				logger.Error($"CheckRestClient: restClient is null");
 				throw new Exception($"{engineType}が起動していない、または見つかりません。");
 			}
 		}
@@ -386,11 +411,14 @@ namespace NodoAme.Models
                 );
                 if (settings is null)
                 {
-                    throw new Exception("JSON読み取りに失敗！");
+					const string Message = "JSON読み取りに失敗！:setting is null";
+                    logger.Error(Message);
+					throw new Exception(Message);
                 }
                 return settings;
             }catch(Exception e){
 				Debug.WriteLine($"ERROR:{e}");
+				logger.Error($"CastContent:{e.Message}");
 				throw new Exception("JSON読み取りに失敗！");
 			}
 		}

@@ -1,6 +1,7 @@
 using System;
 using DotnetWorld.API;
 using DotnetWorld.API.Structs;
+using NLog;
 
 namespace NodoAme
 {
@@ -28,6 +29,7 @@ namespace NodoAme
 
 	public class WorldUtil
 	{
+		private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 		public enum Estimaion
 		{
 			/// <summary>
@@ -91,14 +93,23 @@ namespace NodoAme
 					wParam.time_axis = new double[wParam.f0_length];
 
 					System.Diagnostics.Debug.WriteLine("Analysis");
-					Core.Harvest(
-						x,
-						audioLength,
-						wParam.fs,
-						opt,
-						wParam.time_axis,
-						wParam.f0
-					);
+					try
+					{
+						 Core.Harvest(
+							x,
+							audioLength,
+							wParam.fs,
+							opt,
+							wParam.time_axis,
+							wParam.f0
+						);
+					}
+					catch (System.Exception)
+					{
+						logger.Warn("Estimate Harvest failed!");
+						throw;
+					}
+					
 
 					break;
 				default:
@@ -151,12 +162,24 @@ namespace NodoAme
 		public static (int fs, int nbit, int len, double[] x) ReadWav(string filename)
 		{
 			var isExist = System.IO.File.Exists(filename);
-			if (!isExist) throw new ArgumentException("A internal wav file is not found.");
+			if (!isExist) {
+				const string msg = "A internal wav file is not found.";
+				logger.Error(msg);
+				throw new ArgumentException(msg);
+			}
 
 			var audioLength = Tools.GetAudioLength(filename);
 			if(audioLength<0){
 				using var rd = new NAudio.Wave.WaveFileReader(filename);
-				audioLength = Convert.ToInt32(rd.Length);
+				try
+				{
+					audioLength = Convert.ToInt32(rd.Length);
+				}
+				catch (Exception ex)
+				{
+					logger
+						.Warn($"A wav file '{filename}' length is too long.:{ex.Message}");
+				}
 			}
 			double[] x = new double[audioLength];
 			Tools.WavRead(filename, out int fs, out int nbit, x);

@@ -11,13 +11,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Win32;
 using NAudio.Wave;
 using SharpOpenJTalk;
 using NodoAme.Models;
-using RestSharp;
+using NLog;
 
 namespace NodoAme
 {
@@ -152,6 +151,9 @@ namespace NodoAme
 
 		private ObservableCollection<TalkSoftVoice>? voices = new ObservableCollection<TalkSoftVoice>();
 
+		private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+ 
+
 		internal Wrapper(
 			string type,
 			TalkSoft soft,
@@ -202,9 +204,23 @@ namespace NodoAme
                             MessageBoxButton.OK, 
                             MessageBoxImage.Error
                         );
-						break;
+						logger
+							.Error($"CeVIO Dll not found:{engineType}の呼び出しに失敗");
+						return;
 					}
-					assembly = Assembly.LoadFrom(cevioPath);
+					try{
+						assembly = Assembly.LoadFrom(cevioPath);
+					}catch(Exception e){
+						MessageBox.Show(
+							$"{engineType}を呼び出せませんでした。{e.Message}",
+                            $"{engineType}の呼び出しに失敗",
+                            MessageBoxButton.OK, 
+                            MessageBoxImage.Error
+                        );
+						logger
+							.Fatal($"{e.Message}");
+						return;
+					}
 					Type? t = assembly.GetType(soft.Interface.Service);
 					if(t is null){
 						MessageBox.Show(
@@ -213,38 +229,42 @@ namespace NodoAme
                             MessageBoxButton.OK, 
                             MessageBoxImage.Error
                         );
-						break;
+						logger
+							.Error($"CeVIO Dll cannot call:{engineType}の呼び出しに失敗");
+						return;
 					}
 					
+					try
+					{
+						 MethodInfo startHost = t.GetMethod("StartHost");
+						var result = startHost.Invoke(null, new object[] { false });
 
-					MethodInfo startHost = t.GetMethod("StartHost");
-					var result = startHost.Invoke(null, new object[] { false });
-					
-					/*
-                    dynamic? service = Activator.CreateInstance(t);
-					
-					if(service is null){
-						MessageBox.Show(
-                            "CeVIOの呼び出しに失敗",
-                            "CeVIOを呼び出せませんでした。",
-                            MessageBoxButton.OK, 
-                            MessageBoxImage.Error
-                        );
-						break;
-					}
-                    int result = service.StartHost(false);
-					*/
-					//System.Runtime.InteropServices.Marshal.ReleaseComObject(service);
-
-                    if((int)result > 1){
-                        MessageBox.Show(
-                            $"{engineType}を起動できませんでした。理由code:{result}",
-                            $"{engineType}の起動に失敗",
-                            MessageBoxButton.OK, 
-                            MessageBoxImage.Error
-                        );
-						break;
+						if ((int)result > 1)
+						{
+							MessageBox.Show(
+								$"{engineType}を起動できませんでした。理由code:{result}",
+								$"{engineType}の起動に失敗",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+							logger
+							.Error($"{engineType}を起動できませんでした。理由code:{result}");
+							return;
+						}
                     }
+					catch (System.Exception e)
+					{
+						var msg = $"{engineType}を起動できませんでした。理由:{e.Message}";
+						MessageBox.Show(
+								msg,
+								$"{engineType}の起動に失敗",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+						logger
+							.Error(msg);
+						throw new Exception(msg);
+					}
 
 					Type? t2 = assembly.GetType(soft.Interface.Agent);
 
@@ -288,12 +308,16 @@ namespace NodoAme
 
 					if (!isInitialized)
 					{
+						var msg = $"{engineType} Initialize Failed";
 						MessageBox.Show(
-							$"{engineType} Initialize Failed",
-							$"{engineType} Initialize Failed!",
+							msg,
+							msg,
 							MessageBoxButton.OK, 
 							MessageBoxImage.Error
 						);
+						logger
+							.Error(msg);
+						throw new Exception(msg);
 					}
 					break;
 			}
@@ -311,13 +335,16 @@ namespace NodoAme
 
 		}
 		public ObservableCollection<TalkSoftVoice>? GetAvailableCasts(){
-			if(voices is null){
+			if (voices is null || voices.Count == 0)
+			{
 				MessageBox.Show(
 					"現在、利用できるボイスがありません！",
 					"利用できるボイスがありません",
 					MessageBoxButton.OK, 
 					MessageBoxImage.Error
 				);
+				logger
+					.Error("現在、利用できるボイスがありません！");
 				return voices;
 			}
 
@@ -326,7 +353,10 @@ namespace NodoAme
 
 		public async ValueTask<IList<string>> GetLabelsAsync(string sourceText){
 			//dynamic list;
-			if(this.engine is null)throw new NullReferenceException();
+			if(this.engine is null){
+				logger.Error("GetLabelsAsync(): this.engine is null");
+				throw new NullReferenceException();
+			}
 			switch(engineType){
 				case TalkEngine.CEVIO:
 					//var talker = engine;
@@ -448,8 +478,12 @@ namespace NodoAme
 		/// </summary>
 		/// <param name="text">発話させるテキスト</param>
 		public async ValueTask Speak(string text, bool withSave = false){
-			if(this.engine is null)throw new NullReferenceException();
-			
+			if (this.engine is null)
+			{
+				logger.Error("Speak(): this.engine is null");
+				throw new NullReferenceException("Speak(): this.engine is null");
+			}
+
 			switch(engineType){
 				case TalkEngine.CEVIO:
 					engine.Cast = TalkVoice!.Name;
@@ -472,17 +506,29 @@ namespace NodoAme
 					break;
 				case TalkEngine.OPENJTALK:
 					//var engine = new OpenJTalkAPI();
-					engine.SamplingFrequency = SAMPLE_RATE;
-					engine.Volume = 0.9;
-					engine.FramePeriod = 240;
+					if (!(engine is OpenJTalkAPI jtalk))
+					{
+						MessageBox.Show(
+							"現在、利用できるボイスがありません！",
+							"利用できるボイスがありません",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
+						const string msg = "OpenJTalk.Speak(): this.engine is null";
+						logger.Error(msg);
+						throw new Exception(msg);
+					}
+					jtalk.FramePeriod = 240;
+					jtalk.SamplingFrequency = SAMPLE_RATE;
+					jtalk.Volume = 0.9;
 
 					SetEngineParam();
 
 					//var jtalk = new OpenJTalkAPI();
 					//jtalk.Synthesis(text, false, true);
 
-					engine.Synthesis(text, false, true);
-					List<byte> buf = engine.WavBuffer;
+					jtalk.Synthesis(text, false, true);
+					List<byte> buf = jtalk.WavBuffer;
 
 					//play audio wav data
 					{
@@ -521,7 +567,11 @@ namespace NodoAme
 
 		private void SetVoiceStyle()
 		{
-			if (this.VoiceStyle is null)return;
+			if (this.VoiceStyle is null)
+			{
+				logger.Warn("no voice styles.");
+				return;
+			};
 
 			switch(this.engineType)
 			{
@@ -842,9 +892,12 @@ namespace NodoAme
 					{
 						var logF0 = engineType switch
 						{
-							TalkEngine.CEVIO => Math.Log(parameters.f0![i]),
-							TalkEngine.OPENJTALK => parameters.f0![i],
-							TalkEngine.VOICEVOX => Math.Log(parameters.f0![i]),
+							TalkEngine.CEVIO
+								 => Math.Log(parameters.f0![i]),
+							TalkEngine.OPENJTALK
+								 => parameters.f0![i],
+							TalkEngine.VOICEVOX
+								 => Math.Log(parameters.f0![i]),
 							_ => 0
 						};
 						if (parameters.f0![i] <= 0) { continue; }
@@ -980,6 +1033,7 @@ namespace NodoAme
 			Debug.WriteLine($"TIME[end export file.]:{sw.ElapsedMilliseconds}");
 			//sw.Restart();
 
+			logger.Info($"Export file sucess!{exportPath}:{serifText}");
 			return true;//new ValueTask<bool>(true);
 
 		}
@@ -1067,7 +1121,16 @@ namespace NodoAme
 			var outDirPath = exportPath;
 			var outFile = $"{GetSafeFileName(CastToExport)}_{safeName}.ccst";
 			if(!Directory.Exists(outDirPath)){
-				Directory.CreateDirectory(outDirPath);
+				try
+				{
+					Directory.CreateDirectory(outDirPath);
+				}
+				catch (System.Exception e)
+				{
+					logger.Error($"failed to create a export directory:{outDirPath}");
+					logger.Error($"{ e.Message }");
+					throw;
+				}
 			}
 			var outPath = Path.Combine(outDirPath, outFile);
 			//save
@@ -1168,6 +1231,8 @@ namespace NodoAme
 					result = false;
 					break;
 			}
+			logger
+				.Info($"Success save wav file.:{pathToSave}:{serifText}");
 			return result;
 		}
 
@@ -1184,7 +1249,9 @@ namespace NodoAme
 			var resultOutput = await ExportWaveToFileAsync(serifText, tempName);
 			if (!resultOutput)
 			{
-				throw new Exception("Faild to save temp file!");
+				var msg = $"Faild to save temp file!:{tempName}";
+				logger.Error(msg);
+				throw new Exception(msg);
 			}
 			var (fs, nbit, len, x) = await Task.Run(()=> WorldUtil.ReadWav(tempName));
 			var parameters = new WorldParameters(fs);
