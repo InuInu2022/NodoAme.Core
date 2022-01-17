@@ -74,5 +74,7 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
 		<PackageReference Include="RestSharp" Version="107.0.3"/>
 		<PackageReference Include="NLog" Version="4.7.13"/>
 		<PackageReference Include="MinVer" Version="2.5.0"/>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0"/>
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0"/>
 	</ItemGroup>
 </Project>
