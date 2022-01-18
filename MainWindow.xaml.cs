@@ -13,6 +13,7 @@ namespace NodoAme
 		static public Logger Logger = LogManager.GetCurrentClassLogger();
 		public MainWindow()
 		{
+
 			InitializeComponent();
 			InitLogger();
 			Logger.Info("NodoAme initialized.");

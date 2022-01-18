@@ -243,6 +243,8 @@
                         Value="False" />
                 <Setter Property="Padding"
                         Value="5" />
+                <!-- Setter Property="IsEnabled"
+                        Value="{Binding EnabledInputSerif}" / -->
               </Style>
             </DataGridTextColumn.EditingElementStyle>
             <!-- epoxy:EventBinder.Events>

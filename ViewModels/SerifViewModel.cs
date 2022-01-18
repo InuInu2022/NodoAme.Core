@@ -14,8 +14,10 @@ namespace NodoAme.ViewModels
 		public string? ConvertedText { get; set; }
 		public MainWindowViewModel? ParentVM { get; set; }
 
+		public bool EnabledSerifInput { get; set; }
 		public bool EnabledPreview { get; set; }
 		public bool EnabledExport { get; set; }
+
 
 		public Visibility ExportProgress { get; set; } = Visibility.Collapsed;
 

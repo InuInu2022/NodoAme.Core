@@ -277,8 +277,23 @@ namespace NodoAme
 					foreach (var n in names)
 					{
 						Debug.WriteLine(n);
+						logger.Info($"Installed cevio cast: {n}");
 						voices!
 							.Add(new TalkSoftVoice{Id=$"Cast_{n}", Name=$"{n}"});
+					}
+
+					//CeVIOはインストールされているが、トークがない場合
+					if(names is null || names.Length == 0){
+						var noCast = $"{engineType}のトークボイスが見つかりません。{engineType}のボイスをしゃべりの参考に使用するにはトークエディタとトークボイスが必要です。";
+						MessageBox.Show(
+                            noCast,
+                            $"{engineType}のトークボイスが見つかりません",
+                            MessageBoxButton.OK, 
+                            MessageBoxImage.Error
+                        );
+						logger
+							.Error(noCast);
+						return;
 					}
 
 					//Type.GetTypeFromProgID(soft.Interface.Talker);
@@ -423,6 +438,8 @@ namespace NodoAme
 							catch (Exception ex)
 							{
 								logger.Error(ex.Message);
+
+								//return new List<string>();
 								throw;
 							}
 						}

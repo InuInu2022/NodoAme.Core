@@ -266,6 +266,8 @@ namespace NodoAme.ViewModels
 			IsCheckJapaneseSmallVowel = UserSettings.IsCheckJapaneseSmallVowel;
 			IsOpenCeVIOWhenExport = UserSettings.IsOpenCeVIOWhenExport;
 			IsExportAsTrac = UserSettings.IsExportAsTrac;
+
+			logger.Info("UserSettings load finished.");
 		}
 
 		private Func<RoutedEventArgs, ValueTask> OpenSelectExportDirDialog()
@@ -294,7 +296,6 @@ namespace NodoAme.ViewModels
 
 		private string GetWindowTitle(){
 			var assembly = Assembly.GetExecutingAssembly().GetName();
-			var version = assembly.Version;
 
 			var versionInfo = Assembly
 				.GetExecutingAssembly()
@@ -438,6 +439,7 @@ namespace NodoAme.ViewModels
 			{
 				item.EnabledPreview = !isForceDisable && canPreview;
 				item.EnabledExport = !isForceDisable && canExport;
+				item.EnabledSerifInput = !isForceDisable;
 			}
 		}
 
