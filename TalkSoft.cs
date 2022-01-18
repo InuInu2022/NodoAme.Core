@@ -841,18 +841,26 @@ namespace NodoAme
 								NOTE_OFFSET + start
 							);
 							timingNode.Add(timingData);
-							//if(i != nList.Count-1){
+
 							//途中の青線も指定しないと消えてしまう
-							//var nextPh = nList[i + 1];
+							//単純分割だとCSでちゃんと聞こえない
+
 							var spanTime = ph.EndTime - start;
+
 							foreach (int t in Enumerable.Range(1, 4))
 							{
-								var add = spanTime / 5 * t;
+								var first = spanTime / 2;
+								var add = t switch
+								{
+									1 => first,
+									_ => first + first * 1 / 5 * t
+								};
 								timingNode
 									.Add(new XElement(
 										"Data",
 										NOTE_OFFSET + start + add
 									));
+								Debug.WriteLine($"add:{add}");
 							}
 							//}
 						}
