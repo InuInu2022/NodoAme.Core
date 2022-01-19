@@ -237,7 +237,7 @@ NodeAmeはCSのソングボイス向けに出力できますが、
 
 使えません！
 
-CeVIOソングは自動化できないので、再生は手動になってます。
+CeVIOソングは自動化できないので、ソング再生は手動になってます。
 
 みんなで公式にリクエストを送ろう！
 [https://cevio.jp/contact_soft/](https://cevio.jp/contact_soft/)
@@ -255,21 +255,34 @@ CeVIOソングは自動化できないので、再生は手動になってます
 
 NodoAmeは [SHABERU](http://akihiro0105.web.fc2.com/Downloads/Downloads-SHABERU.html)/[Open JTalk](https://open-jtalk.sp.nitech.ac.jp/)などで使われるボイス音源（`htsvoice`形式の音響モデル）に対応しています。標準男声はatr503_m001、標準女声はtohoku-f01です。利用する場合はキャラクターのボイス音源のライセンスを確認して下さい。
 
-- [SHABERU 追加音響モデル](http://akihiro0105.web.fc2.com/Downloads/Downloads-htsvoice.html)
-- [Open JTalk の音響モデルを試す](https://petile.com/mahoroba/e1875.html)
+- 追加ボイス音源の入手先
+  - [SHABERU 追加音響モデル](http://akihiro0105.web.fc2.com/Downloads/Downloads-htsvoice.html)
+  - [Open JTalk の音響モデルを試す](https://petile.com/mahoroba/e1875.html)
 
-VOICEVOXは暫定で対応しました！
-COEIROINKはAPI側が対応され次第、対応予定です（音素表示と視聴まで対応済）。
+NodoAmeは無料のトークソフト [VOICEVOX](https://voicevox.hiroshiba.jp/) にも対応しています。
+
+- **VOICEVOX**
+  - 暫定で対応しました！
+  - 利用の際はVOICEVOXを先に起動しておいてください
+  - パラメータ変更は対応予定です
+- **COEIROINK**
+  - API側が対応され次第、対応予定です
+    - ※音素表示と視聴は対応済。
+  - 利用の際はVOICEVOXを先に起動しておいてください
+
+
+---
 
 - 対応済みトーク音源
-  - htsvoice形式の音響モデル
+  - `htsvoice`形式の音響モデル
 - 対応済みトークソフト
   - VOICEVOX
 - 対応予定トークソフト
   - COEIROINK
 
-CoeFontはAPIが公開されているのですが、利用したい情報がとれないっぽいです。
-A.I.VOICEはAPIが公開されたら検討してみます。
+#### それ以外のトークソフト対応について
+
+CoeFontはAPIが公開されているのですが、利用したい情報がとれないっぽいです。A.I.VOICEはAPIが公開されたら検討してみます。
 
 考えてるアイディアがうまく行けば、VOICEROIDや生声音声もうまくいくかもしれません。ただし、精度は落ちるかもです…。
 
@@ -284,7 +297,7 @@ A.I.VOICEはAPIが公開されたら検討してみます。
 
 英語のトーク音源（CeVIO AIトーク弦巻マキEnglish）に喋ってもらった音声をマネしたデータを出力はできますが、日本語にない音が含まれる場合は発音できません。
 
-セリフの中の音素が日本語と運良く一緒になれば、日本語ボイスでも発音できるかも？
+セリフの中の音素が日本語と**運良く**一緒になれば、日本語ボイスでも発音できるかも？
 
 英語トーク音源→英語ソング音源はうまくいきます（例：弦巻マキトークEnglish→IAソングEnglish）。
 
@@ -296,7 +309,7 @@ BPMが150固定とか、あとからの手直しにはあまり向いてない�
 
 セリフ全体の長さは一応変更できますが、書き出してみないと長さがわからないですし（リクエストがあれば一応表示できます）、リズムに合わせるほど細かい調声はできません。
 
-DAW上で加工するならできるかも？
+波形データに書き出して、DAW上で加工するならできるかも？
 
 ### ❔Macで動きますか？
 
@@ -327,8 +340,13 @@ MIT Licenseです。
 
 - ver. 0.1.0 : MATSURIに合わせてプロトタイプ版リリース
 
+## スペシャルサンクス
+
+- たらそば さん [@tarasoba9672](https://twitter.com/tarasoba9672)
+
 ## 🐶つくった
 
-- InuInu
+- InuInu（いぬいぬ）
   - <https://bit.ly/InuInuMusic>
-  - <https://twitter.com/InuInuGames>
+  - [@InuInuGames](https://twitter.com/InuInuGames)
+  - [note.com](https://note.com/inuinu_)
