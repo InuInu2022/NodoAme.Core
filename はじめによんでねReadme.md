@@ -15,7 +15,7 @@ CeVIO AIソング（可不ちゃんなど）をしゃべってる風に歌わせ
 ## DL
 
 - 公式サイト
-  - ※準備中
+  - [NodoAme.Home](https://inuinu2022.github.io/NodoAme.Home/)
 - [bowlroll](https://bowlroll.net/file/269946) ※予備
   - pass:カレーうどん
 
