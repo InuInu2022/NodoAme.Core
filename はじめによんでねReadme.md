@@ -9,8 +9,8 @@ CeVIO AIソング（可不ちゃんなど）をしゃべってる風に歌わせ
 
 ## 紹介動画
 
-- [YouTube]()
-- [niconico]()
+- [YouTube](https://youtu.be/lHshJSPfd-M)
+- [niconico](https://nico.ms/sm39928066)
 
 ## DL
 
