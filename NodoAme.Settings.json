@@ -212,7 +212,7 @@
 		{
 			"id":"4",
 			"name":"⚠COEIROINK",
-			"hidden":false,
+			"hidden":true,
 			"enabledPreview":true,
 			"enabledExport":false,
 			"interface":{
