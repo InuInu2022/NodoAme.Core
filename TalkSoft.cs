@@ -164,8 +164,8 @@ namespace NodoAme
 			engineType = type;
 			TalkSoft = soft;
 			TalkVoice = voice ?? null;
-			VoiceStyle = style!=null ? VoiceStyle : null;
-			//var _ = Init();
+			VoiceStyle = style; //style!=null ? VoiceStyle : null;
+							   //var _ = Init();
 		}
 
 		public static async ValueTask<Wrapper> Factory(
@@ -339,7 +339,7 @@ namespace NodoAme
 					bool isInitialized = engine?.Initialize(
 							soft.DicPath,
 							//voice!.Styles.ElementAt()
-							style?.Path ?? voice!.Path
+							style?.Path ?? voice!.Styles![0].Path
 						) ?? false;
 					IsActive = isInitialized;
 					
