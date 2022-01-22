@@ -1191,8 +1191,15 @@ namespace NodoAme
 				}
 				catch (System.Exception e)
 				{
+					MessageBox.Show(
+						$"「{outDirPath}」に新しくフォルダを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+						"フォルダの作成に失敗！",
+						MessageBoxButton.OK,
+						MessageBoxImage.Error
+					);
 					logger.Error($"failed to create a export directory:{outDirPath}");
 					logger.Error($"{ e.Message }");
+					
 					throw;
 				}
 			}
