@@ -12,6 +12,8 @@ CeVIO AIソング（可不ちゃんなど）をしゃべってる風に歌わせ
 - [YouTube](https://youtu.be/lHshJSPfd-M)
 - [niconico](https://nico.ms/sm39928066)
 
+
+
 ## DL
 
 - [公式サイト](https://inuinu2022.github.io/NodoAme.Home/)

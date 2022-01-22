@@ -23,6 +23,10 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
 		<!-- MinVer -->
 		<MinVerTagPrefix>v</MinVerTagPrefix>
 	</PropertyGroup>
+	<Target Name="RemovePublishDirBeforeBuild" BeforeTargets="BeforeBuild">
+		<RemoveDir Directories="$(OutputPath)/publish/" />
+		<Message Text="RemovePublishDirBeforeBuild" Importance="high"/>
+	</Target>
 	<Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
 		<RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)%(Filename)')"/>
 	</Target>
