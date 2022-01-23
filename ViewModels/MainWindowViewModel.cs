@@ -86,7 +86,7 @@ namespace NodoAme.ViewModels
 		public VowelOptions VowelOption { get; set; } = VowelOptions.DoNothing;
 		public bool IsCheckJapaneseRemoveNonSoundVowel { get; set; } = false;
 		public bool IsCheckJapaneseSmallVowel { get; set; } = false;
-
+		public int DefaultSerifLines { get; private set; }
 
 		public string PathToSaveDirectory { get; set; }
 		public bool IsOpenCeVIOWhenExport { get; set; } = true;
@@ -155,7 +155,8 @@ namespace NodoAme.ViewModels
 			//*
 			this.Serifs
 				.Add(new SerifViewModel { ParentVM = this, SourceText = "ほげほげふがふが日本語English" });
-			for (var i = 0; i < 28; i++)
+			int lines = DefaultSerifLines - 2;
+			for (var i = 0; i < lines; i++)
 			{
 				this.Serifs
 					.Add(new SerifViewModel { ParentVM = this, SourceText = "" });
@@ -255,6 +256,7 @@ namespace NodoAme.ViewModels
 			}
 
 			//assign
+			DefaultSerifLines = UserSettings.DefaultSerifLines;
 			PathToSaveDirectory = UserSettings.PathToSaveDirectory;
 			IsUseSeparaterSpace = UserSettings.IsUseSeparaterSpace;
 			IsConvertToPhoneme = UserSettings.IsConvertToPhoneme;

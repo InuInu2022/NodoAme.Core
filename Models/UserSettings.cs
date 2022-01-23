@@ -11,7 +11,9 @@ namespace NodoAme.Models
 	/// </summary>
     public class UserSettings
     {
-		public string Version { get; } = "0.1.0";
+		public string Version { get; } = "0.2.0";
+
+		public int DefaultSerifLines { get; set; } = 30;	//初期表示セリフ行
 		public string? PathToSaveDirectory { get; set; } = "./out/";
 
 		public bool IsUseSeparaterSpace { get; set; } = true;
