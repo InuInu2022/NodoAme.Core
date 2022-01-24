@@ -354,6 +354,7 @@ namespace NodoAme
 						);
 						logger
 							.Error(msg);
+						this.engine?.Dispose();
 						throw new Exception(msg);
 					}
 					break;
