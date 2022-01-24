@@ -152,16 +152,16 @@
               <StackPanel Orientation="Horizontal"
                           Width="350">
                 <Label Content="{Binding Name}"
-                       Width="30"
+                       Width="45"
                        Margin="5,0"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
                        FontSize="11" />
-                <ui:NumberBox Width="70"
+                <ui:NumberBox Width="65"
                               FontSize="11"
                               Value="{Binding Value, ElementName=slider}" />
                 <Slider x:Name="slider"
-                        Width="200"
+                        Width="190"
                         Margin="10,0"
                         Minimum="{Binding Min}"
                         Maximum="{Binding Max}"
