@@ -92,6 +92,9 @@ namespace NodoAme.ViewModels
 		public bool IsOpenCeVIOWhenExport { get; set; } = true;
 
 		public bool IsExportAsTrac { get; set; } = true;
+		public bool IsExportSerifText { get; private set; }
+		public string PathToExportSerifTextDir { get; private set; }
+		public string DefaultExportSerifTextFileName { get; private set; }
 
 		#endregion
 
@@ -268,8 +271,30 @@ namespace NodoAme.ViewModels
 			IsCheckJapaneseSmallVowel = UserSettings.IsCheckJapaneseSmallVowel;
 			IsOpenCeVIOWhenExport = UserSettings.IsOpenCeVIOWhenExport;
 			IsExportAsTrac = UserSettings.IsExportAsTrac;
+			IsExportSerifText = UserSettings.IsExportSerifText;
+			PathToExportSerifTextDir = UserSettings.PathToExportSerifTextDir;
+			DefaultExportSerifTextFileName = UserSettings.DefaultExportSerifTextFileName;
+
+			CheckUserSettingsWhenDebug();	//実装もれのチェック
 
 			logger.Info("UserSettings load finished.");
+		}
+
+		[ConditionalAttribute("DEBUG")]
+		private void CheckUserSettingsWhenDebug(){
+			var props = UserSettings.GetType().GetProperties();
+			foreach (var prop in props)
+			{
+				var ignore = prop.GetCustomAttribute<System.Text.Json.Serialization.JsonIgnoreAttribute>();
+				var isHide = prop.GetCustomAttribute<Models.HideForUserAttribute>();
+				if (!(ignore is null) || !(isHide is null))
+				{
+					continue;	//jsonignore/hideforuserは無視
+				}
+				if(this.GetType().GetProperty(prop.Name) is null){
+					throw new MissingFieldException($"{prop.Name} is not yet implimented!");
+				}
+			}
 		}
 
 		private Func<RoutedEventArgs, ValueTask> OpenSelectExportDirDialog()

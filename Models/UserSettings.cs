@@ -11,10 +11,17 @@ namespace NodoAme.Models
 	/// </summary>
     public class UserSettings
     {
+		[HideForUser]
 		public string Version { get; } = "0.2.0";
 
 		public int DefaultSerifLines { get; set; } = 30;	//初期表示セリフ行
 		public string? PathToSaveDirectory { get; set; } = "./out/";
+
+		#region export_serif_text_options
+		public bool IsExportSerifText { get; set; } = false;
+		public string PathToExportSerifTextDir { get; set; } = "./out/";
+		public string DefaultExportSerifTextFileName { get; set; } = "$セリフ名$";
+		#endregion export_serif_text_options
 
 		public bool IsUseSeparaterSpace { get; set; } = true;
 		public bool IsConvertToHiragana { get; set; } = false;
@@ -58,4 +65,7 @@ namespace NodoAme.Models
 			writer.Close();
         }
 	}
+
+	[AttributeUsage(AttributeTargets.Property)]
+	public class HideForUserAttribute : Attribute{}
 }
