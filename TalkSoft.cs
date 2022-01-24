@@ -1272,6 +1272,87 @@ namespace NodoAme
 			return true;//new ValueTask<bool>(true);
 		}
 
+		/// <summary>
+		/// セリフファイルをtextで出力する
+		/// </summary>
+		/// <param name="serifText"></param>
+		/// <param name="exportPath"></param>
+		/// <param name="fileNamePattern">ファイル名のパターン（CeVIO互換予定）</param>
+		/// <returns></returns>
+		public async ValueTask<bool> ExportSerifTextFileAsync(
+			string serifText,
+			string exportPath,
+			string fileNamePattern
+		){
+			var safeName = GetSafeFileName(serifText);
+			var outDirPath = exportPath;
+
+			var outFile = fileNamePattern;
+			outFile = FileNameReplace(outFile, "$セリフ$", safeName);
+			outFile = FileNameReplace(outFile, "$キャスト名$", TalkVoice?.Name ?? "ANY");
+			outFile = FileNameReplace(outFile, "$日付$", DateTime.Now.ToLocalTime().ToString("yyyymmdd"));
+			//TODO:outFile = FileNameReplace(outFile, "$連番$", "$連番$");
+			outFile = FileNameReplace(outFile, "$トラック名$", safeName);
+
+			if(!Directory.Exists(outDirPath)){
+				try
+				{
+					Directory.CreateDirectory(outDirPath);
+				}
+				catch (System.Exception e)
+				{
+					MessageBox.Show(
+						$"「{outDirPath}」に新しくフォルダを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+						"フォルダの作成に失敗！",
+						MessageBoxButton.OK,
+						MessageBoxImage.Error
+					);
+					logger.Error($"failed to create a export directory:{outDirPath}");
+					logger.Error($"{ e.Message }");
+
+					return false;
+				}
+			}
+			var outPath = Path.Combine(outDirPath, outFile);
+
+			try
+			{
+				using var writer = new StreamWriter(
+					outPath,
+					false,
+					System.Text.Encoding.UTF8
+				);
+				await writer.WriteAsync(serifText);
+			}
+			catch (System.Exception e)
+			{
+				MessageBox.Show(
+					$"セリフファイルの保存に失敗しました。ファイル「{outFile}」を「{outDirPath}」に保存できませんでした。\n詳細：{e.Message}",
+					"セリフファイルの保存に失敗！",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error
+				);
+				logger.Error($"failed to save a serif file:{outPath}");
+				logger.Error($"{ e.Message }");
+
+				return false;
+			}
+
+			return true;
+		}
+
+		internal string FileNameReplace(
+			string outFile,
+			string pattern,
+			string replaceTo
+		){
+			return Regex.Replace(
+				outFile,
+				Regex.Escape(pattern),
+				replaceTo ?? "ANY"
+			);
+		}
+
 		private async ValueTask<bool> ExportWaveToFileAsync(
 			string serifText,
 			string pathToSave

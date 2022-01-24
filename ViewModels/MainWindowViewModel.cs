@@ -92,9 +92,9 @@ namespace NodoAme.ViewModels
 		public bool IsOpenCeVIOWhenExport { get; set; } = true;
 
 		public bool IsExportAsTrac { get; set; } = true;
-		public bool IsExportSerifText { get; private set; }
-		public string PathToExportSerifTextDir { get; private set; }
-		public string DefaultExportSerifTextFileName { get; private set; }
+		public bool IsExportSerifText { get; set; }
+		public string PathToExportSerifTextDir { get; set; }
+		public string DefaultExportSerifTextFileName { get; set; }
 
 		#endregion
 
@@ -123,6 +123,8 @@ namespace NodoAme.ViewModels
 		public Command OpenLicenses { get; set; }
 
 		public Command SelectExportDirectory { get; set; }
+
+		public Command SelectExportSerifTextDir { get; set; }
 
 		public Command ExportSusuru { get; set; }
 
@@ -219,12 +221,17 @@ namespace NodoAme.ViewModels
 				return new ValueTask();
 			});
 
-			this.SelectExportDirectory = CommandFactory.
-				Create<RoutedEventArgs>(OpenSelectExportDirDialog());
+			this.SelectExportDirectory = CommandFactory
+				.Create<RoutedEventArgs>(OpenSelectExportDirDialog());
+
+			SelectExportSerifTextDir = CommandFactory
+				.Create<RoutedEventArgs>(OpenSelectExportSerifTextDirDialog);
 
 			this.ExportSusuru = CommandFactory.Create<RoutedEventArgs>(ExportSusuruTrack());
 
 		}
+
+		
 
 		private void LoadUserSettings()
 		{
@@ -319,6 +326,27 @@ namespace NodoAme.ViewModels
 
 				return new ValueTask();
 			};
+		}
+
+		private ValueTask OpenSelectExportSerifTextDirDialog(RoutedEventArgs arg)
+		{
+			using var cofd = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog()
+			{
+				Title = "セリフテキストの出力フォルダをえらんでね",
+				InitialDirectory = Path.GetFullPath(PathToExportSerifTextDir),
+				IsFolderPicker = true,
+			};
+			if (cofd.ShowDialog() != Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok)
+			{
+				return new ValueTask();
+			}
+
+			UserSettings.PathToExportSerifTextDir
+				= PathToExportSerifTextDir
+				= cofd.FileName;
+			var __ = UserSettings.SaveAsync();
+
+			return new ValueTask();
 		}
 
 		private string GetWindowTitle(){
@@ -757,6 +785,14 @@ namespace NodoAme.ViewModels
 				isTrack,
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory);
+			
+			if(IsExportSerifText){
+				await talkEngine.ExportSerifTextFileAsync(
+					serifText,
+					PathToExportSerifTextDir,
+					DefaultExportSerifTextFileName
+				);
+			}
 
 			MainWindow.Logger.Info($"File export finished: {PathToSaveDirectory}\n{serifText}");
 			//return new ValueTask();
@@ -866,6 +902,17 @@ namespace NodoAme.ViewModels
 			);
 		}
 
+		[PropertyChanged(nameof(IsExportSerifText))]
+		private async ValueTask IsExportSerifTextChangedAsync(bool value){
+			UserSettings.IsExportSerifText = value;
+			await UserSettings.SaveAsync();
+		}
+		
+		[PropertyChanged(nameof(DefaultExportSerifTextFileName))]
+		private async ValueTask DefaultExportSerifTextFileNameChangedAsync(string value){
+			UserSettings.DefaultExportSerifTextFileName = value;
+			await UserSettings.SaveAsync();
+		}
 
 		[PropertyChanged(nameof(IsConvertToHiragana))]
 		private async ValueTask IsConvertToHiraganaChangedAsync(bool value){
