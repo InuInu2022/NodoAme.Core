@@ -664,7 +664,7 @@ namespace NodoAme
 			var tp = this.TalkSoft.TalkSoftParams;
 
 			//TODO:Voicevox対応
-			if(engineType==TalkEngine.VOICEVOX){return;}
+			//if(engineType==TalkEngine.VOICEVOX){return;}
 
 			//値を割当
 			foreach (var p in tp!)
@@ -687,6 +687,7 @@ namespace NodoAme
 						);
 						break;
 					case TalkEngine.OPENJTALK:
+					case TalkEngine.VOICEVOX:
 						prop.SetValue(
 							engine,
 							newParam

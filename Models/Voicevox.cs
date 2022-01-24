@@ -22,6 +22,18 @@ namespace NodoAme.Models
 		public bool IsActive { get; set; } = false;
         public string[]? AvailableCasts { get; set; }
 
+        public double SpeedScale { get; set; }
+
+        public double PitchScale { get; set; }
+
+        public double IntonationScale { get; set; }
+
+        public double VolumeScale { get; set; }
+
+        public double PrePhonemeLength { get; set; }
+
+        public double PostPhonemeLength { get; set; }
+
 		public List<VoicevoxCast> VoicevoxCasts { get; set; } = new List<VoicevoxCast>();
 
         public string Cast {
@@ -135,6 +147,7 @@ namespace NodoAme.Models
             if(res.IsSuccessful && !(res is null)){
 				var content = res.Content ?? "{}";
 				var root = await CastContent<AudioQueryResponse>(content);
+				SetEngineParams(root);
 				var moras = root
 					.AccentPhrases
 					.Select(a => {
@@ -329,18 +342,32 @@ namespace NodoAme.Models
 		private async Task<RestResponse> InternalPostRequest(
             string requestString,
             (string queryName, string queryData)[]? queries = null,
-            object? jsonBody = null
+            AudioQueryResponse? jsonBody = null
         ){
             CheckRestClient();
             var req = new RestRequest($"{host}{requestString}", Method.Post);
             AddQueryParameter(queries, req);
-            if(!(jsonBody is null)){
-                req.AddJsonBody(jsonBody);
-            }
+            if(!(jsonBody is null))
+			{
+				SetEngineParams(jsonBody);
+
+				req.AddJsonBody(jsonBody);
+			}
 			var res = await restClient!.ExecutePostAsync(req);
 			CheckResponce(res);
 			return res;
         }
+
+		private void SetEngineParams(AudioQueryResponse? jsonBody)
+		{
+			//set engine params option
+			jsonBody.IntonationScale = this.IntonationScale;
+			jsonBody.PitchScale = this.PitchScale;
+			jsonBody.PostPhonemeLength = this.PostPhonemeLength;
+			jsonBody.PrePhonemeLength = this.PrePhonemeLength;
+			jsonBody.SpeedScale = this.SpeedScale;
+			jsonBody.VolumeScale = this.VolumeScale;
+		}
 
 		private static void AddQueryParameter((string queryName, string queryData)[]? queries, RestRequest req)
 		{
