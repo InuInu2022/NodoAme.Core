@@ -82,6 +82,5 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0"/>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0"/>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0"/>
-		<PackageReference Include="WanaKanaSharp" Version="0.2.0"/>
 	</ItemGroup>
 </Project>
