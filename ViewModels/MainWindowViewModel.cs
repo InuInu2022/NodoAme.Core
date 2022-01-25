@@ -161,6 +161,7 @@ namespace NodoAme.ViewModels
 			this.Serifs
 				.Add(new SerifViewModel { ParentVM = this, SourceText = "ほげほげふがふが日本語English" });
 			int lines = DefaultSerifLines - 2;
+			if(lines<2)lines = 2;	//check
 			for (var i = 0; i < lines; i++)
 			{
 				this.Serifs
