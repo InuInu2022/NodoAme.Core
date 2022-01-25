@@ -335,14 +335,18 @@ namespace NodoAme
 					break;
 				case TalkEngine.OPENJTALK:
 				default:
-					this.engine = new OpenJTalkAPI();
-					bool isInitialized = engine?.Initialize(
+					bool isInitialized = false;
+					await Task.Run(() =>
+					{
+						this.engine = new OpenJTalkAPI();
+						isInitialized = engine?.Initialize(
 							soft.DicPath,
 							//voice!.Styles.ElementAt()
 							style?.Path ?? voice!.Styles![0].Path
 						) ?? false;
+					});
 					IsActive = isInitialized;
-					
+
 					if (!isInitialized)
 					{
 						var msg = $"{engineType} Initialize Failed";

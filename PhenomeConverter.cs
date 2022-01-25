@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace NodoAme
 {
@@ -35,6 +36,10 @@ namespace NodoAme
 			Models.VowelOptions vowelOption = Models.VowelOptions.DoNothing,
 		    bool isDebugOutput = false
         ){
+			if (Regex.IsMatch(sourceText, @"^\s+")) {
+				return ""; 
+			};
+			
 			var pList = new List<string>();
 			
 			var debugLabels = "";
