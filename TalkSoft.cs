@@ -17,6 +17,9 @@ using NAudio.Wave;
 using SharpOpenJTalk;
 using NodoAme.Models;
 using NLog;
+using WanaKanaNet;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace NodoAme
 {
@@ -121,6 +124,14 @@ namespace NodoAme
 		public const string CEVIO = "CeVIO";
 		public const string OPENJTALK = "OpenJTalk";
 		public const string VOICEVOX = "VOICEVOX";
+	}
+
+	;
+	public enum ExportLyricsMode
+	{
+		KANA = 0,       //hiragana lyrics for CS Japanese voice
+		PHONEME = 1,    //phoneme lyrics (same as v0.1.0) for AI
+		//TODO:ALPHABET = 2,	//alphabet lyrics for CS English voice
 	}
 
 	/// <summary>
@@ -719,7 +730,8 @@ namespace NodoAme
 			double alpha,
 			bool isExportAsTrack = true,
 			bool isOpenCeVIO = false,
-			string exportPath = ""
+			string exportPath = "",
+			ExportLyricsMode exportMode = ExportLyricsMode.KANA
 		)
 		{
 			if (this.engine is null)
@@ -762,7 +774,9 @@ namespace NodoAme
 					{
 						engine.Cast = TalkVoice!.Name;
 						SetVoiceStyle();
-					}else if(engineType == TalkEngine.VOICEVOX){
+					}
+					else if (engineType == TalkEngine.VOICEVOX)
+					{
 						engine.Style = this.VoiceStyle;
 					}
 					SetEngineParam();
@@ -785,7 +799,8 @@ namespace NodoAme
 
 					//声質(Alpha)指定
 					scoreRoot.SetAttributeValue("Alpha", 0.0);
-					if(engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK){
+					if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
+					{
 						var alphaParam = TalkSoft
 						.TalkSoftParams
 						.First(a => a.Id == "Alpha");
@@ -800,28 +815,9 @@ namespace NodoAme
 					var duration = GetTickDuration(serifLen);
 					Debug.WriteLine($"duration :{duration}");
 
-					//pauの区切りでノートに分割する
-					var notesList = new List<dynamic>();
-					var noteList = new List<dynamic>();
-					var phNum = 0;
-					for (int i = 0; i < phs.Count; i++)
-					{
-						switch (phs[i].Phoneme)
-						{
-							case "sil": //ignore phoneme
-								break;
-							case "pau": //split note
-								notesList.Add(new List<dynamic>(noteList));
-								noteList.Clear();
-								phNum++;
-								break;
-							default:    //append
-								noteList.Add(phs[i]);
-								phNum++;
-								break;
-						}
-					}
-					notesList.Add(new List<dynamic>(noteList));
+					//split notes
+					(List<dynamic>? notesList, int phNum)
+						= await SplitPhonemesToNotes(phs, exportMode);
 
 					Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
 
@@ -891,13 +887,29 @@ namespace NodoAme
 						phText = phText.TrimEnd(",".ToCharArray());
 						Debug.WriteLine($"phText :{phText}");
 
+						var lyricText = phText.Replace(",", "");
+
+						//CS対策：CSは有効な文字種の歌詞でないとちゃんと発音しない（音素指定でも）
+						if (exportMode == ExportLyricsMode.KANA)
+						{
+							var kanaOption = new WanaKanaOptions
+							{
+								CustomKanaMapping = new Dictionary<string, string>()
+								{
+									{"cl","っ"}
+								}
+							};
+							lyricText = WanaKana.ToHiragana(lyricText, kanaOption);
+						}
+						Debug.WriteLine($"lyric: {lyricText}");
+
 						//note
 						var note = new XElement("Note",
 							new XAttribute("Clock", 3840 + startClock),
 							new XAttribute("PitchStep", "7"),
 							new XAttribute("PitchOctave", "4"),
 							new XAttribute("Duration", noteLen),
-							new XAttribute("Lyric", phText.Replace(",", "")/*serifText*/),
+							new XAttribute("Lyric", lyricText),
 							new XAttribute("DoReMi", "false"),
 							new XAttribute("Phonetic", phText)
 						);
@@ -906,7 +918,7 @@ namespace NodoAme
 
 					}
 
-					
+
 
 
 					//Timing elements
@@ -916,7 +928,7 @@ namespace NodoAme
 						.First();
 					songRoot
 						.Add(new XElement("Parameter", timingNode));
-					
+
 					sw.Stop();
 					Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
 					sw.Restart();
@@ -1106,6 +1118,127 @@ namespace NodoAme
 			logger.Info($"Export file sucess!{exportPath}:{serifText}");
 			return true;//new ValueTask<bool>(true);
 
+		}
+
+		private async ValueTask<(List<dynamic> notesList, int phNum)>
+		SplitPhonemesToNotes(
+			List<Label> phs,
+			ExportLyricsMode mode
+		)
+		{
+			var notesList = new List<dynamic>();
+			var noteList = new List<dynamic>();
+			var phNum = 0;
+
+			switch (mode)
+			{
+				case ExportLyricsMode.KANA:
+				case ExportLyricsMode.PHONEME:
+				{
+					//ModeForAI: pauの区切りでノートに分割する
+					await Task.Run(() =>
+						{
+							for (int i = 0; i < phs.Count; i++)
+							{
+								switch (phs[i].Phoneme)
+								{
+									case "sil": //ignore phoneme
+										break;
+									case "pau": //split note
+										notesList.Add(new List<dynamic>(noteList));
+										noteList.Clear();
+										phNum++;
+										break;
+									default:    //append
+										noteList.Add(phs[i]);
+										phNum++;
+										break;
+								}
+							}
+						});
+						notesList.Add(new List<dynamic>(noteList));
+					}break;
+				/*
+				case ExportMode.CeVIO_CS:{
+					//mode for cs
+					await Task.Run(() =>
+						{
+							for (int i = 0; i < phs.Count; i++)
+							{
+								switch (phs[i].Phoneme)
+								{
+									case "sil": //ignore phoneme
+										break;
+									case "pau": //split note
+										notesList.Add(new List<dynamic>(noteList));
+										noteList.Clear();
+										phNum++;
+										break;
+									default:
+										var isEnd = i + 1 == phs.Count;
+										var isVowel = PhonemeUtil.IsVowel(phs[i]);
+
+										if(!isEnd && isVowel){
+											//
+											var next = phs[i + 1];
+											var isC = PhonemeUtil.IsConsonant(next);
+											var isN = PhonemeUtil.IsNasal(next);
+											var isV = PhonemeUtil.IsVowel(next);
+
+											//TODO:日本語以外検証
+											//1.母音→母音はnote分割
+											//2.母音→(鼻音以外の)子音はnote分割 [v,c,...]
+											//3. [v,n,v]はノート分割
+											if(
+												(isC && !isN)
+												|| isV 
+												|| (isN && (i+2 < phs.Count) && PhonemeUtil.IsVowel(phs[i+2]))
+											){	//split
+												noteList.Add(phs[i]);
+												notesList.Add(new List<dynamic>(noteList));
+												noteList.Clear();
+												phNum++;
+												break;
+											}
+										}else if(!isEnd && PhonemeUtil.IsNasal(phs[i])){
+											var next = phs[i + 1];
+											var isC = PhonemeUtil.IsConsonant(next);
+											//var isN = PhonemeUtil.IsNasal(next);
+											//鼻音→子音はnote分割 [n,c,...]
+											//TODO: ngの鼻濁音対応（この後に処理するなら要らない）
+											if(isC){			//split
+												noteList.Add(phs[i]);
+												notesList.Add(new List<dynamic>(noteList));
+												noteList.Clear();
+												phNum++;
+												break;
+											}
+										}else if(!isEnd && PhonemeUtil.IsCL(phs[i])){
+											//促音「っ」は前にくっつけて分割
+											noteList.Add(phs[i]);
+											notesList.Add(new List<dynamic>(noteList));
+											noteList.Clear();
+											phNum++;
+											break;
+										}
+
+
+										//append
+										noteList.Add(phs[i]);
+										phNum++;
+										break;
+								}
+							}
+						});
+						notesList.Add(new List<dynamic>(noteList));
+					}break;
+				*/
+				default:
+					logger.Error($"Export mode {mode} is invalid!");
+					break;
+			}
+
+			return (notesList, phNum);
 		}
 
 		private static double GetParametersLength(double serifLen)

@@ -408,6 +408,12 @@
                     VerticalAlignment="Top"
                     Margin="10,0,0,0">
             <WrapPanel fw:PointerTracker.Enabled="True">
+              <ComboBox x:Name="exportLyricesMode"
+                        Margin="10"
+                        Padding="5"
+                        ItemsSource="{Binding ExportLyricsModeList}"
+                        SelectedItem="{Binding SongExportLyricsMode}"
+                        />
               <StackPanel Orientation="Horizontal">
                 <Button x:Name="selectSavePath"
                         Content="保存先選択"
@@ -421,7 +427,7 @@
                          IsReadOnly="true"
                          Margin="5" />
               </StackPanel>
-              <CheckBox Content="Open CeVIO when export"
+              <CheckBox Content="保存時自動でCeVIOを開く"
                         IsChecked="{Binding IsOpenCeVIOWhenExport}"
                         Margin="10,0,10,0" />
               <WrapPanel Orientation="Horizontal">

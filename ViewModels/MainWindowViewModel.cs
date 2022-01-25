@@ -1,5 +1,6 @@
 #nullable disable
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -89,6 +90,10 @@ namespace NodoAme.ViewModels
 		public int DefaultSerifLines { get; private set; }
 
 		public string PathToSaveDirectory { get; set; }
+
+		public ExportLyricsMode SongExportLyricsMode { get; set; }
+		public IEnumerable<ExportLyricsMode> ExportLyricsModeList { get; set; }
+			= Enum.GetValues(typeof(ExportLyricsMode)).Cast<ExportLyricsMode>();
 		public bool IsOpenCeVIOWhenExport { get; set; } = true;
 
 		public bool IsExportAsTrac { get; set; } = true;
@@ -282,6 +287,7 @@ namespace NodoAme.ViewModels
 			IsExportSerifText = UserSettings.IsExportSerifText;
 			PathToExportSerifTextDir = UserSettings.PathToExportSerifTextDir;
 			DefaultExportSerifTextFileName = UserSettings.DefaultExportSerifTextFileName;
+			SongExportLyricsMode = UserSettings.SongExportLyricsMode;
 
 			CheckUserSettingsWhenDebug();	//実装もれのチェック
 
@@ -785,7 +791,9 @@ namespace NodoAme.ViewModels
 				alpha,
 				isTrack,
 				IsOpenCeVIOWhenExport,
-				PathToSaveDirectory);
+				PathToSaveDirectory,
+				SongExportLyricsMode
+				);
 			
 			if(IsExportSerifText){
 				await talkEngine.ExportSerifTextFileAsync(
@@ -901,6 +909,12 @@ namespace NodoAme.ViewModels
 				vowelOption: VowelOption,
 				isDebugOutput: false
 			);
+		}
+
+		[PropertyChanged(nameof(SongExportLyricsMode))]
+		private async ValueTask SongExportLyricsModeChangedAsync(ExportLyricsMode value){
+			UserSettings.SongExportLyricsMode = value;
+			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsExportSerifText))]
