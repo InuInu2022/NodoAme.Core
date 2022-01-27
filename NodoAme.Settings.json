@@ -270,102 +270,122 @@
 		{
 			"id":"CSNV-JPF-THR1",
 			"name":"KAFU",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-JPF-A",
 			"name":"さとうささら",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-JPF-VCLMK1",
 			"name":"結月ゆかり麗",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-JPF-AHS1",
 			"name":"東北きりたん",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-JPF-FP5",
 			"name":"IA",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-ENF-FP5",
 			"name":"IA (ENG)",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-JPF-FP4",
 			"name":"OИE",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-JPF-AHS2",
 			"name":"⚠東北ずん子",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSNV-JPF-AHS3",
 			"name":"⚠東北イタコ",
-			"songSoft":"CeVIO AI"
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"A",
 			"name":"さとうささら",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"ONE",
 			"name":"OИE",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"CSV-ENF-FP3-N",
-			"name":"IA (En) Natural",
-			"songSoft":"⚠CeVIO CS"
+			"name":"⚠IA (En) Natural",
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"CSV-ENF-FP3-P",
-			"name":"IA (En) Powerful",
-			"songSoft":"⚠CeVIO CS"
+			"name":"⚠IA (En) Powerful",
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"PHONEME"
 		},
 		{
 			"id":"XSV-JPM-HRM-P",
 			"name":"ハルオロイド",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"XSV-JPM-P",
 			"name":"赤咲 湊",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"XSV-JPF-W",
 			"name":"緑咲 香澄",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"XSV-JPM-E",
 			"name":"銀咲 大和",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"XSV-JPF-E",
 			"name":"金咲 小春",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"XSV-JPM-W",
 			"name":"白咲 優大",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		},
 		{
 			"id":"XSV-JPF-P",
 			"name":"黄咲 愛里",
-			"songSoft":"⚠CeVIO CS"
+			"songSoft":"CeVIO CS",
+			"lyricsMode":"KANA"
 		}
 	]
 }

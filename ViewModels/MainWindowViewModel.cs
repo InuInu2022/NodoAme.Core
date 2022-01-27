@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 using System.Windows;
@@ -155,8 +156,8 @@ namespace NodoAme.ViewModels
 
 
 
-			this.setting = LoadSettings();
-			this.japaneseRules = LoadJapanaseRule();
+			this.setting =  LoadSettings().Result;
+			this.japaneseRules = LoadJapanaseRule().Result;
 			InitTalkSofts();
 
 			this.Serifs
@@ -262,11 +263,9 @@ namespace NodoAme.ViewModels
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(
-					$"保存した設定の読み込みに失敗しました。{ex.Message}",
-					"保存した設定の読み込みに失敗",
-					MessageBoxButton.OK,
-					MessageBoxImage.Error
+				var _ = ShowErrorMessageBox(
+					title:"保存した設定の読み込みに失敗",
+					message:$"保存した設定の読み込みに失敗しました。{ex.Message}"
 				);
 				logger.Error($"usersetting.json loading failed:{ex.Message}");
 			}
@@ -379,64 +378,71 @@ namespace NodoAme.ViewModels
 			Debug.WriteLine("called test button.");
 		}
 
-		private Settings LoadSettings()
+		private async Task<Settings> LoadSettings()
 		{
-			return LoadJson<Settings>("NodoAme.Settings.json");
+			return await LoadJsonAsync<Settings>("NodoAme.Settings.json");
 		}
 
-		private JapaneseRule LoadJapanaseRule()
+		private async Task<JapaneseRule> LoadJapanaseRule()
 		{
-			return LoadJson<JapaneseRule>(@"dic\japanese.json");
+			return await LoadJsonAsync<JapaneseRule>(@"dic\japanese.json");
 		}
 
 
-		private T LoadJson<T>(
+		private async ValueTask<T> LoadJsonAsync<T>(
 			string pathToJson
 		)
 		{
-			using StreamReader sr = new StreamReader(
+
+			using var sr = new StreamReader(
 				pathToJson,
-				System.Text.Encoding.GetEncoding("utf-8")
+				System.Text.Encoding.UTF8
 			);
-			string allLine = sr.ReadToEnd();
+			var allLine = sr.ReadToEnd();
 			sr.Close();
 
-			if (String.IsNullOrEmpty(allLine))
-			{
-				MessageBox.Show(
-					"Jsonの中身が空です",
-					"Jsonエラー",
-					MessageBoxButton.OK,
-					MessageBoxImage.Error
-				);
-				MainWindow.Logger.Error($"Jsonの中身が空です。path to json: {pathToJson}");
-				return default;//null;
-			}
 			try
 			{
+				var opt = new JsonSerializerOptions
+				{
+					Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+					WriteIndented = true
+				};
+				opt.Converters.Add(new JsonStringEnumConverter());
+
 				T settings = JsonSerializer
 					.Deserialize<T>(
 						allLine,
-						new JsonSerializerOptions
-						{
-							Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-							WriteIndented = true,
-						}
+						opt
 					);
 				return settings;
 			}
 			catch (JsonException e)
 			{
 				Debug.WriteLine(e.Message);
-				MessageBox.Show(
-					e.Message,
-					"Json読み取りエラー",
-					MessageBoxButton.OK,
-					MessageBoxImage.Error
+				await ShowErrorMessageBox(
+					title:"Json読み取りエラー",
+					message:e.Message
 				);
 				MainWindow.Logger.Error($"Json読み取りエラー: {e.Message}");
 				return default;
 			}
+		}
+
+		public async ValueTask ShowErrorMessageBox(
+			string title,
+			string message,
+			Exception e = null
+		){
+			await Task.Run(() =>
+			{
+				MessageBox.Show(
+					message ?? $"エラーが発生しました。{e}",
+					title ?? "ERROR",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error
+				);
+			});
 		}
 
 
@@ -572,6 +578,10 @@ namespace NodoAme.ViewModels
 		private ValueTask ExportCastSelectedChangedAsync(int index)
 		{
 			//if(IsTalkSoftComboEnabled)InitVoices();
+			if(ExportCastItems is null)return new ValueTask();
+			
+			var current = ExportCastItems[index];
+			SongExportLyricsMode = current.LyricsMode;
 			return new ValueTask();
 		}
 

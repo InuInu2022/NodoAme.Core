@@ -11,5 +11,7 @@ namespace NodoAme
 		public string? Name { get; set; }
 		[JsonPropertyName("songSoft")]
 		public string? SongSoft { get; set; }
+		[JsonPropertyName("lyricsMode")]
+		public ExportLyricsMode LyricsMode { get; set; }
 	}
 }
