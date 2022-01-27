@@ -128,6 +128,8 @@ namespace NodoAme.ViewModels
 
 		public Command OpenLicenses { get; set; }
 
+		public Command OpenWebsite { get; set; }
+
 		public Command SelectExportDirectory { get; set; }
 
 		public Command SelectExportSerifTextDir { get; set; }
@@ -225,6 +227,12 @@ namespace NodoAme.ViewModels
 			this.OpenLicenses = CommandFactory.Create<RoutedEventArgs>(_ =>
 			{
 				Process.Start(Path.GetFullPath("./Licenses/"));
+				return new ValueTask();
+			});
+
+			OpenWebsite = CommandFactory.Create<RoutedEventArgs>(_ =>
+			{
+				Process.Start("https://inuinu2022.github.io/NodoAme.Home/#/");
 				return new ValueTask();
 			});
 
@@ -579,7 +587,7 @@ namespace NodoAme.ViewModels
 		{
 			//if(IsTalkSoftComboEnabled)InitVoices();
 			if(ExportCastItems is null)return new ValueTask();
-			
+
 			var current = ExportCastItems[index];
 			SongExportLyricsMode = current.LyricsMode;
 			return new ValueTask();
