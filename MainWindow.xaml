@@ -58,7 +58,7 @@
                 Text="Engine"
                 ToolTip="音素・かな変換をするトークソフトを選びます。&#xA;最初は NodoAme 標準エンジンです。&#xA;「⚠」のつくトークソフトは制限があります。"
                 Width="150"
-                Margin="10,10,10,0"
+                Margin="10,10,0,0"
                 FontSize="16.0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
@@ -69,14 +69,14 @@
                 SelectedIndex="{Binding TalkSoftSelected}" />
       <TextBlock x:Name="VoiceTextbox"
                  Text="Voice:"
-                 Margin="10,10,10,0"
+                 Margin="5,10,5,0"
                  FontSize="16.0"
                  VerticalAlignment="Center" />
       <ComboBox x:Name="PreviewVoiceComboBox"
                 Text="Voice"
                 ToolTip="しゃべらせるお手本になる、トークのボイスを選びます。"
                 Width="150"
-                Margin="10,10,10,0"
+                Margin="0,10,0,0"
                 FontSize="16.0"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -89,7 +89,7 @@
                 Text="VoiceStyle"
                 ToolTip="ボイスの感情・スタイル・声質プリセットを選びます"
                 Width="100"
-                Margin="10,10,10,0"
+                Margin="3,10,0,0"
                 FontSize="16.0"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -106,7 +106,7 @@
                 Text="ExportCast"
                 ToolTip="喋らせるソングキャストを選びます&#xA;「⚠」のついたキャストはまだ上手くしゃべれません。"
                 Width="Auto"
-                Margin="10,10,10,0"
+                Margin="0,10,0,0"
                 FontSize="16.0"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -125,6 +125,16 @@
           </DataTemplate>
         </ComboBox.ItemTemplate>
       </ComboBox>
+      <ComboBox x:Name="exportLyricesMode"
+          Width="Auto"
+          ToolTip="歌詞の出力方法を選びます。&#xA;CeVIO AIは「PHONEME」（音素）、CeVIO CSは「KANA」（ひらがな）がベストです。"
+          Margin="3,10,0,0"
+          FontSize="12.5"
+          VerticalAlignment="Top"
+          HorizontalAlignment="Left"
+          ItemsSource="{Binding ExportLyricsModeList}"
+          SelectedItem="{Binding SongExportLyricsMode}"
+          />
     </WrapPanel>
     <!-- talk soft parameters -->
     <Expander x:Name="parameters"
@@ -408,62 +418,83 @@
                     VerticalAlignment="Top"
                     Margin="10,0,0,0">
             <WrapPanel fw:PointerTracker.Enabled="True">
-              <ComboBox x:Name="exportLyricesMode"
-                        Margin="10"
-                        Padding="5"
-                        ItemsSource="{Binding ExportLyricsModeList}"
-                        SelectedItem="{Binding SongExportLyricsMode}"
-                        />
-              <StackPanel Orientation="Horizontal">
-                <Button x:Name="selectSavePath"
-                        Content="保存先選択"
-                        Margin="10"
-                        Padding="5"
-                        Style="{StaticResource ButtonRevealStyle}"
-                        Command="{Binding SelectExportDirectory}" />
-                <TextBox Text="{Binding PathToSaveDirectory}"
-                         Width="300"
-                         VerticalAlignment="Center"
-                         IsReadOnly="true"
-                         Margin="5" />
-              </StackPanel>
-              <CheckBox Content="保存時自動でCeVIOを開く"
+
+              <!-- ///////////////// Export trac file save option /////////////// -->
+              <Border 
+                BorderBrush="{DynamicResource SystemBaseMediumLowColorBrush}"
+                BorderThickness="1"
+                Margin="10,5,0,0"
+                CornerRadius="5" >
+                <WrapPanel Orientation="Horizontal">
+                  <Button x:Name="selectSavePath"
+                          Content="保存先選択"
+                          Margin="10"
+                          Padding="5"
+                          Style="{StaticResource ButtonRevealStyle}"
+                          Command="{Binding SelectExportDirectory}" />
+                  <TextBox Text="{Binding PathToSaveDirectory}"
+                          Width="300"
+                          VerticalAlignment="Center"
+                          IsReadOnly="true"
+                          Margin="5" />
+                  <CheckBox Content="保存時自動でCeVIOを開く"
                         IsChecked="{Binding IsOpenCeVIOWhenExport}"
                         Margin="10,0,10,0" />
-              <WrapPanel Orientation="Horizontal">
-                <CheckBox Content="セリフをテキストファイルに保存"
-                        IsChecked="{Binding IsExportSerifText}"
-                        IsEnabled="true"
-                        Margin="10,0,10,0" />
-                <Button x:Name="selectExportSerifTextPath"
-                        Content="セリフ保存先選択"
-                        Margin="10"
-                        Padding="5"
-                        IsEnabled="{Binding IsExportSerifText}"
-                        Style="{StaticResource ButtonRevealStyle}"
-                        Command="{Binding SelectExportSerifTextDir}" />
-                <TextBox Text="{Binding PathToExportSerifTextDir}"
-                         Width="300"
-                         VerticalAlignment="Center"
-                         IsEnabled="{Binding IsExportSerifText}"
-                         IsReadOnly="true"
-                         Margin="5" />
-                <Expander x:Name="exportSerifTextOptions"
-                    Header="セリフ保存オプション"
-                    ExpandDirection="Down"
-                    IsExpanded="False"
-                    IsEnabled="{Binding IsExportSerifText}"
-                    VerticalAlignment="Top"
-                    Margin="10,0,0,0">
-                  <TextBox x:Name="exportSerifTextFileName"
-                          Text="{Binding DefaultExportSerifTextFileName}"
+                </WrapPanel>
+              </Border>
+
+              <!-- ///////////////// Export serif file save option ///////////////// -->
+              <Border 
+                BorderBrush="{DynamicResource SystemBaseMediumLowColorBrush}"
+                BorderThickness="1"
+                Margin="10,5,0,0"
+                CornerRadius="5" >
+                <WrapPanel Orientation="Horizontal">
+                  <CheckBox Content="セリフをテキストファイルに保存"
+                          IsChecked="{Binding IsExportSerifText}"
+                          IsEnabled="true"
+                          Margin="10,0,10,0" />
+                  <Button x:Name="selectExportSerifTextPath"
+                          Content="セリフ保存先選択"
+                          Margin="10"
+                          Padding="5"
+                          IsEnabled="{Binding IsExportSerifText}"
+                          Style="{StaticResource ButtonRevealStyle}"
+                          Command="{Binding SelectExportSerifTextDir}" />
+                  <TextBox Text="{Binding PathToExportSerifTextDir}"
                           Width="300"
                           VerticalAlignment="Center"
                           IsEnabled="{Binding IsExportSerifText}"
-                          IsReadOnly="false"
+                          IsReadOnly="true"
                           Margin="5" />
-                </Expander>
-              </WrapPanel>
+                  <Expander x:Name="exportSerifTextOptions"
+                      Header="セリフ保存オプション"
+                      ExpandDirection="Down"
+                      IsExpanded="False"
+                      IsEnabled="{Binding IsExportSerifText}"
+                      VerticalAlignment="Top"
+                      Margin="10,0,0,0">
+                    <WrapPanel>
+                      <TextBlock x:Name="serifFileNameTextBox"
+                                Text="ファイル名:"
+                                Margin="5,0,5,0"
+                                FontSize="12.5"
+                                VerticalAlignment="Center" />
+                      <TextBox x:Name="exportSerifTextFileName"
+                                Text="{Binding DefaultExportSerifTextFileName}"
+                                ToolTip="ファイル名を変更できます。&#xA;「$キャスト名$」「$日付$」「$セリフ$」「$トラック名$」の文字列の置き換えに対応してます。"
+                                Width="300"
+                                VerticalAlignment="Center"
+                                IsEnabled="{Binding IsExportSerifText}"
+                                IsReadOnly="false"
+                                Margin="5" />
+                    </WrapPanel>
+                  </Expander>  
+                </WrapPanel>
+              </Border>
+
+              <!-- ///////////////// Other save options ///////////////// -->
+              
               <CheckBox Content="Export with .lab file."
                         IsChecked="false"
                         IsEnabled="false"
@@ -478,6 +509,7 @@
                         Padding="5"
                         Style="{StaticResource ButtonRevealStyle}"
                         Command="{Binding ExportSusuru}" />
+              
             </WrapPanel>
           </Expander>
           <Expander x:Name="otherOptions"
