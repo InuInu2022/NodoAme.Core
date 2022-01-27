@@ -197,7 +197,7 @@
 		},
 		{
 			"id":"3",
-			"name":"⚠VOICEVOX",
+			"name":"VOICEVOX",
 			"hidden":false,
 			"enabledPreview":true,
 			"enabledExport":true,
