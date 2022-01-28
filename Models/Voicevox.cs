@@ -360,6 +360,7 @@ namespace NodoAme.Models
 
 		private void SetEngineParams(AudioQueryResponse? jsonBody)
 		{
+			if(jsonBody is null)return;
 			//set engine params option
 			jsonBody.IntonationScale = this.IntonationScale;
 			jsonBody.PitchScale = this.PitchScale;
