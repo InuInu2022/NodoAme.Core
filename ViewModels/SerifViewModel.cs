@@ -28,6 +28,8 @@ namespace NodoAme.ViewModels
 
 		public Command ExportPreviewWav { get; set; }
 		public Command CheckEnterAndAddRow { get; private set; }
+		private string? LastSourceText { get; set; }
+		private SongCast? LastCast { get; set; }
 
 		public SerifViewModel()
 		{
@@ -92,6 +94,9 @@ namespace NodoAme.ViewModels
 		private async ValueTask SourceTextChangedAsync(string sourceText)
 		{
 			if (sourceText?.Length == 0) return; //false;new ValueTask();    //抜ける
+			if(this.LastSourceText == sourceText
+			&& this.LastCast != ParentVM!.ExportCastItems[ParentVM.ExportCastSelected]) {return;  } //同じ文字列なら処理を抜ける
+			this.LastSourceText = sourceText;
 			this.ConvertedText = await ParentVM!.ConvertFromListAsync(sourceText);
 			//var s = ConvertFromList(sourceText);
 			//if(IsTalkSoftComboEnabled)InitVoices();
