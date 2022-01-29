@@ -52,7 +52,9 @@ namespace NodoAme.ViewModels
 					this.SourceText,
 					cast.Id,
 					alpha,
-					isTrack: true);
+					isTrack: true,
+					cast: cast
+				);
 				EnabledExport = true;
 				ExportProgress = Visibility.Collapsed;
 			});

@@ -792,7 +792,8 @@ namespace NodoAme.ViewModels
 			string serifText,
 			string castId,
 			double alpha,
-			bool isTrack = false
+			bool isTrack = false,
+			SongCast cast = null
 		)
 		{
 			this.talkEngine = await GenerateWrapper(
@@ -810,7 +811,8 @@ namespace NodoAme.ViewModels
 				isTrack,
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory,
-				SongExportLyricsMode
+				SongExportLyricsMode,
+				cast
 				);
 			
 			if(IsExportSerifText){

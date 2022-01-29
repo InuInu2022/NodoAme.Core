@@ -12,14 +12,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
+
 using Microsoft.Win32;
+
 using NAudio.Wave;
-using SharpOpenJTalk;
-using NodoAme.Models;
+
 using NLog;
+
+using NodoAme.Models;
+
+using SharpOpenJTalk;
+
 using WanaKanaNet;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace NodoAme
 {
@@ -124,6 +128,18 @@ namespace NodoAme
 		public const string CEVIO = "CeVIO";
 		public const string OPENJTALK = "OpenJTalk";
 		public const string VOICEVOX = "VOICEVOX";
+	}
+
+
+	/// <summary>
+	/// トークソフト名称（詳細）列挙
+	/// </summary>
+	public static class TalkSoftName{
+		public const string CEVIO_AI = "CeVIO AI";
+		public const string CEVIO_CS = "CeVIO CS";
+		public const string VOICEVOX = TalkEngine.VOICEVOX;
+		public const string OPENJTALK = TalkEngine.OPENJTALK;
+		public const string COEIROINK = "COEIROINK";
 	}
 
 	;
@@ -731,7 +747,8 @@ namespace NodoAme
 			bool isExportAsTrack = true,
 			bool isOpenCeVIO = false,
 			string exportPath = "",
-			ExportLyricsMode exportMode = ExportLyricsMode.KANA
+			ExportLyricsMode exportMode = ExportLyricsMode.KANA,
+			SongCast? cast = null
 		)
 		{
 			if (this.engine is null)
@@ -1105,6 +1122,9 @@ namespace NodoAme
 			groupNode.SetAttributeValue("Name", serifText);
 			groupNode.SetAttributeValue("Id", guid);
 			groupNode.SetAttributeValue("CastId", CastToExport);
+			if(!(cast is null) && cast.SongSoft == TalkSoftName.CEVIO_CS){
+				groupNode.SetAttributeValue("Volume", 10);
+			}
 
 			sw.Stop();
 			Debug.WriteLine($"TIME[end genarate xml]:{sw.ElapsedMilliseconds}");
