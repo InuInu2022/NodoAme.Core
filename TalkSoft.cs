@@ -872,7 +872,7 @@ namespace NodoAme
 								var add = t switch
 								{
 									1 => first,
-									_ => first + first * 1 / 5 * t
+									_ => first + (first * 1 / 5 * t)
 								};
 								timingNode
 									.Add(new XElement(
@@ -881,7 +881,14 @@ namespace NodoAme
 									));
 								Debug.WriteLine($"add:{add}");
 							}
-							//}
+							
+							//最後の処理
+							if(i+1 == nList.Count){
+								var lastTimingData = new XElement("Data",
+									NOTE_OFFSET + ph.EndTime
+								);
+								timingNode.Add(lastTimingData);
+							}
 						}
 						pauCount++;
 						phText = phText.TrimEnd(",".ToCharArray());
