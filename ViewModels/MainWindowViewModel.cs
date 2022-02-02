@@ -761,19 +761,6 @@ namespace NodoAme.ViewModels
 			MainWindow.Logger.Info("InitVoiceStyles finished.");
 		}
 
-		private async ValueTask PreviewTalkAsync()
-		{
-
-			this.talkEngine = await GenerateWrapper(
-				this.currentEngine,
-				_talksofts.ElementAt(TalkSoftSelected),
-				_voices.ElementAt(TalkVoiceSelected)
-			);
-
-			await talkEngine.Speak(this.SourceText);
-
-		}
-
 		public async ValueTask PreviewTalkFromList(string serifText)
 		{
 			this.talkEngine = await GenerateWrapper(
@@ -890,27 +877,6 @@ namespace NodoAme.ViewModels
 				return this.talkEngine;
 			}
 
-		}
-
-
-		private async ValueTask ConvertToAsync(RoutedEventArgs eventArgs)
-		{
-			this.talkEngine = await GenerateWrapper(
-				this.currentEngine,
-				_talksofts.ElementAt(TalkSoftSelected),
-				_voices.ElementAt(TalkVoiceSelected)
-			);
-
-			//converted text show
-			ConvertedText = await PhenomeConverter.ConvertAsync(
-				talkEngine: talkEngine,
-				sourceText: this.SourceText,
-				isUseSeparaterSpace: IsUseSeparaterSpace,
-				isCheckJapaneseSyllabicNasal: IsCheckJapaneseSyllabicNasal,
-				isCheckJapaneseNasalSonantGa: IsCheckJananeseNasalGa,
-				vowelOption: VowelOption,
-				isDebugOutput: false
-			);
 		}
 
 		public async ValueTask<string> ConvertFromListAsync(string sourceText)
