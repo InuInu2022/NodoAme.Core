@@ -101,6 +101,8 @@ namespace NodoAme.ViewModels
 		public bool IsExportSerifText { get; set; }
 		public string PathToExportSerifTextDir { get; set; }
 		public string DefaultExportSerifTextFileName { get; set; }
+		public Pile<System.Windows.Controls.TextBox> SerifTextFileNamePile { get; set; }
+		public int TextPointOfInsertMetatextToFileName { get; set; }
 
 		#endregion
 
@@ -134,7 +136,11 @@ namespace NodoAme.ViewModels
 
 		public Command SelectExportSerifTextDir { get; set; }
 
+		public Command InsertMetaTextToSerifTextFileName { get; set; }
+
 		public Command ExportSusuru { get; set; }
+
+		
 
 		//---------------------------------------------------
 		#endregion
@@ -242,11 +248,16 @@ namespace NodoAme.ViewModels
 			SelectExportSerifTextDir = CommandFactory
 				.Create<RoutedEventArgs>(OpenSelectExportSerifTextDirDialog);
 
+			InsertMetaTextToSerifTextFileName = CommandFactory
+				.Create<string>(InsertMetaText);
+
+			SerifTextFileNamePile = PileFactory.Create<System.Windows.Controls.TextBox>();
+
 			this.ExportSusuru = CommandFactory.Create<RoutedEventArgs>(ExportSusuruTrack());
 
 		}
 
-		
+
 
 		private void LoadUserSettings()
 		{
@@ -361,6 +372,30 @@ namespace NodoAme.ViewModels
 			var __ = UserSettings.SaveAsync();
 
 			return new ValueTask();
+		}
+
+		private async ValueTask InsertMetaText(string buttonName)
+		{
+
+			var meta = buttonName switch
+			{
+				"insertCastName" => MetaTexts.CASTNAME,
+				"insertDate" => MetaTexts.DATE,
+				"insertSerif" => MetaTexts.SERIF,
+				"insertTracName" => MetaTexts.TRACKNAME,
+				_ => ""
+			};
+
+			if(buttonName=="insertReset"){
+				DefaultExportSerifTextFileName = UserSettings.SERIF_FILE_NAME;
+				return;
+			}
+
+			var index = await SerifTextFileNamePile.RentAsync(async box => await Task.Run(() => box.SelectionStart));
+
+			DefaultExportSerifTextFileName =
+				DefaultExportSerifTextFileName
+					.Insert(index, meta);
 		}
 
 		private string GetWindowTitle(){
@@ -780,7 +815,7 @@ namespace NodoAme.ViewModels
 			string castId,
 			double alpha,
 			bool isTrack = false,
-			SongCast cast = null
+			SongCast songCast = null
 		)
 		{
 			this.talkEngine = await GenerateWrapper(
@@ -799,14 +834,15 @@ namespace NodoAme.ViewModels
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory,
 				SongExportLyricsMode,
-				cast
+				songCast
 				);
 			
 			if(IsExportSerifText){
 				await talkEngine.ExportSerifTextFileAsync(
 					serifText,
 					PathToExportSerifTextDir,
-					DefaultExportSerifTextFileName
+					DefaultExportSerifTextFileName,
+					songCast.Name
 				);
 			}
 
@@ -911,6 +947,7 @@ namespace NodoAme.ViewModels
 		
 		[PropertyChanged(nameof(DefaultExportSerifTextFileName))]
 		private async ValueTask DefaultExportSerifTextFileNameChangedAsync(string value){
+			if(string.IsNullOrEmpty(value))value = UserSettings.SERIF_FILE_NAME;
 			UserSettings.DefaultExportSerifTextFileName = value;
 			await UserSettings.SaveAsync();
 		}

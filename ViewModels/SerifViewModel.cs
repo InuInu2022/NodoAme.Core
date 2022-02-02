@@ -55,7 +55,7 @@ namespace NodoAme.ViewModels
 					cast.Id,
 					alpha,
 					isTrack: true,
-					cast: cast
+					songCast: cast
 				);
 				EnabledExport = true;
 				ExportProgress = Visibility.Collapsed;

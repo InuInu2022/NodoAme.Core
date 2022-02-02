@@ -24,7 +24,9 @@ namespace NodoAme.Models
 		#region export_serif_text_options
 		public bool IsExportSerifText { get; set; } = false;
 		public string PathToExportSerifTextDir { get; set; } = "./out/";
-		public string DefaultExportSerifTextFileName { get; set; } = "$セリフ$.txt";
+		public string DefaultExportSerifTextFileName { get; set; } = SERIF_FILE_NAME;
+		
+		public const string SERIF_FILE_NAME = "$セリフ$.txt";
 		#endregion export_serif_text_options
 
 		public bool IsUseSeparaterSpace { get; set; } = true;

@@ -153,7 +153,8 @@ namespace NodoAme
 	/// <summary>
 	/// トークエンジンラッパー
 	/// </summary>
-	public class Wrapper{
+	public class Wrapper
+	{
 		private const double NOTE_OFFSET = 1.6;
 		/// <summary>
 		/// 1小節開始目のindex値。LogF0/C0など。
@@ -162,6 +163,7 @@ namespace NodoAme
 		private const double INDEX_SPAN_TIME = 0.005;
 		private const int SEC_RATE = 10000000;
 		private const int SAMPLE_RATE = 48000;
+
 		//private const string TalkEngine.CEVIO = "CeVIO";
 		//private const string TalkEngine.OPENJTALK = "OpenJTalk";
 		private string CastToExport = "CSNV-JPF-THR1";
@@ -1446,17 +1448,19 @@ namespace NodoAme
 		public async ValueTask<bool> ExportSerifTextFileAsync(
 			string serifText,
 			string exportPath,
-			string fileNamePattern
+			string fileNamePattern,
+			string SongCastName
 		){
 			var safeName = GetSafeFileName(serifText);
 			var outDirPath = exportPath;
 
+			fileNamePattern = string.IsNullOrEmpty(fileNamePattern) ? UserSettings.SERIF_FILE_NAME : fileNamePattern;
 			var outFile = fileNamePattern;
-			outFile = FileNameReplace(outFile, "$セリフ$", safeName);
-			outFile = FileNameReplace(outFile, "$キャスト名$", TalkVoice?.Name ?? "ANY");
-			outFile = FileNameReplace(outFile, "$日付$", DateTime.Now.ToLocalTime().ToString("yyyymmdd"));
+			outFile = FileNameReplace(outFile, MetaTexts.SERIF, safeName);
+			outFile = FileNameReplace(outFile, MetaTexts.CASTNAME, SongCastName ?? "ANY");
+			outFile = FileNameReplace(outFile, MetaTexts.DATE, DateTime.Now.ToLocalTime().ToString("yyyymmdd"));
 			//TODO:outFile = FileNameReplace(outFile, "$連番$", "$連番$");
-			outFile = FileNameReplace(outFile, "$トラック名$", safeName);
+			outFile = FileNameReplace(outFile, MetaTexts.TRACKNAME, safeName);
 
 			if(!Directory.Exists(outDirPath)){
 				try

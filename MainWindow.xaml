@@ -473,6 +473,7 @@
                           VerticalAlignment="Center"
                           IsEnabled="{Binding IsExportSerifText}"
                           IsReadOnly="true"
+                          HorizontalContentAlignment="Right"
                           Margin="5" />
                   <Expander x:Name="exportSerifTextOptions"
                       Header="セリフ保存オプション"
@@ -495,34 +496,50 @@
                                 VerticalAlignment="Center"
                                 IsEnabled="{Binding IsExportSerifText}"
                                 IsReadOnly="false"
-                                Margin="5" />
+                                epoxy:Anchor.Pile="{Binding SerifTextFileNamePile}"
+                                Margin="5" 
+                                />
                       <Button x:Name="insertCastName"
                                 Content="キャスト名"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
-                                IsEnabled="false"
+                                Command="{Binding InsertMetaTextToSerifTextFileName}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
                                 />
                       <Button x:Name="insertDate"
                                 Content="日付"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
-                                IsEnabled="false"
+                                Command="{Binding InsertMetaTextToSerifTextFileName}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
                                 />
                       <Button x:Name="insertSerif"
                                 Content="セリフ"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
-                                IsEnabled="false"
+                                Command="{Binding InsertMetaTextToSerifTextFileName}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
                                 />
                       <Button x:Name="insertTracName"
                                 Content="トラック名"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
-                                IsEnabled="false"
+                                Command="{Binding InsertMetaTextToSerifTextFileName}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
+                                />
+                      <Button x:Name="insertReset"
+                                Content=""
+                                ToolTip="リセット"
+                                Margin="5,10"
+                                Padding="5"
+                                FontFamily="Segoe MDL2 Assets"
+                                Style="{StaticResource ButtonRevealStyle}"
+                                Command="{Binding InsertMetaTextToSerifTextFileName}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
                                 />
                     </WrapPanel>
                   </Expander>  
