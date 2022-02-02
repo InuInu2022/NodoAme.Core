@@ -88,7 +88,7 @@ namespace NodoAme.ViewModels
 		public VowelOptions VowelOption { get; set; } = VowelOptions.DoNothing;
 		public bool IsCheckJapaneseRemoveNonSoundVowel { get; set; } = false;
 		public bool IsCheckJapaneseSmallVowel { get; set; } = false;
-		public int DefaultSerifLines { get; private set; }
+		public int DefaultSerifLines { get; set; }
 
 		public string PathToSaveDirectory { get; set; }
 
@@ -175,7 +175,7 @@ namespace NodoAme.ViewModels
 			this.Serifs
 				.Add(new SerifViewModel { ParentVM = this, SourceText = "ほげほげふがふが日本語English" });
 			int lines = DefaultSerifLines - 2;
-			if(lines<2)lines = 2;	//check
+			if(lines<1)lines = 1;	//check
 			for (var i = 0; i < lines; i++)
 			{
 				this.Serifs
@@ -931,6 +931,12 @@ namespace NodoAme.ViewModels
 				vowelOption: VowelOption,
 				isDebugOutput: false
 			);
+		}
+
+		[PropertyChanged(nameof(DefaultSerifLines))]
+		private async ValueTask DefaultSerifLinesChangedAsync(int value){
+			UserSettings.DefaultSerifLines = value;
+			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(SongExportLyricsMode))]

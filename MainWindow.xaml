@@ -369,6 +369,18 @@
                       Content="スペース区切り"
                       Margin="10,0,10,0"
                       IsChecked="{Binding IsUseSeparaterSpace}" />
+            <StackPanel Orientation="Horizontal">
+              <Label Content="表示行数" Margin="10,5,5,0" />
+              <ui:NumberBox Width="65"
+                          FontSize="11"
+                          Minimum="2"
+                          SmallChange="1"
+                          Margin="10,0"
+                          Value="{Binding DefaultSerifLines}" />
+              <Label Content="⚠"
+                      Margin="5,5,5,0" 
+                      ToolTip="反映には再起動が必要です。"/>
+            </StackPanel>
           </WrapPanel>
           <Expander x:Name="phonemeOptions"
                     Header="音素"
@@ -411,6 +423,8 @@
                              Content="無声母音を削除"
                              ToolTip="無声母音「U」「I」を削除（脱落）します。" />
               </ui:RadioButtons>
+              
+              
             </WrapPanel>
           </Expander>
           <Expander x:Name="saveOptions"
