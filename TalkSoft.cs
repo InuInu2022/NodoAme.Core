@@ -920,14 +920,7 @@ namespace NodoAme
 						//CS対策：CSは有効な文字種の歌詞でないとちゃんと発音しない（音素指定でも）
 						if (exportMode == ExportLyricsMode.KANA)
 						{
-							var kanaOption = new WanaKanaOptions
-							{
-								CustomKanaMapping = new Dictionary<string, string>()
-								{
-									{"cl","っ"}
-								}
-							};
-							lyricText = WanaKana.ToHiragana(lyricText, kanaOption);
+							lyricText = PhonemeConverter.ConvertToKana(lyricText);
 						}
 						Debug.WriteLine($"lyric: {lyricText}");
 

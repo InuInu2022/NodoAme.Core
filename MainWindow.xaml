@@ -366,8 +366,9 @@
                            IsChecked="{Binding IsConvertToPhoneme}" />
               <RadioButton x:Name="RadioOptionShowHiragana"
                            Content="ひらがな"
-                           ToolTip="【未実装】実際の発音の「ひらがな」に変換します。&#xA;例：「こんにちは」→「こんにちわ」"
-                           IsEnabled="false" />
+                           ToolTip="実際の発音の「ひらがな」に変換します。&#xA;例：「こんにちは」→「こんにちわ」"
+                           IsEnabled="true" 
+                           IsChecked="{Binding IsConvertToHiragana}" />
             </ui:RadioButtons>
             <CheckBox x:Name="Spacing"
                       Content="スペース区切り"

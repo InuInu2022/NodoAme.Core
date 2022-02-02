@@ -922,14 +922,15 @@ namespace NodoAme.ViewModels
 				_talksofts.ElementAt(TalkSoftSelected),
 				_voices.ElementAt(TalkVoiceSelected)
 			);
-			return await PhenomeConverter.ConvertAsync(
+			return await PhonemeConverter.ConvertAsync(
 				talkEngine: talkEngine,
 				sourceText: sourceText,
 				isUseSeparaterSpace: IsUseSeparaterSpace,
 				isCheckJapaneseSyllabicNasal: IsCheckJapaneseSyllabicNasal,
 				isCheckJapaneseNasalSonantGa: IsCheckJananeseNasalGa,
 				vowelOption: VowelOption,
-				isDebugOutput: false
+				isDebugOutput: false,
+				isConvertToHiragana: IsConvertToHiragana
 			);
 		}
 
@@ -1010,9 +1011,9 @@ namespace NodoAme.ViewModels
 		[PropertyChanged(nameof(IsUseSeparaterSpace))]
 		private ValueTask IsUseSeparaterSpaceChangedAsync(bool useSpace)
 		{
-			if (PhenomeConverter.CurrentPhonemes != null)
+			if (PhonemeConverter.CurrentPhonemes != null)
 			{
-				ConvertedText = PhenomeConverter.ChangeSeparater(useSpace);
+				ConvertedText = PhonemeConverter.ChangeSeparater(useSpace);
 			}
 			if(!(UserSettings is null)){
 				UserSettings.IsUseSeparaterSpace = useSpace;

@@ -1,14 +1,13 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using WanaKanaNet;
+using System.Linq;
 
 namespace NodoAme
 {
-    public static class PhenomeConverter
+	public static class PhonemeConverter
     {
 		private const int PREV_PHENOME_IDY = 1;
 		private const int CURRENT_PHENOME_IDY = 2;
@@ -34,8 +33,10 @@ namespace NodoAme
 		    bool isCheckJapaneseSyllabicNasal = false,
 			bool isCheckJapaneseNasalSonantGa = false,
 			Models.VowelOptions vowelOption = Models.VowelOptions.DoNothing,
-		    bool isDebugOutput = false
-        ){
+		    bool isDebugOutput = false,
+			bool isConvertToHiragana = false
+		)
+		{
 			if (Regex.IsMatch(sourceText, @"^\s+")) {
 				return ""; 
 			};
@@ -64,7 +65,7 @@ namespace NodoAme
 						if (isCheckJapaneseSyllabicNasal)
 						{
 							//phenome += PhenomeConverter.CheckJapaneseSyllabicNasal(phenoms);
-                            pList.Add(PhenomeConverter.CheckJapaneseSyllabicNasal(phenoms));
+                            pList.Add(PhonemeConverter.CheckJapaneseSyllabicNasal(phenoms));
 						}
 						else
 						{
@@ -82,7 +83,7 @@ namespace NodoAme
                         phenome += " ";
                         */
                         if(isCheckJapaneseNasalSonantGa){
-                            pList.Add(PhenomeConverter.CheckJapaneseNasalSonantGa(phenoms));
+                            pList.Add(PhonemeConverter.CheckJapaneseNasalSonantGa(phenoms));
                         }else{
                             pList.Add(p3);
                         }
@@ -112,7 +113,26 @@ namespace NodoAme
 
 			CurrentPhonemes = pList;
 
-			return ChangeSeparater(isUseSeparaterSpace);
+			return isConvertToHiragana switch
+			{
+				true => ChangeSeparater(
+							ConvertToKana(string.Concat(CurrentPhonemes)),
+							isUseSeparaterSpace
+						),
+				false => ChangeSeparater(isUseSeparaterSpace)
+			};
+		}
+
+		public static string ConvertToKana(string phonemes)
+		{
+			var kanaOption = new WanaKanaOptions
+			{
+				CustomKanaMapping = new Dictionary<string, string>()
+					{
+						{"cl","っ"}
+					}
+			};
+			return WanaKana.ToHiragana(phonemes, kanaOption);
 		}
 
 		private static string[] GetPhonemeFromContextLabel(string label){
@@ -131,6 +151,21 @@ namespace NodoAme
 			else
 			{
 				return String.Concat(CurrentPhonemes);
+			}
+		}
+		public static string ChangeSeparater(
+			string baseText,
+			bool isUseSeparaterSpace
+		){
+			if (isUseSeparaterSpace)
+			{
+				//return String.Join(" ", CurrentPhonemes);
+				var s = baseText.ToCharArray().Select(c => new string(c,1)).ToArray();
+				return string.Join(" ", s);
+			}
+			else
+			{
+				return baseText;
 			}
 		}
 
