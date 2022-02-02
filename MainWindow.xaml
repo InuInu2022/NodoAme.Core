@@ -167,16 +167,20 @@
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
                        FontSize="11" />
-                <ui:NumberBox Width="65"
+                <ui:NumberBox Width="95"
                               FontSize="11"
+                              SmallChange="{Binding SmallChange}"
+                              SpinButtonPlacementMode="Compact"
+                              ValidationMode="InvalidInputOverwritten"
                               Value="{Binding Value, ElementName=slider}" />
                 <Slider x:Name="slider"
-                        Width="190"
+                        Width="160"
                         Margin="10,0"
                         Minimum="{Binding Min}"
                         Maximum="{Binding Max}"
-                        TickFrequency="0.1"
-                        SmallChange="1"
+                        IsSnapToTickEnabled="True"
+                        TickFrequency="{Binding SmallChange}"
+                        SmallChange="{Binding SmallChange}"
                         Value="{Binding Value}" />
               </StackPanel>
             </DataTemplate>
@@ -371,11 +375,13 @@
                       IsChecked="{Binding IsUseSeparaterSpace}" />
             <StackPanel Orientation="Horizontal">
               <Label Content="表示行数" Margin="10,5,5,0" />
-              <ui:NumberBox Width="65"
+              <ui:NumberBox Width="100"
                           FontSize="11"
                           Minimum="2"
                           SmallChange="1"
                           Margin="10,0"
+                          SpinButtonPlacementMode="Compact"
+                          ValidationMode="InvalidInputOverwritten"
                           Value="{Binding DefaultSerifLines}" />
               <Label Content="⚠"
                       Margin="5,5,5,0" 

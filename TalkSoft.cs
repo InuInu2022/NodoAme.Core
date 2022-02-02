@@ -83,6 +83,8 @@ namespace NodoAme
 
 		[JsonPropertyName("defaultValue")]
 		public double? DefaultValue { get; set; }
+		[JsonPropertyName("smallChange")]
+		public double? SmallChange { get; set; }
 
 		public double? Value { get; set; }
 	}
