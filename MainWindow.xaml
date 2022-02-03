@@ -389,6 +389,8 @@
                       ToolTip="反映には再起動が必要です。"/>
             </StackPanel>
           </WrapPanel>
+          
+          <!-- ///////////////////////////note option////////////////////////// -->
           <Expander x:Name="phonemeOptions"
                     Header="音素"
                     ToolTip="音素に関係するオプションです。"
@@ -434,6 +436,33 @@
               
             </WrapPanel>
           </Expander>
+          <!-- ///////////////////////////note option////////////////////////// -->
+          <Expander x:Name="noteOptions"
+                    Header="楽譜"
+                    ToolTip="出力する楽譜情報に関係するオプションです。"
+                    ExpandDirection="Down"
+                    IsExpanded="false"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch"
+                    Margin="10,0,0,0">
+            <WrapPanel fw:PointerTracker.Enabled="True">
+              <Label Content="Note pitch:"
+                     Margin="10,10,5,0" 
+                     VerticalAlignment="Center"
+                     />
+              <ComboBox x:Name="noteAdaptingPitchMode"
+                        Width="Auto"
+                        ToolTip="【⚠実験機能】出力するノートの音程への合わせ方を選択します。&#xA;「FIXED」は固定(G4)、「AVERAGE」は平均、「MEDIAN」は中央値の音程のノートが出力されます。"
+                        Margin="3,10,0,0"
+                        FontSize="12.5"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding NoteAdaptModeList}"
+                        SelectedItem="{Binding AdaptingNoteToPitchMode}"
+                        />
+            </WrapPanel>
+          </Expander>
+          <!-- ///////////////////////////save option////////////////////////// -->
           <Expander x:Name="saveOptions"
                     Header="保存"
                     ExpandDirection="Down"

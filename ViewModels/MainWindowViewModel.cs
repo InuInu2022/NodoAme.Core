@@ -104,6 +104,10 @@ namespace NodoAme.ViewModels
 		public Pile<System.Windows.Controls.TextBox> SerifTextFileNamePile { get; set; }
 		public int TextPointOfInsertMetatextToFileName { get; set; }
 
+		public NoteAdaptMode AdaptingNoteToPitchMode { get; set; }
+		public IEnumerable<NoteAdaptMode> NoteAdaptModeList { get; set; }
+			= Enum.GetValues(typeof(NoteAdaptMode)).Cast<NoteAdaptMode>();
+
 		#endregion
 
 		#region commands
@@ -306,6 +310,7 @@ namespace NodoAme.ViewModels
 			PathToExportSerifTextDir = UserSettings.PathToExportSerifTextDir;
 			DefaultExportSerifTextFileName = UserSettings.DefaultExportSerifTextFileName;
 			SongExportLyricsMode = UserSettings.SongExportLyricsMode;
+			AdaptingNoteToPitchMode = UserSettings.AdaptingNoteToPitchMode;
 
 			CheckUserSettingsWhenDebug();	//実装もれのチェック
 
@@ -834,7 +839,8 @@ namespace NodoAme.ViewModels
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory,
 				SongExportLyricsMode,
-				songCast
+				songCast,
+				AdaptingNoteToPitchMode
 				);
 			
 			if(IsExportSerifText){
@@ -1022,6 +1028,12 @@ namespace NodoAme.ViewModels
 			
 			
 			return new ValueTask();
+		}
+
+		[PropertyChanged(nameof(AdaptingNoteToPitchMode))]
+		private async ValueTask IsAdaptingNoteToPitchChangedAsync(NoteAdaptMode value){
+			UserSettings.AdaptingNoteToPitchMode = value;
+			await UserSettings.SaveAsync();
 		}
 	}
 }

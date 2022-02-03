@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
-
+using MathNet.Numerics.Statistics;
 using Microsoft.Win32;
 
 using NAudio.Wave;
@@ -752,7 +752,8 @@ namespace NodoAme
 			bool isOpenCeVIO = false,
 			string exportPath = "",
 			ExportLyricsMode exportMode = ExportLyricsMode.KANA,
-			SongCast? cast = null
+			SongCast? cast = null,
+			NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED
 		)
 		{
 			if (this.engine is null)
@@ -812,6 +813,9 @@ namespace NodoAme
 
 					//TODO: .labファイル出力
 					MakeLabFile(phs);
+
+					//Estimate F0
+					WorldParameters parameters = await EstimateF0(serifText);
 
 					//Note elements
 					//TODO: csや他ソフト向けにF0を解析してnoteを割り当て、付与する
@@ -902,9 +906,10 @@ namespace NodoAme
 									));
 								Debug.WriteLine($"add:{add}");
 							}
-							
+
 							//最後の処理
-							if(i+1 == nList.Count){
+							if (i + 1 == nList.Count)
+							{
 								var lastTimingData = new XElement("Data",
 									NOTE_OFFSET + ph.EndTime
 								);
@@ -924,11 +929,29 @@ namespace NodoAme
 						}
 						Debug.WriteLine($"lyric: {lyricText}");
 
+
+						var pitches = parameters.f0.Where(d => d > 0);
+						pitches = engineType switch
+						{
+							TalkEngine.OPENJTALK =>
+								pitches.Select(p => Math.Exp(p)),
+							_ => pitches
+						};
+
+						(var octave, var step) = noteAdaptMode switch
+						{
+							NoteAdaptMode.AVERAGE =>
+								NoteUtil.FreqToPitchOctaveAndStep(pitches.Average()),
+							NoteAdaptMode.MEDIAN =>
+								NoteUtil.FreqToPitchOctaveAndStep(pitches.Median()),
+							_ => (4, 7)
+						};
+
 						//note
 						var note = new XElement("Note",
 							new XAttribute("Clock", 3840 + startClock),
-							new XAttribute("PitchStep", "7"),
-							new XAttribute("PitchOctave", "4"),
+							new XAttribute("PitchStep", step),
+							new XAttribute("PitchOctave", octave),
 							new XAttribute("Duration", noteLen),
 							new XAttribute("Lyric", lyricText),
 							new XAttribute("DoReMi", "false"),
@@ -954,27 +977,7 @@ namespace NodoAme
 					Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
 					sw.Restart();
 
-					//F0
-					WorldParameters parameters;
-					if (engineType == TalkEngine.CEVIO
-		 			|| engineType == TalkEngine.VOICEVOX)
-					{
-						//出力音声をテンポラリ出力し、WORLDで解析する
-						parameters = await EstimateAsync(serifText);
-					}
-					else if (engineType == TalkEngine.OPENJTALK)
-					{
-						//Open JTalk はf0を直接取得
-						parameters = new WorldParameters(100);
-						engine.Synthesis(serifText, false, true);
-						double[] fa = this.engine.GetLF0Array();
-						parameters.f0 = fa;
-						parameters.f0_length = fa.Length;
-					}
-					else
-					{
-						throw new NotImplementedException();
-					}
+					//LogF0 elements
 
 					//LogF0, Alpha等のルート要素を取得
 					var parameterRoot = tmplTrack
@@ -982,7 +985,6 @@ namespace NodoAme
 						.First();
 					double paramLen = GetParametersLength(serifLen);
 
-					//LogF0 elements
 					//F0をピッチ線として書き込む
 					#region write_logf0
 					var logF0Node = new XElement("LogF0",
@@ -1144,6 +1146,39 @@ namespace NodoAme
 
 		}
 
+		/// <summary>
+		/// F0を解析する
+		/// </summary>
+		/// <param name="serifText"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		private async ValueTask<WorldParameters> EstimateF0(string serifText)
+		{
+			WorldParameters parameters;
+
+			if (engineType == TalkEngine.CEVIO
+			 || engineType == TalkEngine.VOICEVOX)
+			{
+				//出力音声をテンポラリ出力し、WORLDで解析する
+				parameters = await EstimateAsync(serifText);
+			}
+			else if (engineType == TalkEngine.OPENJTALK)
+			{
+				//Open JTalk はf0を直接取得
+				parameters = new WorldParameters(100);
+				engine!.Synthesis(serifText, false, true);
+				double[] fa = this.engine.GetLF0Array();
+				parameters.f0 = fa;
+				parameters.f0_length = fa.Length;
+			}
+			else
+			{
+				throw new NotImplementedException();
+			}
+
+			return parameters;
+		}
+
 		private async ValueTask<(List<dynamic> notesList, int phNum)>
 		SplitPhonemesToNotes(
 			List<Label> phs,
@@ -1273,6 +1308,8 @@ namespace NodoAme
 			return (d+1) * TRACK_PARAM_OFFSET_INDEX;
 
 		}
+
+
 
 		private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemes(string serifText){
 			var len = 0.0;
