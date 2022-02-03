@@ -43,7 +43,7 @@ namespace NodoAme.Models
 		public bool IsOpenCeVIOWhenExport { get; set; } = true;
 		public bool IsExportAsTrac { get; set; } = true;
 
-		public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.FIXED;
+		public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
 
 		[JsonIgnore]
 		public const string UserSettingsFileName = "usersettings.json";
