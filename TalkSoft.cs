@@ -698,9 +698,6 @@ namespace NodoAme
 		{
 			var tp = this.TalkSoft.TalkSoftParams;
 
-			//TODO:Voicevox対応
-			//if(engineType==TalkEngine.VOICEVOX){return;}
-
 			//値を割当
 			foreach (var p in tp!)
 			{
@@ -753,7 +750,8 @@ namespace NodoAme
 			string exportPath = "",
 			ExportLyricsMode exportMode = ExportLyricsMode.KANA,
 			SongCast? cast = null,
-			NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED
+			NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED,
+			NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND
 		)
 		{
 			if (this.engine is null)
@@ -786,317 +784,304 @@ namespace NodoAme
 			double serifLen = 0.0;
 
 			//TODO:エンジンごとの解析部分とccst加工部分を分ける
-			//TODO:ccst加工部分の共通処理化
-			switch (engineType)
+			if (engineType == TalkEngine.CEVIO)
 			{
-				case TalkEngine.CEVIO:
-				case TalkEngine.OPENJTALK:
-				case TalkEngine.VOICEVOX:
-					if (engineType == TalkEngine.CEVIO)
-					{
-						engine.Cast = TalkVoice!.Name;
-						SetVoiceStyle();
-					}
-					else if (engineType == TalkEngine.VOICEVOX)
-					{
-						engine.Style = this.VoiceStyle;
-					}
-					SetEngineParam();
-
-					//serifLen = engine.GetTextDuration(serifText);
-					var dandp = await this.GetTextDurationAndPhonemes(serifText);
-					serifLen = dandp.duration;
-					var phs = dandp.phs;    //TODO: use this.GetLabels()
-					var labels = await GetLabelsAsync(serifText);
-
-					Debug.WriteLine($"--TIME[tmg eliminate(text duration)]:{sw.ElapsedMilliseconds}");
-
-					//TODO: .labファイル出力
-					MakeLabFile(phs);
-
-					//Estimate F0
-					WorldParameters parameters = await EstimateF0(serifText);
-
-					//Note elements
-					//TODO: csや他ソフト向けにF0を解析してnoteを割り当て、付与する
-					var scoreNodes = tmplTrack.Descendants("Score");
-					var scoreRoot = scoreNodes.First();
-
-					//声質(Alpha)指定
-					scoreRoot.SetAttributeValue("Alpha", 0.0);
-					if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
-					{
-						var alphaParam = TalkSoft
-						.TalkSoftParams
-						.First(a => a.Id == "Alpha");
-						var newAlpha = (alphaParam.Value / 100 * 2) - 1.0;
-						if (engineType == TalkEngine.OPENJTALK) newAlpha = 0;   //TODO:暫定対応
-
-						scoreRoot.SetAttributeValue("Alpha", newAlpha.ToString());
-					}
-
-					//tmplTrack.Element("Score");
-					//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
-					var duration = GetTickDuration(serifLen);
-					Debug.WriteLine($"duration :{duration}");
-
-					//split notes
-					(List<dynamic>? notesList, int phNum)
-						= await SplitPhonemesToNotes(phs, exportMode);
-
-					Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
-
-					if (notesList is null) return false;// new ValueTask<bool>(false);
-
-					///<summary>timing node root</summary>
-					var timingNode = new XElement("Timing",
-						new XAttribute("Length", (phNum * 5) + 10)
-					);
-
-					var phCount = 0;
-					var pauCount = 0;
-					foreach (List<dynamic> nList in notesList)
-					{
-						var phText = "";
-						var noteLen = 0;
-						var startClock = Double.MaxValue;
-						var startPhonemeTime = Double.MaxValue;
-
-
-						for (int i = 0; i < nList.Count; i++)
-						{
-							var ph = nList[i];
-							var start = ph.StartTime;
-							if (startPhonemeTime > start)
-							{
-								//最初の音素の開始時刻を指定
-								startClock = Math.Round(GetTickDuration(start));
-								startPhonemeTime = start;
-							}
-							phText += ph.Phoneme.ToLower() + ",";   //TODO:「ん」対応
-							noteLen += GetTickDuration(ph.EndTime - ph.StartTime);
-
-
-							//timing elements
-							phCount++;
-							var count = (5 * (phCount + pauCount)) - 1;
-							var timingData = new XElement("Data",
-								new XAttribute("Index", count.ToString()),
-								NOTE_OFFSET + start
-							);
-							timingNode.Add(timingData);
-
-							//途中の青線も指定しないと消えてしまう
-							//単純分割だとCSでちゃんと聞こえない
-
-							var spanTime = ph.EndTime - start;
-
-							foreach (int t in Enumerable.Range(1, 4))
-							{
-								var first = spanTime / 2;
-								var add = t switch
-								{
-									1 => first,
-									_ => first + (first * 1 / 5 * t)
-								};
-								timingNode
-									.Add(new XElement(
-										"Data",
-										NOTE_OFFSET + start + add
-									));
-								Debug.WriteLine($"add:{add}");
-							}
-
-							//最後の処理
-							if (i + 1 == nList.Count)
-							{
-								var lastTimingData = new XElement("Data",
-									NOTE_OFFSET + ph.EndTime
-								);
-								timingNode.Add(lastTimingData);
-							}
-						}
-						pauCount++;
-						phText = phText.TrimEnd(",".ToCharArray());
-						Debug.WriteLine($"phText :{phText}");
-
-						var lyricText = phText.Replace(",", "");
-
-						//CS対策：CSは有効な文字種の歌詞でないとちゃんと発音しない（音素指定でも）
-						if (exportMode == ExportLyricsMode.KANA)
-						{
-							lyricText = PhonemeConverter.ConvertToKana(lyricText);
-						}
-						Debug.WriteLine($"lyric: {lyricText}");
-
-
-						var pitches = parameters.f0.Where(d => d > 0);
-						pitches = engineType switch
-						{
-							TalkEngine.OPENJTALK =>
-								pitches.Select(p => Math.Exp(p)),
-							_ => pitches
-						};
-
-						(var octave, var step) = noteAdaptMode switch
-						{
-							NoteAdaptMode.AVERAGE =>
-								NoteUtil.FreqToPitchOctaveAndStep(pitches.Average()),
-							NoteAdaptMode.MEDIAN =>
-								NoteUtil.FreqToPitchOctaveAndStep(pitches.Median()),
-							_ => (4, 7)
-						};
-
-						//note
-						var note = new XElement("Note",
-							new XAttribute("Clock", 3840 + startClock),
-							new XAttribute("PitchStep", step),
-							new XAttribute("PitchOctave", octave),
-							new XAttribute("Duration", noteLen),
-							new XAttribute("Lyric", lyricText),
-							new XAttribute("DoReMi", "false"),
-							new XAttribute("Phonetic", phText)
-						);
-						scoreRoot.Add(note);
-
-
-					}
-
-
-
-
-					//Timing elements
-					//TMGの線を書き込む
-					var songRoot = tmplTrack
-						.Descendants("Song")
-						.First();
-					songRoot
-						.Add(new XElement("Parameter", timingNode));
-
-					sw.Stop();
-					Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
-					sw.Restart();
-
-					//LogF0 elements
-
-					//LogF0, Alpha等のルート要素を取得
-					var parameterRoot = tmplTrack
-						.Descendants("Parameter")
-						.First();
-					double paramLen = GetParametersLength(serifLen);
-
-					//F0をピッチ線として書き込む
-					#region write_logf0
-					var logF0Node = new XElement("LogF0",
-						new XAttribute("Length", paramLen)
-					);
-
-					//double lastLogF0 = 0;
-					//int repeatCount = 0;
-					for (int i = 0; i < parameters.f0_length; i++)
-					{
-						var logF0 = engineType switch
-						{
-							TalkEngine.CEVIO
-								 => Math.Log(parameters.f0![i]),
-							TalkEngine.OPENJTALK
-								 => parameters.f0![i],
-							TalkEngine.VOICEVOX
-								 => Math.Log(parameters.f0![i]),
-							_ => 0
-						};
-						if (parameters.f0![i] <= 0) { continue; }
-
-						var node = new XElement("Data",
-							new XAttribute("Index", (TRACK_PARAM_OFFSET_INDEX + i).ToString()),
-							logF0.ToString()
-						);
-						logF0Node.Add(node);
-
-					}
-
-
-					parameterRoot.Add(logF0Node);
-					sw.Stop();
-					Debug.WriteLine($"TIME[end f0]:{sw.ElapsedMilliseconds}");
-					sw.Restart();
-					#endregion
-
-
-					//VOL elements
-					//Volumeの線を書き込む
-					#region write_c0
-					//volume(C0) node root
-
-
-					var volumeNode = new XElement("C0",
-						new XAttribute("Length", paramLen)
-					);
-
-					const string VOL_ZERO = "-2.4";
-
-					//CeVIOのバグ開始部分のVOLを削る
-					var startVol = new XElement("Data",
-							new XAttribute("Index", 0),
-							new XAttribute("Repeat", TRACK_PARAM_OFFSET_INDEX / 4), //4分の1拍無音化
-							VOL_ZERO
-						);
-					volumeNode.Add(startVol);
-
-					//無声母音のVOLを削る
-					var reg = new Regex("[AIUEO]", RegexOptions.Compiled);
-
-					var noSoundVowels = phs
-						.Where(l => !(l.Phoneme is null))
-						.Where(l => l.Phoneme!.Length == 1 && char.IsUpper(Convert.ToChar(l.Phoneme)))
-						.Where(l => reg.IsMatch(l.Phoneme));
-					foreach (var ph in noSoundVowels)
-					{
-						var s = ph.StartTime is null ? 0.0 : (double)ph.StartTime! / INDEX_SPAN_TIME;
-						var index = Math.Round(s, 0, MidpointRounding.AwayFromZero);
-						var e = ph.EndTime is null ? 0.0 : (double)ph.EndTime! / INDEX_SPAN_TIME;
-						var eIndex = Math.Round(e, 0, MidpointRounding.AwayFromZero);
-						var rep = eIndex - index;
-
-						var tVol = new XElement("Data",
-							new XAttribute("Index", TRACK_PARAM_OFFSET_INDEX + index),
-							new XAttribute("Repeat", rep),
-							VOL_ZERO
-						);
-						volumeNode.Add(tVol);
-					}
-
-					//TODO:間の吐息を抑える
-
-					//CeVIOのバグ終了部分のVOLを削る
-					var endVol = new XElement("Data",
-							new XAttribute("Index", paramLen - TRACK_PARAM_OFFSET_INDEX),
-							new XAttribute("Repeat", TRACK_PARAM_OFFSET_INDEX), //1小節
-							VOL_ZERO
-						);
-					volumeNode.Add(endVol);
-
-
-					parameterRoot.Add(volumeNode);
-
-					sw.Stop();
-					Debug.WriteLine($"TIME[end vol]:{sw.ElapsedMilliseconds}");
-					sw.Restart();
-					#endregion
-
-					break;
-				/*
-				case ENGINE_OPENJTALK:
-					SetEngineParam();
-					
-					var dandp2 = this.GetTextDurationAndPhonemes(serifText);
-					serifLen = dandp2.duration;
-					var phs2 = dandp2.phs;
-					break;
-				*/
-				default:
-					break;
+				engine.Cast = TalkVoice!.Name;
+				SetVoiceStyle();
 			}
+			else if (engineType == TalkEngine.VOICEVOX)
+			{
+				engine.Style = this.VoiceStyle;
+			}
+			SetEngineParam();
+
+			//serifLen = engine.GetTextDuration(serifText);
+			var dandp = await this.GetTextDurationAndPhonemes(serifText);
+			serifLen = dandp.duration;
+			var phs = dandp.phs;    //TODO: use this.GetLabels()
+			var labels = await GetLabelsAsync(serifText);
+
+			Debug.WriteLine($"--TIME[tmg eliminate(text duration)]:{sw.ElapsedMilliseconds}");
+
+			//TODO: .labファイル出力
+			MakeLabFile(phs);
+
+			//Estimate F0
+			WorldParameters parameters = await EstimateF0(serifText);
+
+			//Note elements
+			//TODO: csや他ソフト向けにF0を解析してnoteを割り当て、付与する
+			var scoreNodes = tmplTrack.Descendants("Score");
+			var scoreRoot = scoreNodes.First();
+
+			//声質(Alpha)指定
+			scoreRoot.SetAttributeValue("Alpha", 0.0);
+			if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
+			{
+				var alphaParam = TalkSoft
+				.TalkSoftParams
+				.First(a => a.Id == "Alpha");
+				var newAlpha = (alphaParam.Value / 100 * 2) - 1.0;
+				if (engineType == TalkEngine.OPENJTALK) newAlpha = 0;   //TODO:暫定対応
+
+				scoreRoot.SetAttributeValue("Alpha", newAlpha.ToString());
+			}
+
+			//tmplTrack.Element("Score");
+			//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
+			var duration = GetTickDuration(serifLen);
+			Debug.WriteLine($"duration :{duration}");
+
+			//split notes
+			(List<dynamic>? notesList, int phNum)
+				= await SplitPhonemesToNotes(phs, exportMode, noteSplitMode);
+
+			Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
+
+			if (notesList is null) return false;// new ValueTask<bool>(false);
+
+			///<summary>timing node root</summary>
+			var timingNode = new XElement("Timing",
+				new XAttribute("Length", (phNum * 5) + 10)
+			);
+
+			var phCount = 0;
+			var pauCount = 0;
+			foreach (List<dynamic> nList in notesList)
+			{
+				var phText = "";
+				var noteLen = 0;
+				var startClock = Double.MaxValue;
+				var startPhonemeTime = Double.MaxValue;
+
+				for (int i = 0; i < nList.Count; i++)
+				{
+					var ph = nList[i];
+					var start = ph.StartTime;
+					if (startPhonemeTime > start)
+					{
+						//最初の音素の開始時刻を指定
+						startClock = Math.Round(GetTickDuration(start));
+						startPhonemeTime = start;
+					}
+					if(!PhonemeUtil.IsPau(ph)){
+						phText += ph.Phoneme.ToLower() + ",";   //TODO:「ん」対応
+						noteLen += GetTickDuration(ph.EndTime - ph.StartTime);
+						phCount++;
+					}else{
+						pauCount++;
+					}
+					
+					
+					
+
+					//timing elements
+					
+					var count = (5 * (phCount + pauCount)) - 1;
+					var timingData = new XElement("Data",
+						new XAttribute("Index", count.ToString()),
+						NOTE_OFFSET + start
+					);
+					timingNode.Add(timingData);
+					Debug.WriteLine($"Index: {count} [{ph.Phoneme}]");
+
+					//途中の青線も指定しないと消えてしまう
+					//単純分割だとCSでちゃんと聞こえない
+
+					var spanTime = ph.EndTime - start;
+
+					foreach (int t in Enumerable.Range(1, 4))
+					{
+						var first = spanTime / 2;
+						var add = t switch
+						{
+							1 => first,
+							_ => first + (first * 1 / 5 * t)
+						};
+						timingNode
+							.Add(new XElement(
+								"Data",
+								NOTE_OFFSET + start + add
+							));
+						//Debug.WriteLine($"add:{add}");
+					}
+
+					//最後の処理
+					if ((i + 1 == nList.Count))
+					{
+						var lastTimingData = new XElement("Data",
+							NOTE_OFFSET + ph.EndTime
+						);
+						timingNode.Add(lastTimingData);
+					}
+				}
+				if(noteSplitMode==NoteSplitModes.IGNORE_NOSOUND)pauCount++;
+				
+				phText = phText.TrimEnd(",".ToCharArray());
+				Debug.WriteLine($"phText :{phText}");
+
+				//CS対策：CSは有効な文字種の歌詞でないとちゃんと発音しない（音素指定でも）
+				var lyricText = exportMode switch
+				{
+					ExportLyricsMode.KANA => PhonemeConverter.ConvertToKana(phText.Replace("pau", "").Replace(",", "")),
+					_ => phText.Replace(",", ""),
+				};
+				Debug.WriteLine($"lyric: {lyricText}");
+
+
+				var pitches = parameters.f0.Where(d => d > 0);
+				pitches = engineType switch
+				{
+					TalkEngine.OPENJTALK =>
+						pitches.Select(p => Math.Exp(p)),
+					_ => pitches
+				};
+
+				(var octave, var step) = noteAdaptMode switch
+				{
+					NoteAdaptMode.AVERAGE =>
+						NoteUtil.FreqToPitchOctaveAndStep(pitches.Average()),
+					NoteAdaptMode.MEDIAN =>
+						NoteUtil.FreqToPitchOctaveAndStep(pitches.Median()),
+					_ => (4, 7)
+				};
+
+				//note
+				var note = new XElement("Note",
+					new XAttribute("Clock", 3840 + startClock),
+					new XAttribute("PitchStep", step),
+					new XAttribute("PitchOctave", octave),
+					new XAttribute("Duration", noteLen),
+					new XAttribute("Lyric", lyricText),
+					new XAttribute("DoReMi", "false"),
+					new XAttribute("Phonetic", phText)
+				);
+				scoreRoot.Add(note);
+
+
+			}
+
+
+
+
+			//Timing elements
+			//TMGの線を書き込む
+			var songRoot = tmplTrack
+				.Descendants("Song")
+				.First();
+			songRoot
+				.Add(new XElement("Parameter", timingNode));
+
+			sw.Stop();
+			Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
+			sw.Restart();
+
+			//LogF0 elements
+
+			//LogF0, Alpha等のルート要素を取得
+			var parameterRoot = tmplTrack
+				.Descendants("Parameter")
+				.First();
+			double paramLen = GetParametersLength(serifLen);
+
+			//F0をピッチ線として書き込む
+			#region write_logf0
+			var logF0Node = new XElement("LogF0",
+				new XAttribute("Length", paramLen)
+			);
+
+			//double lastLogF0 = 0;
+			//int repeatCount = 0;
+			for (int i = 0; i < parameters.f0_length; i++)
+			{
+				var logF0 = engineType switch
+				{
+					TalkEngine.CEVIO
+							=> Math.Log(parameters.f0![i]),
+					TalkEngine.OPENJTALK
+							=> parameters.f0![i],
+					TalkEngine.VOICEVOX
+							=> Math.Log(parameters.f0![i]),
+					_ => 0
+				};
+				if (parameters.f0![i] <= 0) { continue; }
+
+				var node = new XElement("Data",
+					new XAttribute("Index", (TRACK_PARAM_OFFSET_INDEX + i).ToString()),
+					logF0.ToString()
+				);
+				logF0Node.Add(node);
+
+			}
+
+
+			parameterRoot.Add(logF0Node);
+			sw.Stop();
+			Debug.WriteLine($"TIME[end f0]:{sw.ElapsedMilliseconds}");
+			sw.Restart();
+			#endregion
+
+
+			//VOL elements
+			//Volumeの線を書き込む
+			#region write_c0
+			//volume(C0) node root
+
+
+			var volumeNode = new XElement("C0",
+				new XAttribute("Length", paramLen)
+			);
+
+			const string VOL_ZERO = "-2.4";
+
+			//CeVIOのバグ開始部分のVOLを削る
+			var startVol = new XElement("Data",
+					new XAttribute("Index", 0),
+					new XAttribute("Repeat", TRACK_PARAM_OFFSET_INDEX / 4), //4分の1拍無音化
+					VOL_ZERO
+				);
+			volumeNode.Add(startVol);
+
+			//無声母音のVOLを削る
+			var reg = new Regex("[AIUEO]", RegexOptions.Compiled);
+
+			var noSoundVowels = phs
+				.Where(l => !(l.Phoneme is null))
+				.Where(l => l.Phoneme!.Length == 1 && char.IsUpper(Convert.ToChar(l.Phoneme)))
+				.Where(l => reg.IsMatch(l.Phoneme));
+			foreach (var ph in noSoundVowels)
+			{
+				var s = ph.StartTime is null ? 0.0 : (double)ph.StartTime! / INDEX_SPAN_TIME;
+				var index = Math.Round(s, 0, MidpointRounding.AwayFromZero);
+				var e = ph.EndTime is null ? 0.0 : (double)ph.EndTime! / INDEX_SPAN_TIME;
+				var eIndex = Math.Round(e, 0, MidpointRounding.AwayFromZero);
+				var rep = eIndex - index;
+
+				var tVol = new XElement("Data",
+					new XAttribute("Index", TRACK_PARAM_OFFSET_INDEX + index),
+					new XAttribute("Repeat", rep),
+					VOL_ZERO
+				);
+				volumeNode.Add(tVol);
+			}
+
+			//TODO:間の吐息を抑える
+
+			//CeVIOのバグ終了部分のVOLを削る
+			var endVol = new XElement("Data",
+					new XAttribute("Index", paramLen - TRACK_PARAM_OFFSET_INDEX),
+					new XAttribute("Repeat", TRACK_PARAM_OFFSET_INDEX), //1小節
+					VOL_ZERO
+				);
+			volumeNode.Add(endVol);
+
+
+			parameterRoot.Add(volumeNode);
+
+			sw.Stop();
+			Debug.WriteLine($"TIME[end vol]:{sw.ElapsedMilliseconds}");
+			sw.Restart();
+			#endregion
 
 			//TODO:エンジンごとの解析部分とccst加工部分を分ける
 			//TODO:ccst加工部分の共通処理化
@@ -1182,7 +1167,8 @@ namespace NodoAme
 		private async ValueTask<(List<dynamic> notesList, int phNum)>
 		SplitPhonemesToNotes(
 			List<Label> phs,
-			ExportLyricsMode mode
+			ExportLyricsMode mode,
+			NoteSplitModes splitMode
 		)
 		{
 			var notesList = new List<dynamic>();
@@ -1204,6 +1190,9 @@ namespace NodoAme
 									case "sil": //ignore phoneme
 										break;
 									case "pau": //split note
+										if(splitMode == NoteSplitModes.SPLIT_ONLY){
+											noteList.Add(phs[i]);
+										}
 										notesList.Add(new List<dynamic>(noteList));
 										noteList.Clear();
 										phNum++;

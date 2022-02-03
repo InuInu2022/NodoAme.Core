@@ -108,6 +108,8 @@ namespace NodoAme.ViewModels
 		public IEnumerable<NoteAdaptMode> NoteAdaptModeList { get; set; }
 			= Enum.GetValues(typeof(NoteAdaptMode)).Cast<NoteAdaptMode>();
 
+		public NoteSplitModes NoteSplitMode { get; set; }
+
 		#endregion
 
 		#region commands
@@ -311,6 +313,7 @@ namespace NodoAme.ViewModels
 			DefaultExportSerifTextFileName = UserSettings.DefaultExportSerifTextFileName;
 			SongExportLyricsMode = UserSettings.SongExportLyricsMode;
 			AdaptingNoteToPitchMode = UserSettings.AdaptingNoteToPitchMode;
+			NoteSplitMode = UserSettings.NoteSplitMode;
 
 			CheckUserSettingsWhenDebug();	//実装もれのチェック
 
@@ -840,8 +843,9 @@ namespace NodoAme.ViewModels
 				PathToSaveDirectory,
 				SongExportLyricsMode,
 				songCast,
-				AdaptingNoteToPitchMode
-				);
+				AdaptingNoteToPitchMode,
+				noteSplitMode: NoteSplitMode
+			);
 			
 			if(IsExportSerifText){
 				await talkEngine.ExportSerifTextFileAsync(
@@ -1033,6 +1037,12 @@ namespace NodoAme.ViewModels
 		[PropertyChanged(nameof(AdaptingNoteToPitchMode))]
 		private async ValueTask IsAdaptingNoteToPitchChangedAsync(NoteAdaptMode value){
 			UserSettings.AdaptingNoteToPitchMode = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(NoteSplitMode))]
+		private async ValueTask NoteSplitModeChangedAsync(NoteSplitModes value){
+			UserSettings.NoteSplitMode = value;
 			await UserSettings.SaveAsync();
 		}
 	}

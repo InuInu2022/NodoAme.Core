@@ -32,4 +32,15 @@ namespace NodoAme.Models
 		/// </summary>
         MEDIAN
     }
+
+    public enum NoteSplitModes{
+        /// <summary>
+		/// sil, pauなどを無視し、分割する
+		/// </summary>
+        IGNORE_NOSOUND,
+        /// <summary>
+		/// sil, pauは分割に使うが無視しない
+		/// </summary>
+        SPLIT_ONLY
+    }
 }

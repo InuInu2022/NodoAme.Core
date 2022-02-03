@@ -27,8 +27,13 @@ namespace NodoAme.Models
 		public string DefaultExportSerifTextFileName { get; set; } = SERIF_FILE_NAME;
 		
 		public const string SERIF_FILE_NAME = "$セリフ$.txt";
+
+		public bool IsOpenCeVIOWhenExport { get; set; } = true;
+		public bool IsExportAsTrac { get; set; } = true;
+
 		#endregion export_serif_text_options
 
+		#region display_phonemes_options
 		public bool IsUseSeparaterSpace { get; set; } = true;
 		public bool IsConvertToHiragana { get; set; } = false;
 		public bool IsConvertToPhoneme { get; set; } = true;
@@ -39,11 +44,11 @@ namespace NodoAme.Models
 		public VowelOptions VowelOption { get; set; } = VowelOptions.DoNothing;
 		public bool IsCheckJapaneseRemoveNonSoundVowel { get; set; } = false;
 		public bool IsCheckJapaneseSmallVowel { get; set; } = false;
-
-		public bool IsOpenCeVIOWhenExport { get; set; } = true;
-		public bool IsExportAsTrac { get; set; } = true;
+		#endregion display_phonemes_options
 
 		public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
+
+		public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY;
 
 		[JsonIgnore]
 		public const string UserSettingsFileName = "usersettings.json";
