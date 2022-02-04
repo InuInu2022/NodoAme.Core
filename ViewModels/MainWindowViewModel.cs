@@ -108,6 +108,9 @@ namespace NodoAme.ViewModels
 		public IEnumerable<NoteAdaptMode> NoteAdaptModeList { get; set; }
 			= Enum.GetValues(typeof(NoteAdaptMode)).Cast<NoteAdaptMode>();
 
+		public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
+			= new ObservableCollection<SongSoftTracFileExtSetting>();
+
 		public NoteSplitModes NoteSplitMode { get; set; }
 
 		#endregion
@@ -314,6 +317,7 @@ namespace NodoAme.ViewModels
 			SongExportLyricsMode = UserSettings.SongExportLyricsMode;
 			AdaptingNoteToPitchMode = UserSettings.AdaptingNoteToPitchMode;
 			NoteSplitMode = UserSettings.NoteSplitMode;
+			ExportFileExtentions = new ObservableCollection<SongSoftTracFileExtSetting>(UserSettings.ExportFileExtentions);
 
 			CheckUserSettingsWhenDebug();	//実装もれのチェック
 
@@ -1043,6 +1047,13 @@ namespace NodoAme.ViewModels
 		[PropertyChanged(nameof(NoteSplitMode))]
 		private async ValueTask NoteSplitModeChangedAsync(NoteSplitModes value){
 			UserSettings.NoteSplitMode = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(ExportFileExtentions))]
+		private async ValueTask ExportFileExtentionsChangedAsync(ObservableCollection<SongSoftTracFileExtSetting> value){
+			if(value is null || value.Count == 0) return;
+			UserSettings.ExportFileExtentions = ExportFileExtentions;
 			await UserSettings.SaveAsync();
 		}
 	}

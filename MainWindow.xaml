@@ -460,6 +460,35 @@
                         ItemsSource="{Binding NoteAdaptModeList}"
                         SelectedItem="{Binding AdaptingNoteToPitchMode}"
                         />
+              <ItemsControl x:Name="songExportFileExtList"
+                      Margin="0,0,0,0"
+                      MaxHeight="300"
+                      BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                      fw:PointerTracker.Enabled="True"
+                      ItemsSource="{Binding ExportFileExtentions}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                      <Label Content="{Binding SongSoft}"
+                            Width="45"
+                            Margin="5,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontSize="11" />
+                      <TextBox Text="{Binding FileExt, UpdateSourceTrigger=PropertyChanged}"
+                            Width="100"
+                            VerticalAlignment="Center"
+                            Margin="5" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
             </WrapPanel>
           </Expander>
           <!-- ///////////////////////////save option////////////////////////// -->

@@ -14,4 +14,9 @@ namespace NodoAme
 		[JsonPropertyName("lyricsMode")]
 		public ExportLyricsMode LyricsMode { get; set; }
 	}
+
+	public static class SongSoftName{
+		public static string CEVIO_AI = "CeVIO AI";
+		public static string CEVIO_CS = "CeVIO CS";
+	}
 }

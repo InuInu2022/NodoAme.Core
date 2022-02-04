@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -6,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using System.Threading.Tasks;
+using NodoAme.ViewModels;
 
 namespace NodoAme.Models
 {
@@ -25,7 +28,13 @@ namespace NodoAme.Models
 		public bool IsExportSerifText { get; set; } = false;
 		public string PathToExportSerifTextDir { get; set; } = "./out/";
 		public string DefaultExportSerifTextFileName { get; set; } = SERIF_FILE_NAME;
-		
+
+		public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions
+			= new ObservableCollection<SongSoftTracFileExtSetting>{
+				new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_AI, FileExt="ccst"},
+				new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_CS, FileExt="ccst"}
+			};
+
 		public const string SERIF_FILE_NAME = "$セリフ$.txt";
 
 		public bool IsOpenCeVIOWhenExport { get; set; } = true;
