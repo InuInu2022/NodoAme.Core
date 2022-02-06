@@ -463,6 +463,8 @@
               <ItemsControl x:Name="songExportFileExtList"
                       Margin="0,0,0,0"
                       MaxHeight="300"
+                      IsEnabled="false"
+                      Visibility="Collapsed"
                       BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
                       fw:PointerTracker.Enabled="True"
                       ItemsSource="{Binding ExportFileExtentions}">
