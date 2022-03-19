@@ -343,6 +343,49 @@
 			"lyricsMode":"PHONEME"
 		},
 		{
+			"id":"ID-CHIS-A",
+			"name":"知声(ccs出力)",
+			"songSoft":"CeVIO Pro",
+			"lyricsMode":"KANA"
+		},
+		{
+			"id":"ID-CHIS-A",
+			"name":"知声(tssprj出力)",
+			"songSoft":"CeVIO Pro",
+			"lyricsMode":"KANA",
+			"exportFile":"tssprj"
+		},
+		{
+			"id":"CSNV-JPF-THR2",
+			"name":"⚠星界（SEKAI）",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
+		},
+		{
+			"id":"CSNV-JPF-B",
+			"name":"⚠すずきつづみ",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
+		},
+		{
+			"id":"CSNV-JPF-KZN1",
+			"name":"⚠キズナ（#KZN)",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
+		},
+		{
+			"id":"CSNV-JPF-BSRD1",
+			"name":"⚠戸山香澄",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
+		},
+		{
+			"id":"CSNV-JPF-BSRD2",
+			"name":"⚠湊友希那",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
