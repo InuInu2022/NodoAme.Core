@@ -18,7 +18,7 @@ namespace NodoAme.Models
 	public class UserSettings
 	{
 		[HideForUser]
-		public string Version { get; } = "0.2.0";
+		public string Version { get; } = "0.3.0";
 
 		public int DefaultSerifLines { get; set; } = 30;    //初期表示セリフ行
 		public string? PathToSaveDirectory { get; set; } = "./out/";
