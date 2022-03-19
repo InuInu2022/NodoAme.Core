@@ -13,10 +13,13 @@ namespace NodoAme
 		public string? SongSoft { get; set; }
 		[JsonPropertyName("lyricsMode")]
 		public ExportLyricsMode LyricsMode { get; set; }
+		[JsonPropertyName("exportFile")]
+		public string? ExportFile { get; set; }
 	}
 
 	public static class SongSoftName{
 		public static string CEVIO_AI = "CeVIO AI";
 		public static string CEVIO_CS = "CeVIO CS";
+		public static string CEVIO_Pro = "CeVIO Pro";
 	}
 }
