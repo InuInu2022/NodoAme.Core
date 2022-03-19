@@ -815,6 +815,7 @@ namespace NodoAme
 			var scoreRoot = scoreNodes.First();
 
 			//声質(Alpha)指定
+			/*0.0がデフォルトではないので0を指定すると可笑しくなる
 			scoreRoot.SetAttributeValue("Alpha", 0.0);
 			if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
 			{
@@ -826,6 +827,7 @@ namespace NodoAme
 
 				scoreRoot.SetAttributeValue("Alpha", newAlpha.ToString());
 			}
+			*/
 
 			//tmplTrack.Element("Score");
 			//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
