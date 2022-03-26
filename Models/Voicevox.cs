@@ -426,7 +426,7 @@ namespace NodoAme.Models
 		private async Task<T> CastContent<T>(string content){
 			using var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
             try{
-                T settings = await JsonSerializer
+                T? settings = await JsonSerializer
                 .DeserializeAsync<T>
                 (
                     stream,
