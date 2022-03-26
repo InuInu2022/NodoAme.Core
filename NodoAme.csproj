@@ -59,6 +59,9 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
 		<Content Include="template/temp.*.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Include="template/Template.tssprj">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Include="./Licenses/*/*">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
