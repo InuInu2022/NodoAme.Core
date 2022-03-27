@@ -59,6 +59,8 @@ namespace NodoAme.Models
 
 		public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY;
 
+		public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NONE;
+
 		[JsonIgnore]
 		public const string UserSettingsFileName = "usersettings.json";
 		[JsonIgnore]

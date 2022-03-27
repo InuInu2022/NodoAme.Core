@@ -756,7 +756,8 @@ namespace NodoAme
 			SongCast? cast = null,
 			NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED,
 			NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND,
-			ExportFileType fileType = ExportFileType.CCS
+			ExportFileType fileType = ExportFileType.CCS,
+			BreathSuppressMode breathSuppress = BreathSuppressMode.NONE
 		)
 		{
 			if (this.engine is null)
@@ -1042,19 +1043,35 @@ namespace NodoAme
 			const string VOL_ZERO = "-2.4";
 
 			//CeVIOのバグ開始部分のVOLを削る
+			var startVolumeRep = breathSuppress switch
+			{
+				BreathSuppressMode.NO_BREATH =>
+					//最初の音素開始まで無音
+					//Math.Round((double)(phs.Find(v => v.Phoneme! == "sil")!.EndTime! / INDEX_SPAN_TIME), 0, MidpointRounding.AwayFromZero)
+					TRACK_PARAM_OFFSET_INDEX
+					,
+				BreathSuppressMode.NONE or _ =>
+					//4分の1拍無音化
+					TRACK_PARAM_OFFSET_INDEX / 4
+			};
 			var startVol = new XElement("Data",
 					new XAttribute("Index", 0),
-					new XAttribute("Repeat", TRACK_PARAM_OFFSET_INDEX / 4), //4分の1拍無音化
+					new XAttribute("Repeat", startVolumeRep ),
 					VOL_ZERO
 				);
 			volumeNode.Add(startVol);
 
-			//無声母音のVOLを削る
-			var reg = new Regex("[AIUEO]", RegexOptions.Compiled);
+			//無声母音/ブレス音のVOLを削る
+			var reg = breathSuppress switch{
+				BreathSuppressMode.NO_BREATH =>
+					new Regex("[AIUEO]|pau|sil", RegexOptions.Compiled),
+				BreathSuppressMode.NONE or _ =>
+					new Regex("[AIUEO]", RegexOptions.Compiled),
+			} ;
 
 			var noSoundVowels = phs
 				.Where(l => !(l.Phoneme is null))
-				.Where(l => l.Phoneme!.Length == 1 && char.IsUpper(Convert.ToChar(l.Phoneme)))
+				//.Where(l => l.Phoneme!.Length == 1 && char.IsUpper(Convert.ToChar(l.Phoneme)))
 				.Where(l => reg.IsMatch(l.Phoneme));
 			foreach (var ph in noSoundVowels)
 			{
@@ -1072,12 +1089,14 @@ namespace NodoAme
 				volumeNode.Add(tVol);
 			}
 
-			//TODO:間の吐息を抑える
+			
 
 			//CeVIOのバグ終了部分のVOLを削る
+			var lastTime = phs.Last().EndTime ?? 0.0;
+			var lastIndex = Math.Round(lastTime / INDEX_SPAN_TIME,0,MidpointRounding.AwayFromZero);
 			var endVol = new XElement("Data",
-					new XAttribute("Index", paramLen - TRACK_PARAM_OFFSET_INDEX),
-					new XAttribute("Repeat", TRACK_PARAM_OFFSET_INDEX), //1小節
+					new XAttribute("Index", TRACK_PARAM_OFFSET_INDEX + lastIndex),
+					new XAttribute("Repeat", paramLen - (lastIndex+TRACK_PARAM_OFFSET_INDEX)), //1小節
 					VOL_ZERO
 				);
 			volumeNode.Add(endVol);

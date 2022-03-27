@@ -108,6 +108,10 @@ namespace NodoAme.ViewModels
 		public IEnumerable<NoteAdaptMode> NoteAdaptModeList { get; set; }
 			= Enum.GetValues(typeof(NoteAdaptMode)).Cast<NoteAdaptMode>();
 
+		public BreathSuppressMode BreathSuppress { get; set; }
+		public IEnumerable<BreathSuppressMode> BreathSuppressModeList { get; set; }
+			= Enum.GetValues(typeof(BreathSuppressMode)).Cast<BreathSuppressMode>();
+
 		public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
 			= new ObservableCollection<SongSoftTracFileExtSetting>();
 
@@ -318,6 +322,7 @@ namespace NodoAme.ViewModels
 			AdaptingNoteToPitchMode = UserSettings.AdaptingNoteToPitchMode;
 			NoteSplitMode = UserSettings.NoteSplitMode;
 			ExportFileExtentions = new ObservableCollection<SongSoftTracFileExtSetting>(UserSettings.ExportFileExtentions);
+			BreathSuppress = UserSettings.BreathSuppress;
 
 			CheckUserSettingsWhenDebug();	//実装もれのチェック
 
@@ -850,7 +855,8 @@ namespace NodoAme.ViewModels
 				songCast,
 				AdaptingNoteToPitchMode,
 				noteSplitMode: NoteSplitMode,
-				(exportFileType != 0) ? exportFileType : ExportFileType.CCS
+				(exportFileType != 0) ? exportFileType : ExportFileType.CCS,
+				BreathSuppress
 			);
 			
 			if(IsExportSerifText){
@@ -1056,6 +1062,12 @@ namespace NodoAme.ViewModels
 		private async ValueTask ExportFileExtentionsChangedAsync(ObservableCollection<SongSoftTracFileExtSetting> value){
 			if(value is null || value.Count == 0) return;
 			UserSettings.ExportFileExtentions = ExportFileExtentions;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(BreathSuppress))]
+		private async ValueTask BreathSuppressChangedAsync(BreathSuppressMode value){
+			UserSettings.BreathSuppress = value;
 			await UserSettings.SaveAsync();
 		}
 	}
