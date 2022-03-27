@@ -14,7 +14,7 @@ namespace NodoAme
 		[JsonPropertyName("lyricsMode")]
 		public ExportLyricsMode LyricsMode { get; set; }
 		[JsonPropertyName("exportFile")]
-		public string? ExportFile { get; set; }
+		public NodoAme.Models.ExportFileType ExportFile { get; set; }
 	}
 
 	public static class SongSoftName{

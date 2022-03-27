@@ -350,10 +350,10 @@
 		},
 		{
 			"id":"ID-CHIS-A",
-			"name":"🚫知声(tssprj出力)",
+			"name":"知声(tssprj出力)",
 			"songSoft":"CeVIO Pro",
 			"lyricsMode":"KANA",
-			"exportFile":"tssprj"
+			"exportFile":1
 		},
 		{
 			"id":"CSNV-JPF-THR2",

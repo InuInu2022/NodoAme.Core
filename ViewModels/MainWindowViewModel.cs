@@ -838,6 +838,7 @@ namespace NodoAme.ViewModels
 			);
 
 			Debug.WriteLine("Export!");
+			var exportFileType = ExportCastItems.ElementAt(ExportCastSelected).ExportFile;
 			await this.talkEngine.ExportFileAsync(
 				serifText,
 				castId,
@@ -848,7 +849,8 @@ namespace NodoAme.ViewModels
 				SongExportLyricsMode,
 				songCast,
 				AdaptingNoteToPitchMode,
-				noteSplitMode: NoteSplitMode
+				noteSplitMode: NoteSplitMode,
+				(exportFileType != 0) ? exportFileType : ExportFileType.CCS
 			);
 			
 			if(IsExportSerifText){

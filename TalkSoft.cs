@@ -12,8 +12,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
-using MathNet.Numerics.Statistics;
+
 using Microsoft.Win32;
+
+using MathNet.Numerics.Statistics;
 
 using NAudio.Wave;
 
@@ -22,6 +24,8 @@ using NLog;
 using NodoAme.Models;
 
 using SharpOpenJTalk;
+
+using Tssproj;
 
 using WanaKanaNet;
 
@@ -751,7 +755,8 @@ namespace NodoAme
 			ExportLyricsMode exportMode = ExportLyricsMode.KANA,
 			SongCast? cast = null,
 			NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED,
-			NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND
+			NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND,
+			ExportFileType fileType = ExportFileType.CCS
 		)
 		{
 			if (this.engine is null)
@@ -769,7 +774,7 @@ namespace NodoAme
 
 
 
-			//テンプレートxml読み込み
+			//テンプレートファイル読み込み
 			var tmplTrack = isExportAsTrack ? 
 				XElement.Load(@"./template/temp.track.xml") :	//ccst file
 				XElement.Load(@"./template/temp.track.xml")		//TODO:ccs file（現在はトラックのみ）
@@ -1112,16 +1117,67 @@ namespace NodoAme
 				groupNode.SetAttributeValue("Volume", 10);
 			}
 
+			//tssprj
+			var tssprj = Array.Empty<byte>();
+			if(fileType == ExportFileType.TSSPRJ)
+			{
+				tssprj = File.ReadAllBytes("./template/Template.tssprj");
+
+				var r = scoreRoot;
+				var es = scoreRoot.Elements();
+
+				var notes = scoreRoot
+					.Elements()
+					.Where(v => v.Name == "Note")
+					.Select(v => new Tssproj.Note(
+						int.Parse(v.Attribute("Clock").Value),
+						int.Parse(v.Attribute("Duration").Value),
+						v.Attribute("Lyric").Value,
+						v.Attribute("Phonetic").Value,
+						int.Parse(v.Attribute("PitchOctave").Value),
+						int.Parse(v.Attribute("PitchStep").Value)
+					))
+					.ToList();
+				tssprj = tssprj.AsSpan().ReplaceNotes(notes);
+
+				Debug.WriteLine($"tmg len: {timingNode.Attribute("Length").Value}");
+				var timing = new Timing(
+					int.Parse(timingNode.Attribute("Length").Value),
+					GetDataList(timingNode)
+				);
+
+				Debug.WriteLine($"pit len: {logF0Node.Attribute("Length").Value}");
+				var pitch = new Pitch(
+					int.Parse(logF0Node.Attribute("Length").Value),
+					GetDataList(logF0Node)
+				);
+				
+				Debug.WriteLine($"vol len: {volumeNode.Attribute("Length").Value}");
+				var volume = new Volume(
+					int.Parse(volumeNode.Attribute("Length").Value),
+					GetDataList(volumeNode)
+				);
+
+				tssprj = tssprj.AsSpan().ReplaceParamters(timing, pitch, volume);
+			}
+
 			sw.Stop();
 			Debug.WriteLine($"TIME[end genarate xml]:{sw.ElapsedMilliseconds}");
 			sw.Restart();
 
 			//set trac file name
+			dynamic exportData = fileType switch
+			{
+				ExportFileType.TSSPRJ => tssprj,
+				ExportFileType.CCS => tmplTrack,
+				_ => tmplTrack
+			};
 			await ExportCore(
 				serifText,
 				exportPath,
-				tmplTrack,
-				isOpenCeVIO
+				exportData,
+				isOpenCeVIO,
+				fileType
 			);
 
 			sw.Stop();
@@ -1131,6 +1187,22 @@ namespace NodoAme
 			logger.Info($"Export file sucess!{exportPath}:{serifText}");
 			return true;//new ValueTask<bool>(true);
 
+		}
+
+		private static List<Data> GetDataList(XElement baseNode) 
+		{
+			var data = baseNode
+				.Elements()
+				.Select(v => new Tssproj.Data(
+					double.Parse(v.Value),
+					v.HasAttributes && v.Attribute("Index") is not null ?
+						int.Parse(v.Attribute("Index").Value) : null,
+					v.HasAttributes && v.Attribute("Repeat") is not null ?
+						int.Parse(v.Attribute("Repeat").Value) : null
+					//v.Attributes().Select(v => v.Name.LocalName).Contains("Repeat") ? int.Parse(v.Attribute("Repeat").Value) : null
+				))
+				.ToList();
+			return data;
 		}
 
 		/// <summary>
@@ -1369,12 +1441,17 @@ namespace NodoAme
 		private async ValueTask ExportCore(
 			string trackFileName,
 			string exportPath,
-			XElement tmplTrack,
-			bool isOpenCeVIO
+			dynamic/*XElement or byte[]*/ tmplTrack,
+			bool isOpenCeVIO,
+			ExportFileType fileType
 		){
 			var safeName = GetSafeFileName(trackFileName);
 			var outDirPath = exportPath;
-			var outFile = $"{GetSafeFileName(CastToExport)}_{safeName}.ccst";
+			var outFile = fileType switch{
+				ExportFileType.CCS => $"{GetSafeFileName(CastToExport)}_{safeName}.ccst",
+				ExportFileType.TSSPRJ =>  $"{GetSafeFileName(CastToExport)}_{safeName}.tssprj",
+				_ => $"{GetSafeFileName(CastToExport)}_{safeName}.ccst"
+			} ;
 			if(!Directory.Exists(outDirPath)){
 				try
 				{
@@ -1396,7 +1473,15 @@ namespace NodoAme
 			}
 			var outPath = Path.Combine(outDirPath, outFile);
 			//save
-			await Task.Run(() =>tmplTrack.Save(outPath));
+			if(fileType == ExportFileType.CCS){
+				var xml = tmplTrack as XElement;
+				await Task.Run(() => xml!.Save(outPath));
+			}else if(fileType == ExportFileType.TSSPRJ){
+				var bin = tmplTrack as byte[];
+				using var writer = new BinaryWriter(new FileStream(outPath, FileMode.Create));
+				writer.Write(bin);
+			}
+
 
 			if(isOpenCeVIO){
 				//CeVIOにファイルを渡す
@@ -1421,7 +1506,8 @@ namespace NodoAme
 			string castId,
 			bool isExportAsTrack = true,
 			bool isOpenCeVIO = false,
-			string exportPath = ""
+			string exportPath = "",
+			ExportFileType fileType = ExportFileType.CCS
 		){
 			if (this.engine is null)
 			{
@@ -1455,7 +1541,8 @@ namespace NodoAme
 				TRACK_FILE_NAME,
 				exportPath,
 				tmplTrack,
-				isOpenCeVIO
+				isOpenCeVIO,
+				fileType
 			);
 
 			return true;//new ValueTask<bool>(true);

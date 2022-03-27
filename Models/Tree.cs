@@ -33,17 +33,20 @@ public class TssTree: TssCommon
     public byte[] GetChildHeader(bool withNull = true){
 		//if(Count<=0) return new byte[1] { NULL_END };
 
+		var cByte = BitConverter.GetBytes(Count).AsSpan();
+		int len = cByte.Length;
+
 		if(withNull){
-			return new byte[3]{
+			var n = new byte[]{
 				00,
-				01,
-				Convert.ToByte(Count)
+				Convert.ToByte(len)
 			};
+			return n.Concat(cByte.ToArray()).ToArray();
 		}else{
-			return new byte[2]{
-				01,
-				Convert.ToByte(Count)
+			var n = new byte[]{
+				Convert.ToByte(len)
 			};
+			return n.Concat(cByte.ToArray()).ToArray();
 		}
 		
 	}
@@ -181,7 +184,7 @@ public class Note : TssTree
 		AddAttribute("Duration", duration);
         AddAttribute("PitchStep", pitchStep);
         AddAttribute("PitchOctave", pitchOctave);
-        AddAttribute("Lyric", lyrics);
+        AddAttribute("Lyric", $"{lyrics}[{phoneme}]");
 		AddAttribute("Syllabic", 0);
 		//AddAttribute("DoReMi", false);
         AddAttribute("Phoneme", phoneme);
@@ -241,10 +244,13 @@ public class Volume : AbstTreeHasDataChild
 
 public class Data : TssTree
 {
-	public Data(double value, int? index = null) : base("Data")
+	public Data(double value, int? index = null, int? repeat = null) : base("Data")
 	{
 		if(index is not null && index >= 0){
 			AddAttribute("Index", index);
+		}
+		if(repeat is not null && repeat >= 0){
+			AddAttribute("Repeat", repeat);
 		}
 		AddAttribute("Value", value);
 	}
