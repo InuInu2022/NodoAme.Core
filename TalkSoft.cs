@@ -186,6 +186,9 @@ namespace NodoAme
 		private Assembly? assembly;
 
 		private ObservableCollection<TalkSoftVoice>? voices = new ObservableCollection<TalkSoftVoice>();
+		private IList<string>? lastLabels;
+		private Task<dynamic?>? lastTaskGetLabel;
+		private readonly CancellationTokenSource cancelSource = new CancellationTokenSource();
 
 		private static readonly Logger logger = LogManager.GetCurrentClassLogger();
  
@@ -448,10 +451,26 @@ namespace NodoAme
 						Debug.WriteLine(ph.Phoneme);
 					}
 					*/
+					if (
+						lastTaskGetLabel?.IsCompleted == false &&
+						cancelSource.Token.CanBeCanceled)
+					{
+						cancelSource.Cancel();
+					}
 
-					var ps = await Task.Run(
-						()=>engine.GetPhonemes(sourceText));
-					return MakePsudoLabels(ps);
+					this.lastTaskGetLabel = Task.Run(() =>
+					{
+						if(cancelSource.Token.IsCancellationRequested)return null;
+						return engine.GetPhonemes(sourceText);
+					},
+					cancelSource.Token);
+
+					var ps = await lastTaskGetLabel;
+
+					if(ps is null){return this.lastLabels!;}
+
+					this.lastLabels = MakePsudoLabels(ps);
+					return this.lastLabels;
 					//break;
 				case TalkEngine.VOICEVOX:
 					var vv = this.engine as Voicevox;
