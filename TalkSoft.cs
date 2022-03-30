@@ -148,13 +148,6 @@ namespace NodoAme
 		public const string COEIROINK = "COEIROINK";
 	}
 
-	;
-	public enum ExportLyricsMode
-	{
-		KANA = 0,       //hiragana lyrics for CS Japanese voice
-		PHONEME = 1,    //phoneme lyrics (same as v0.1.0) for AI
-		//TODO:ALPHABET = 2,	//alphabet lyrics for CS English voice
-	}
 
 	/// <summary>
 	/// トークエンジンラッパー
@@ -465,7 +458,17 @@ namespace NodoAme
 					},
 					cancelSource.Token);
 
-					var ps = await lastTaskGetLabel;
+					dynamic? ps = null;
+					try
+					{
+						ps = await lastTaskGetLabel;
+					}
+					catch (OperationCanceledException)
+					{
+						Debug.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
+						return new List<string>() { "" };
+					}
+
 
 					if(ps is null){return this.lastLabels!;}
 
