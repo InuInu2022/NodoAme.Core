@@ -45,6 +45,8 @@ namespace NodoAme.ViewModels
 		public ObservableCollection<TalkSoftVoiceStylePreset> TalkVoiceStylePresetsItems { get; private set; }
 		public int VoiceStylePresetsSelected { get; set; } = 0;
 
+		public ObservableCollection<TalkVoiceStyleParam> TalkVoiceStyleParams { get; set; }
+
 		public ObservableCollection<SongCast> ExportCastItems { get; private set; }
 		public int ExportCastSelected { get; set; } = 0;
 
@@ -59,7 +61,9 @@ namespace NodoAme.ViewModels
 
 		private ObservableCollection<TalkSoft> _talksofts = new ObservableCollection<TalkSoft>();
 		private ObservableCollection<TalkSoftVoice> _voices = new ObservableCollection<TalkSoftVoice>();
-		private ObservableCollection<TalkSoftVoiceStylePreset> _styles = new ObservableCollection<TalkSoftVoiceStylePreset>();
+		private ObservableCollection<TalkSoftVoiceStylePreset> _stylePresets = new ObservableCollection<TalkSoftVoiceStylePreset>();
+
+		private ObservableCollection<TalkVoiceStyleParam> _voiceStyles = new() { };
 
 		#region checkboxes
 
@@ -586,15 +590,21 @@ namespace NodoAme.ViewModels
 				switch (this.currentEngine)
 				{
 					case TalkEngine.CEVIO:
+						this.talkEngine.VoiceStyle = _stylePresets.ElementAt(index);
+						this.talkEngine.SetVoiceStyle(true);
+						//変化させたプリセットを感情合成値に反映
+						this._voiceStyles = this.talkEngine.GetVoiceStyles();
+						this.TalkVoiceStyleParams = this._voiceStyles;
+						break;
 					case TalkEngine.VOICEVOX:
-						this.talkEngine.VoiceStyle = _styles.ElementAt(index);
+						this.talkEngine.VoiceStyle = _stylePresets.ElementAt(index);
 						break;
 					case TalkEngine.OPENJTALK:
 						this.talkEngine = await Wrapper.Factory(
 							this.currentEngine,
 							_talksofts.ElementAt(TalkSoftSelected),
 							_voices.ElementAt(TalkVoiceSelected),
-							_styles.ElementAt(index)
+							_stylePresets.ElementAt(index)
 						);
 
 						break;
@@ -756,15 +766,23 @@ namespace NodoAme.ViewModels
 					this.talkEngine.TalkVoice = _voices
 						.ElementAt(TalkVoiceSelected);
 
-					var styles = await Task.Run(
-						()=> this.talkEngine.GetStyles()
+					var stylePresets = await Task.Run(
+						()=> this.talkEngine.GetStylePresets()
 					);
 
-					this._styles.Clear();
-					_styles = styles;
+					var voiceStyles = await Task.Run(
+						() => this.talkEngine.GetVoiceStyles()
+					);
+
+					this._stylePresets.Clear();
+					_stylePresets = stylePresets;
+
+					this._voiceStyles.Clear();
+					_voiceStyles = voiceStyles;
 
 					IsStylePresetsComboEnabled = true;
-					TalkVoiceStylePresetsItems = _styles;
+					TalkVoiceStylePresetsItems = _stylePresets;
+					TalkVoiceStyleParams = _voiceStyles;
 					VoiceStylePresetsSelected = 0;
 
 				}
@@ -778,14 +796,16 @@ namespace NodoAme.ViewModels
 						.ElementAt(TalkVoiceSelected);
 
 					var styles = await Task.Run(
-						()=> this.talkEngine.GetStyles()
+						()=> this.talkEngine.GetStylePresets()
 					);
 
-					this._styles.Clear();
-					_styles = styles;
+					this._stylePresets.Clear();
+					_stylePresets = styles;
+
+					this._voiceStyles.Clear();
 
 					IsStylePresetsComboEnabled = true;
-					TalkVoiceStylePresetsItems = _styles;
+					TalkVoiceStylePresetsItems = _stylePresets;
 					VoiceStylePresetsSelected = 0;
 				}
 				else
@@ -803,10 +823,13 @@ namespace NodoAme.ViewModels
 
 				//var styles = this.talkEngine.GetStyles();
 
-				this._styles.Clear();
-				_styles = styles;
+				this._stylePresets.Clear();
+				_stylePresets = styles;
+
+				this._voiceStyles.Clear();
+
 				IsStylePresetsComboEnabled = true;
-				TalkVoiceStylePresetsItems = _styles;
+				TalkVoiceStylePresetsItems = _stylePresets;
 				VoiceStylePresetsSelected = 0;
 			}
 
@@ -819,10 +842,11 @@ namespace NodoAme.ViewModels
 				this.currentEngine,
 				_talksofts.ElementAt(TalkSoftSelected),
 				_voices.ElementAt(TalkVoiceSelected),
-				_styles.ElementAt(VoiceStylePresetsSelected)
+				_stylePresets.ElementAt(VoiceStylePresetsSelected),
+				TalkVoiceStyleParams
 			);
 
-			talkEngine.VoiceStyle = _styles.ElementAt(VoiceStylePresetsSelected);
+			talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
 			await talkEngine.Speak(serifText);
 
 		}
@@ -839,7 +863,8 @@ namespace NodoAme.ViewModels
 				this.currentEngine,
 				_talksofts.ElementAt(TalkSoftSelected),
 				_voices.ElementAt(TalkVoiceSelected),
-				_styles.ElementAt(VoiceStylePresetsSelected)
+				_stylePresets.ElementAt(VoiceStylePresetsSelected),
+				TalkVoiceStyleParams
 			);
 
 			Debug.WriteLine("Export!");
@@ -878,10 +903,11 @@ namespace NodoAme.ViewModels
 				this.currentEngine,
 				_talksofts.ElementAt(TalkSoftSelected),
 				_voices.ElementAt(TalkVoiceSelected),
-				_styles.ElementAt(VoiceStylePresetsSelected)
+				_stylePresets.ElementAt(VoiceStylePresetsSelected),
+				TalkVoiceStyleParams
 			);
 
-			talkEngine.VoiceStyle = _styles.ElementAt(VoiceStylePresetsSelected);
+			talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
 			await talkEngine.Speak(serifText);
 			await talkEngine.PreviewSave(serifText);
 		}
@@ -894,7 +920,8 @@ namespace NodoAme.ViewModels
 					this.currentEngine,
 					_talksofts.ElementAt(TalkSoftSelected),
 					_voices.ElementAt(TalkVoiceSelected),
-					_styles.ElementAt(VoiceStylePresetsSelected)
+					_stylePresets.ElementAt(VoiceStylePresetsSelected),
+					TalkVoiceStyleParams
 				);
 				await talkEngine.ExportSpecialFile(
 					ExportCastItems[ExportCastSelected].Id,
@@ -912,7 +939,8 @@ namespace NodoAme.ViewModels
 			string engine,
 			TalkSoft soft,
 			TalkSoftVoice voice = null,
-			TalkSoftVoiceStylePreset style = null
+			TalkSoftVoiceStylePreset style = null,
+			IList<TalkVoiceStyleParam> styleParams = null
 		)
 		{
 			var isNotGenerated = false;
@@ -927,11 +955,12 @@ namespace NodoAme.ViewModels
 			}
 
 			if (isNotGenerated){
-				return await Wrapper.Factory(engine, soft, voice, style);
+				return await Wrapper.Factory(engine, soft, voice, style, styleParams);
 			}
 			else{
 				if (voice != null) this.talkEngine.TalkVoice = voice;
 				if (style != null) this.talkEngine.VoiceStyle = style;
+				if (styleParams != null) this.talkEngine.VoiceStyleParams = styleParams;
 				return this.talkEngine;
 			}
 

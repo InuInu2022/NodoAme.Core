@@ -68,6 +68,11 @@ namespace NodoAme
 		public string? Path {get;set;}
 		[JsonPropertyName("styles")]
 		public IList<TalkSoftVoiceStylePreset>? Styles { get; set; }
+
+		/// <summary>
+		/// 現在の感情合成値
+		/// </summary>
+		public IList<TalkVoiceStyleParam>? CurrentStyleParams { get; set; }
 	}
 
 
@@ -102,6 +107,20 @@ namespace NodoAme
 
 		[JsonPropertyName("path")]
 		public string? Path {get;set;}
+	}
+
+	/// <summary>
+	/// 感情合成用
+	/// </summary>
+	public class TalkVoiceStyleParam{
+		public string? Id { get; set; }
+		public string? Name { get; set; }
+		public double Min { get; set; }
+		public double Max { get; set; }
+		public double DefaultValue { get; set; }
+
+		public double? SmallChange { get; set; }
+		public double Value { get; set; }
 	}
 
 	public class TalkSoftInterface{
@@ -169,6 +188,7 @@ namespace NodoAme
 		private string engineType;
 		public TalkSoftVoice? TalkVoice { get; set; }
 		public TalkSoftVoiceStylePreset? VoiceStyle { get; set; }
+		public IList<TalkVoiceStyleParam>? VoiceStyleParams { get; set; }
 		public TalkSoft TalkSoft { get; set; }
 		public bool IsActive { get; set; }
 
@@ -190,23 +210,25 @@ namespace NodoAme
 			string type,
 			TalkSoft soft,
 			TalkSoftVoice? voice = null,
-			TalkSoftVoiceStylePreset? style = null
+			TalkSoftVoiceStylePreset? style = null,
+			IList<TalkVoiceStyleParam>? styleParams = null
 		){
 			engineType = type;
 			TalkSoft = soft;
 			TalkVoice = voice ?? null;
-			VoiceStyle = style; //style!=null ? VoiceStyle : null;
-							   //var _ = Init();
+			VoiceStyle = style;
+			VoiceStyleParams = styleParams;
 		}
 
 		public static async ValueTask<Wrapper> Factory(
 			string type,
 			TalkSoft soft,
 			TalkSoftVoice? voice = null,
-			TalkSoftVoiceStylePreset? style = null
+			TalkSoftVoiceStylePreset? style = null,
+			IList<TalkVoiceStyleParam>? styleParams = null
 		)
 		{
-			var wrapper = new Wrapper(type, soft, voice, style);
+			var wrapper = new Wrapper(type, soft, voice, style, styleParams);
 			await wrapper.Init();
 			return wrapper;
 		}
@@ -542,7 +564,7 @@ namespace NodoAme
 			}
 		}
 
-		public ObservableCollection<TalkSoftVoiceStylePreset> GetStyles(){
+		public ObservableCollection<TalkSoftVoiceStylePreset> GetStylePresets(){
 			var styles = new ObservableCollection<TalkSoftVoiceStylePreset>();
 			switch (engineType)
 			{
@@ -591,11 +613,52 @@ namespace NodoAme
 			return styles;
 		}
 
+		public ObservableCollection<TalkVoiceStyleParam> GetVoiceStyles(){
+			var styles = new ObservableCollection<TalkVoiceStyleParam>();
+			switch (engineType)
+			{
+				case TalkEngine.CEVIO:
+					Type? talker = assembly!.GetType(TalkSoft.Interface!.Talker);
+					Debug.WriteLine($"cast: {this.TalkVoice!.Name!}");
+					this.engine = Activator.CreateInstance(
+						talker,
+						new object[]{this.TalkVoice!.Name!}
+					);
+					var comps = engine.Components;
+					foreach (var c in comps)
+					{
+						//Debug.WriteLine($"c:{c}");
+						styles.Add(new TalkVoiceStyleParam {
+							Id = c.Id,
+							Name = c.Name,
+							Value = c.Value,
+							DefaultValue = c.Value,
+							Min = 0,
+							Max = 100,
+							SmallChange = 1
+						});
+					}
+
+					//return styles;
+
+					break;
+				case TalkEngine.OPENJTALK:
+				case TalkEngine.VOICEVOX:
+				default:
+					//return styles;
+					break;
+			}
+			return styles;
+		}
+
 		/// <summary>
 		/// TTSに発話させる
 		/// </summary>
 		/// <param name="text">発話させるテキスト</param>
-		public async ValueTask Speak(string text, bool withSave = false){
+		public async ValueTask Speak(
+			string text,
+			bool withSave = false
+		){
 			if (this.engine is null)
 			{
 				logger.Error("Speak(): this.engine is null");
@@ -607,7 +670,7 @@ namespace NodoAme
 					engine.Cast = TalkVoice!.Name;
 					Debug.WriteLine($"CAST:{engine.Cast}" );
 					SetEngineParam();
-					SetVoiceStyle();
+					SetVoiceStyle(false);
 
 					var state = engine.Speak(text);
 
@@ -683,7 +746,9 @@ namespace NodoAme
 			await Speak(serifText, true);
 		}
 
-		private void SetVoiceStyle()
+		public void SetVoiceStyle(
+			bool usePreset = true
+		)
 		{
 			if (this.VoiceStyle is null)
 			{
@@ -691,23 +756,37 @@ namespace NodoAme
 				return;
 			};
 
+
+
 			switch(this.engineType)
 			{
 				case TalkEngine.CEVIO:
-					foreach (var c in engine!.Components)
-					{
-						if (this.VoiceStyle.Id == c.Id)
+					if(usePreset){
+						//プリセット
+						foreach (var c in engine!.Components)
 						{
-							c.Value = 100;  //感情値ValueをMAXに
-							Debug.WriteLine($"Current Style:{c.Name}");
+							if (this.VoiceStyle.Id == c.Id)
+							{
+								c.Value = 100;  //感情値ValueをMAXに
+								Debug.WriteLine($"Current Style:{c.Name}");
+							}
+							else
+							{
+								c.Value = 0;    //感情値Valueをゼロに
+							}
 						}
-						else
+					}else{
+						IList<TalkVoiceStyleParam>? voiceStyleParams = this.VoiceStyleParams;
+						//感情合成
+						foreach (var c in engine!.Components)
 						{
-							c.Value = 0;    //感情値Valueをゼロに
+							var p = voiceStyleParams.First(v => v.Id == c.Id);
+							if(p is null)continue;
+							Debug.WriteLine($"VoiceStyle: {p.Name} {p.Value}");
+							c.Value = (uint)p.Value;
 						}
-						//Debug.WriteLine($"c:{c}");
-						//styles.Add(new TalkSoftVoiceStylePreset { Id = c.Id, Name = c.Name, Value = c.Value });
 					}
+
 					break;
 				case TalkEngine.VOICEVOX:
 					var vv = this.engine as Voicevox;
@@ -815,7 +894,7 @@ namespace NodoAme
 			if (engineType == TalkEngine.CEVIO)
 			{
 				engine.Cast = TalkVoice!.Name;
-				SetVoiceStyle();
+				SetVoiceStyle(false);
 			}
 			else if (engineType == TalkEngine.VOICEVOX)
 			{
