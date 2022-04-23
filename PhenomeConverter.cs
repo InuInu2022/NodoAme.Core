@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using WanaKanaNet;
 using System.Linq;
+using NodoAme.Models;
 
 namespace NodoAme
 {
@@ -285,6 +286,96 @@ namespace NodoAme
 				}
 			}
 			return s;
+		}
+
+		/// <summary>
+		/// 英語の音素を日本語の音素に変換する
+		/// CeVIO Pro ・ CeVIO AI 8.2以降と互換
+		/// </summary>
+		/// aa:a; ae:e; ah:a; ax:a; ao:o; aw:a,u; axr:a; ay:a,i; b:b; ch:ch; d:d; dd:r; dh:z; eh:e; ey:e,i; f:f; g:g; hh:h; ih:i; iy:i; jh:j; jjh:j; k:k; l:r; ll:r; m:m; mm:N; n:n; nn:N; ng:n; ow:o,u; oy:o,i; p:p; r:r; s:s; sh:sh; t:t; tt:r; th:s; uh:u; uw:u; v:v; w:w; y:y; z:z; zh:j; zz:z; cl:cl;
+		/// <param name="phs"></param>
+		/// <returns></returns>
+		public static List<Label> EnglishToJapanese(List<Label> phs){
+			return phs
+				.Select(v =>
+				{
+					var newPhoneme = v.Phoneme switch
+					{
+						"aa" => "a",
+						"ah" => "a",
+						"ax" => "a",
+						"axr" => "a",
+						"ay" => "a,i",
+						"aw" => "a,u",
+						"cl" => "cl",
+						"ae" => "e",
+						"eh" => "e",
+						"ey" => "e,i",
+						"hh" => "h",
+						"ih" => "i",
+						"iy" => "i",
+						"jh" => "j",
+						"jjh" => "j",
+						"zh" => "j",
+						"mm" => "N",
+						"nn" => "N",
+						"ng" => "n",
+						"ao" => "o",
+						"oy" => "o,i",
+						"ow" => "o,u",
+						"dd" => "r",
+						"l" => "r",
+						"ll" => "r",
+						"tt" => "r",
+						"th" => "s",
+						"uh" => "u",
+						"uw" => "u",
+						"dh" => "z",
+						"zz" => "z",
+						_ => v.Phoneme,
+					};
+
+					List<Label> list = newPhoneme!.Contains(",") switch
+					{
+						true => v.SplitLabel(newPhoneme),
+						false => v.ReplacePhoneme(newPhoneme)
+					};
+					return list;
+				})
+				.SelectMany(v => v)
+				.ToList();
+		}
+
+		public static List<Label> ReplacePhoneme(
+			this Label label,
+			string newPhoneme
+		){
+			label.Phoneme = newPhoneme;
+			return new List<Label> { label };
+		}
+
+		public static List<Label> SplitLabel(
+			this Label label,
+			string splited
+		){
+			var a = splited.Split(new char[]{','});
+			var num = a.Length;
+
+			var start = label.StartTime ?? 0;
+			var end = label.EndTime ?? 0;
+
+			var length = end - start;
+			var span = length / num;
+
+			return a
+				.Select((v, i) => new Label(
+					v,
+					start + (span * i),
+					start + (span * (i+1))
+				))
+				.ToList();
+
+			//return new List<Label> { label };
 		}
     }
 }

@@ -182,6 +182,8 @@ namespace NodoAme
 		private const int SEC_RATE = 10000000;
 		private const int SAMPLE_RATE = 48000;
 
+		private readonly char[] ENGLISH_SPLITTER = new char[] { '.', '?' };
+
 		//private const string TalkEngine.CEVIO = "CeVIO";
 		//private const string TalkEngine.OPENJTALK = "OpenJTalk";
 		private string CastToExport = "CSNV-JPF-THR1";
@@ -941,6 +943,11 @@ namespace NodoAme
 			var duration = GetTickDuration(serifLen);
 			Debug.WriteLine($"duration :{duration}");
 
+			//Convert phonemes from En to Ja
+			if(exportMode == ExportLyricsMode.EN_TO_JA){
+				phs = PhonemeConverter.EnglishToJapanese(phs);
+			}
+
 			//split notes
 			(List<dynamic>? notesList, int phNum)
 				= await SplitPhonemesToNotes(phs, exportMode, noteSplitMode);
@@ -956,6 +963,7 @@ namespace NodoAme
 
 			var phCount = 0;
 			var pauCount = 0;
+			var notesListCount = 0;
 			foreach (List<dynamic> nList in notesList)
 			{
 				var phText = "";
@@ -1029,12 +1037,18 @@ namespace NodoAme
 				phText = phText.TrimEnd(",".ToCharArray());
 				Debug.WriteLine($"phText :{phText}");
 
+
+
 				//CS対策：CSは有効な文字種の歌詞でないとちゃんと発音しない（音素指定でも）
 				var lyricText = exportMode switch
 				{
-					ExportLyricsMode.KANA => PhonemeConverter.ConvertToKana(phText.Replace("pau", "").Replace(",", "")),
+					ExportLyricsMode.KANA
+						=> PhonemeConverter.ConvertToKana(phText.Replace("pau", "").Replace(",", "")),
+					//ExportLyricsMode.ALPHABET 
+					//	=> serifText.Split(ENGLISH_SPLITTER)[notesListCount],
 					_ => phText.Replace(",", ""),
 				};
+				notesListCount++;
 				Debug.WriteLine($"lyric: {lyricText}");
 
 
@@ -1373,6 +1387,8 @@ namespace NodoAme
 			{
 				case ExportLyricsMode.KANA:
 				case ExportLyricsMode.PHONEME:
+				case ExportLyricsMode.ALPHABET:
+				case ExportLyricsMode.EN_TO_JA:
 				{
 					//ModeForAI: pauの区切りでノートに分割する
 					await Task.Run(() =>
@@ -1400,81 +1416,7 @@ namespace NodoAme
 						});
 						notesList.Add(new List<dynamic>(noteList));
 					}break;
-				/*
-				case ExportMode.CeVIO_CS:{
-					//mode for cs
-					await Task.Run(() =>
-						{
-							for (int i = 0; i < phs.Count; i++)
-							{
-								switch (phs[i].Phoneme)
-								{
-									case "sil": //ignore phoneme
-										break;
-									case "pau": //split note
-										notesList.Add(new List<dynamic>(noteList));
-										noteList.Clear();
-										phNum++;
-										break;
-									default:
-										var isEnd = i + 1 == phs.Count;
-										var isVowel = PhonemeUtil.IsVowel(phs[i]);
 
-										if(!isEnd && isVowel){
-											//
-											var next = phs[i + 1];
-											var isC = PhonemeUtil.IsConsonant(next);
-											var isN = PhonemeUtil.IsNasal(next);
-											var isV = PhonemeUtil.IsVowel(next);
-
-											//TODO:日本語以外検証
-											//1.母音→母音はnote分割
-											//2.母音→(鼻音以外の)子音はnote分割 [v,c,...]
-											//3. [v,n,v]はノート分割
-											if(
-												(isC && !isN)
-												|| isV 
-												|| (isN && (i+2 < phs.Count) && PhonemeUtil.IsVowel(phs[i+2]))
-											){	//split
-												noteList.Add(phs[i]);
-												notesList.Add(new List<dynamic>(noteList));
-												noteList.Clear();
-												phNum++;
-												break;
-											}
-										}else if(!isEnd && PhonemeUtil.IsNasal(phs[i])){
-											var next = phs[i + 1];
-											var isC = PhonemeUtil.IsConsonant(next);
-											//var isN = PhonemeUtil.IsNasal(next);
-											//鼻音→子音はnote分割 [n,c,...]
-											//TODO: ngの鼻濁音対応（この後に処理するなら要らない）
-											if(isC){			//split
-												noteList.Add(phs[i]);
-												notesList.Add(new List<dynamic>(noteList));
-												noteList.Clear();
-												phNum++;
-												break;
-											}
-										}else if(!isEnd && PhonemeUtil.IsCL(phs[i])){
-											//促音「っ」は前にくっつけて分割
-											noteList.Add(phs[i]);
-											notesList.Add(new List<dynamic>(noteList));
-											noteList.Clear();
-											phNum++;
-											break;
-										}
-
-
-										//append
-										noteList.Add(phs[i]);
-										phNum++;
-										break;
-								}
-							}
-						});
-						notesList.Add(new List<dynamic>(noteList));
-					}break;
-				*/
 				default:
 					logger.Error($"Export mode {mode} is invalid!");
 					break;
