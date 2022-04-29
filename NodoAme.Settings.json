@@ -9,18 +9,6 @@
 			"enabledExport":true,
 			"voices":[
 				{
-					"id":"m001",
-					"name":"標準男声",
-					"path":"dic/nitech_jp_atr503_m001.htsvoice",
-					"styles":[
-						{
-							"id":"standard",
-							"name":"標準",
-							"path":"dic/nitech_jp_atr503_m001.htsvoice"
-						}
-					]
-				},
-				{
 					"id":"tohoku_f001",
 					"name":"標準女声",
 					"path":"dic/tohoku-f01-neutral.htsvoice",
@@ -44,6 +32,18 @@
 							"id":"sad",
 							"name":"悲しみ",
 							"path":"./dic/tohoku-f01-sad.htsvoice"
+						}
+					]
+				},
+				{
+					"id":"m001",
+					"name":"標準男声",
+					"path":"dic/nitech_jp_atr503_m001.htsvoice",
+					"styles":[
+						{
+							"id":"standard",
+							"name":"標準",
+							"path":"dic/nitech_jp_atr503_m001.htsvoice"
 						}
 					]
 				}
@@ -357,7 +357,7 @@
 		},
 		{
 			"id":"CSNV-JPF-THR2",
-			"name":"⚠星界（SEKAI）",
+			"name":"星界（SEKAI）",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
 		},
