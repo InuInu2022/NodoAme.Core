@@ -344,12 +344,6 @@
 		},
 		{
 			"id":"ID-CHIS-A",
-			"name":"⚠知声(ccs出力)",
-			"songSoft":"CeVIO Pro",
-			"lyricsMode":"KANA"
-		},
-		{
-			"id":"ID-CHIS-A",
 			"name":"知声(tssprj出力)",
 			"songSoft":"CeVIO Pro",
 			"lyricsMode":"KANA",
