@@ -245,16 +245,6 @@
     </Expander>
     <!-- standard options -->
     <WrapPanel Grid.Row="2" />
-    <!-- TextBox x:Name="phbox"
-             VerticalAlignment="Top"
-             Margin="10,0,10,0"
-             TextWrapping="Wrap"
-             AcceptsReturn="True"
-             FontSize="16.0"
-             FontFamily="Georgia"
-             IsReadOnly="True"
-             IsReadOnlyCaretVisible="True"
-             Text="{Binding ConvertedText}" / -->
     <!-- List start -->
     <fw:DropShadowPanel Grid.Row="3"
                         ShadowMode="Outer"
@@ -269,7 +259,7 @@
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.VirtualizationMode="Recycling"
                 CanUserAddRows="False"
-                CanUserDeleteRows="False"
+                CanUserDeleteRows="True"
                 CanUserReorderColumns="True"
                 CanUserSortColumns="False"
                 SelectionUnit="CellOrRowHeader"
@@ -316,21 +306,7 @@
                         Value="{Binding EnabledInputSerif}" / -->
               </Style>
             </DataGridTextColumn.EditingElementStyle>
-            <!-- epoxy:EventBinder.Events>
-						<epoxy:Event Name="KeyDown"
-									Command="{Binding CheckEnterAndAddRow}" />
-					</epoxy:EventBinder.Events -->
           </DataGridTextColumn>
-          <!-- DataGridTemplateColumn 
-					Header="セリフ"
-					Width="*"
-					>
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding ElementName=PreviewButton, Path=IsEnabled}" />
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-				</DataGridTemplateColumn -->
           <DataGridTemplateColumn Header="試聴"
                                   Width="SizeToCells">
             <DataGridTemplateColumn.CellTemplate>
