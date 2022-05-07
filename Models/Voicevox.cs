@@ -206,12 +206,13 @@ namespace NodoAme.Models
 			}
         }
 
-        public async ValueTask SpeakAsync(string serif){
-            if(string.IsNullOrEmpty(serif))return;
+        public async ValueTask<double> SpeakAsync(string serif){
+            if(string.IsNullOrEmpty(serif))return -1;
 
 
 			var sRes = await SynthesisAsync(serif);
 
+			double time = 0.0;
 			await Task.Run(() =>
 			{
 				using var ms = new MemoryStream(sRes.RawBytes);
@@ -219,6 +220,7 @@ namespace NodoAme.Models
 					ms,
 					new WaveFormat(24000, 16, 1)
 				);
+				time = rs.TotalTime.TotalSeconds;
 				var wo = new WaveOutEvent();
 				wo.Init(rs);
 				wo.Play();
@@ -229,7 +231,7 @@ namespace NodoAme.Models
 				wo.Dispose();
 			});
 
-			//var dl = await restClient!.DownloadDataAsync(sRes);
+			return time;
 		}
 
         public async ValueTask<bool> OutputWaveToFile(

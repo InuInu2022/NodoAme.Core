@@ -836,7 +836,7 @@ namespace NodoAme.ViewModels
 			MainWindow.Logger.Info("InitVoiceStyles finished.");
 		}
 
-		public async ValueTask PreviewTalkFromList(string serifText)
+		public async ValueTask<string> PreviewTalkFromList(string serifText)
 		{
 			this.talkEngine = await GenerateWrapper(
 				this.currentEngine,
@@ -847,7 +847,7 @@ namespace NodoAme.ViewModels
 			);
 
 			talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
-			await talkEngine.Speak(serifText);
+			return await talkEngine.Speak(serifText);
 
 		}
 
@@ -984,6 +984,8 @@ namespace NodoAme.ViewModels
 				isConvertToHiragana: IsConvertToHiragana
 			);
 		}
+
+
 
 		[PropertyChanged(nameof(DefaultSerifLines))]
 		private async ValueTask DefaultSerifLinesChangedAsync(int value){

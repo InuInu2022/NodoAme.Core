@@ -56,7 +56,8 @@
     <WrapPanel Grid.Row="0">
       <ComboBox x:Name="TalkSoftComboBox"
                 Text="Engine"
-                ToolTip="音素・かな変換をするトークソフトを選びます。&#xA;最初は NodoAme 標準エンジンです。&#xA;「⚠」のつくトークソフトは制限があります。"
+                ToolTip="しゃべらせるお手本になるトークソフトを選びます。&#xA;最初は NodoAme 標準エンジンです。&#xA;「⚠」のつくトークソフトは制限があります。"
+                ToolTipService.ShowDuration="10000000"
                 Width="120"
                 Margin="10,10,0,0"
                 FontSize="16.0"
@@ -74,7 +75,7 @@
                  VerticalAlignment="Center" />
       <ComboBox x:Name="PreviewVoiceComboBox"
                 Text="Voice"
-                ToolTip="しゃべらせるお手本になる、トークのボイスを選びます。"
+                ToolTip="しゃべらせるお手本になる、トークのボイスを選びます。&#xA;最初は NodoAme 標準ボイスです。"
                 Width="130"
                 Margin="0,10,0,0"
                 FontSize="16.0"
@@ -128,6 +129,7 @@
       <ComboBox x:Name="exportLyricesMode"
           Width="Auto"
           ToolTip="歌詞の出力方法を選びます。&#xA;CeVIO AIは「PHONEME」（音素）、CeVIO CSは「KANA」（ひらがな）がベストです。"
+          ToolTipService.ShowDuration="10000000"
           Margin="3,10,0,0"
           FontSize="12.5"
           VerticalAlignment="Top"
@@ -354,6 +356,44 @@
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
+          <DataGridTextColumn Header="秒"
+                              Width="SizeToHeader"
+                              MinWidth="50"
+                              Binding="{Binding SerifTime}"
+                              >
+            <DataGridTextColumn.ElementStyle>
+              <Style TargetType="TextBlock">
+                <Setter Property="ToolTip"
+                        Value="セリフの時間を表示します。&#xA;⚠試聴ボタンを押すことで更新。" />
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+                <Setter Property="Margin"
+                        Value="5" />
+                <Setter Property="FontSize"
+                        Value="10" />
+              </Style>
+            </DataGridTextColumn.ElementStyle>
+            <DataGridTextColumn.EditingElementStyle>
+              <Style TargetType="{x:Type TextBox}">
+                <Setter Property="AcceptsReturn"
+                        Value="False" />
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+                <Setter Property="Padding"
+                        Value="5" />
+                <Setter Property="Margin"
+                        Value="5" />
+                <Setter Property="FontSize"
+                        Value="10" />
+                <Setter Property="IsReadOnly"
+                        Value="True" />
+              </Style>
+            </DataGridTextColumn.EditingElementStyle>
+          </DataGridTextColumn>
           <DataGridTemplateColumn Header="音素"
                                   Width="*">
             <DataGridTemplateColumn.CellTemplate>
@@ -364,6 +404,7 @@
                            AcceptsReturn="False"
                            FontFamily="Georgia"
                            FontSize="16.5"
+                           ToolTip="音素の文字列を表示します。&#xA;オプションで音素の差し替えに対応します。"
                            IsReadOnly="True"
                            Style="{StaticResource TextBoxRevealStyle}"
                            Text="{Binding ConvertedText}" />

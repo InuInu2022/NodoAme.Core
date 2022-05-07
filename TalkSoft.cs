@@ -657,16 +657,19 @@ namespace NodoAme
 		/// TTSに発話させる
 		/// </summary>
 		/// <param name="text">発話させるテキスト</param>
-		public async ValueTask Speak(
+		/// <returns>秒数</returns>
+		public async ValueTask<string> Speak(
 			string text,
 			bool withSave = false
 		){
 			if (this.engine is null)
 			{
 				logger.Error("Speak(): this.engine is null");
+				return "ERROR";
 				throw new NullReferenceException("Speak(): this.engine is null");
 			}
 
+			double time = 0;
 			switch(engineType){
 				case TalkEngine.CEVIO:
 					engine.Cast = TalkVoice!.Name;
@@ -674,6 +677,7 @@ namespace NodoAme
 					SetEngineParam();
 					SetVoiceStyle(false);
 
+					time = engine.GetTextDuration(text);
 					var state = engine.Speak(text);
 
 					if(withSave){
@@ -709,17 +713,18 @@ namespace NodoAme
 
 					//var jtalk = new OpenJTalkAPI();
 					//jtalk.Synthesis(text, false, true);
-
-					jtalk.Synthesis(text, false, true);
-					List<byte> buf = jtalk.WavBuffer;
-
-					//play audio wav data
+					await Task.Run(() =>
 					{
+						jtalk.Synthesis(text, false, true);
+						List<byte> buf = jtalk.WavBuffer;
+
+						//play audio wav data
 						using var ms = new MemoryStream(buf.ToArray());
 						var rs = new RawSourceWaveStream(
 							ms,
 							new WaveFormat(SAMPLE_RATE, 16, 1)
 						);
+						time = rs.TotalTime.TotalSeconds;
 						var wo = new WaveOutEvent();
 						wo.Init(rs);
 						wo.Play();
@@ -728,7 +733,7 @@ namespace NodoAme
 							Thread.Sleep(500);
 						}
 						wo.Dispose();
-					}
+					});
 					break;
 				case TalkEngine.VOICEVOX:
 					SetEngineParam();
@@ -736,12 +741,14 @@ namespace NodoAme
 					var vv = this.engine as Voicevox;
 					vv!.Cast = TalkVoice!.Name!;
 					
-					await vv!.SpeakAsync(text);
+					time = await vv!.SpeakAsync(text);
 					break;
 				default:
 
 					break;
 			}
+
+			return Convert.ToString(time);
 		}
 
 		public async ValueTask PreviewSave(string serifText){

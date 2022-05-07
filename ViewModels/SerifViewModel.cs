@@ -12,6 +12,8 @@ namespace NodoAme.ViewModels
 	{
 		public string? SourceText { get; set; }
 		public string? ConvertedText { get; set; }
+
+		public string? SerifTime { get; set; }
 		public MainWindowViewModel? ParentVM { get; set; }
 
 		public bool EnabledSerifInput { get; set; }
@@ -38,7 +40,7 @@ namespace NodoAme.ViewModels
 				async _ => {
 					EnabledPreview = false;
 					PreviewProgress = Visibility.Visible;
-					await ParentVM!.PreviewTalkFromList(this.SourceText);
+					SerifTime = await ParentVM!.PreviewTalkFromList(this.SourceText);
 					EnabledPreview = true;
 					PreviewProgress = Visibility.Collapsed;
 				}
