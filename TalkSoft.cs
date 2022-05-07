@@ -914,7 +914,7 @@ namespace NodoAme
 			//serifLen = engine.GetTextDuration(serifText);
 			var dandp = await this.GetTextDurationAndPhonemes(serifText);
 			serifLen = dandp.duration;
-			var phs = dandp.phs;    //TODO: use this.GetLabels()
+			var phs = dandp.phs;
 			var labels = await GetLabelsAsync(serifText);
 
 			Debug.WriteLine($"--TIME[tmg eliminate(text duration)]:{sw.ElapsedMilliseconds}");
@@ -981,7 +981,11 @@ namespace NodoAme
 				for (int i = 0; i < nList.Count; i++)
 				{
 					var ph = nList[i];
-					var start = ph.StartTime;
+					if(ph is null)continue;
+					string pText = ph.Phoneme ?? "";
+
+					double start = ph.StartTime ?? 0.0;
+					double end = ph.EndTime ?? 0.0;
 					if (startPhonemeTime > start)
 					{
 						//最初の音素の開始時刻を指定
@@ -989,8 +993,13 @@ namespace NodoAme
 						startPhonemeTime = start;
 					}
 					if(!PhonemeUtil.IsPau(ph)){
-						phText += ph.Phoneme.ToLower() + ",";   //TODO:「ん」対応
-						noteLen += GetTickDuration(ph.EndTime - ph.StartTime);
+						var addPhoneme = PhonemeUtil.IsNoSoundVowel(pText) switch
+						{
+							true => pText.ToLower(),	//無声母音は小文字化
+							false => pText
+						};
+						phText += addPhoneme + ",";
+						noteLen += (int) GetTickDuration(end - start);
 						phCount++;
 					}else{
 						pauCount++;

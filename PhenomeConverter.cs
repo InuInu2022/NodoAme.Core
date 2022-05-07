@@ -205,56 +205,35 @@ namespace NodoAme
 		/// <returns></returns>
 		private static string CheckJapaneseSyllabicNasal(string[] phenoms)
         {
-			switch (phenoms[NEXT_PHENOME_IDY])
+			return phenoms[NEXT_PHENOME_IDY] switch
 			{
 				/*
-                case "pau":
-                case "sil":
-                    switch (phenoms[PREV_PHENOME_IDY])
-                    {
-                        case "a":
-                        case "i":
-                        case "e":
-                            s = "n,g";
-                            break;
-                        case "u":
-                        case "o":
-                        case "pau":
-                        case "sil":
-                            s = "N";
-                            break;
-                        default:
-                            s = "N";
-                            break;
-                    }
-                    break;
-                */
-				case "p":
-				case "py":
-				case "b":
-				case "by":
-				case "m":
-				case "my":
-					return "m";
-				case "t":
-				case "ty":
-				case "ch":
-				case "ts":
-				case "d":
-				case "jy":
-				case "n":
-				case "ny":
-				case "r":
-				case "ry":
-					return "n";
-				case "k":
-				case "ky":
-				case "g":
-				case "gy":
-					return "n,g";
-				default:
-					return phenoms[CURRENT_PHENOME_IDY];
-			}
+				case "pau":
+				case "sil":
+					switch (phenoms[PREV_PHENOME_IDY])
+					{
+						case "a":
+						case "i":
+						case "e":
+							s = "n,g";
+							break;
+						case "u":
+						case "o":
+						case "pau":
+						case "sil":
+							s = "N";
+							break;
+						default:
+							s = "N";
+							break;
+					}
+					break;
+				*/
+				"p" or "py" or "b" or "by" or "m" or "my" => "m",
+				"t" or "ty" or "ch" or "ts" or "d" or "jy" or "n" or "ny" or "r" or "ry" => "n",
+				"k" or "ky" or "g" or "gy" => "n,g",
+				_ => phenoms[CURRENT_PHENOME_IDY],
+			};
 		}
 
 		/// <summary>

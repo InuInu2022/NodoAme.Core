@@ -10,6 +10,12 @@ namespace NodoAme.Models
 		public const string SIL = "sil";
 		public const string INVALID_PH = "xx";
 
+		public static Regex VOWELS_JA = new("[aiueoAIUEO]", RegexOptions.Compiled);
+		public static Regex NOSOUND_VOWELS = new("[AIUEO]", RegexOptions.Compiled);
+
+		public static Regex NO_CONSONANT = new($"{INVALID_PH}|{CL}|{PAU}|{SIL}", RegexOptions.Compiled);
+		public static Regex NASAL_JA = new("[nmN]|ng", RegexOptions.Compiled);
+
 		/// <summary>
 		/// 音素テキストが母音かどうか
 		/// </summary>
@@ -17,7 +23,7 @@ namespace NodoAme.Models
 		/// <returns></returns>
 		public static bool IsVowel(string? pText){
             if(string.IsNullOrEmpty(pText)) return false;
-			return Regex.IsMatch(pText, "[aiueoAIUEO]");
+			return VOWELS_JA.IsMatch(pText);
 		}
 
         /// <summary>
@@ -30,18 +36,32 @@ namespace NodoAme.Models
 			return PhonemeUtil.IsVowel(label.Phoneme);
 		}
 
+		/// <summary>
+		/// 音素テキストが無声母音か？
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public static bool IsNoSoundVowel(string text)
+			=> NOSOUND_VOWELS.IsMatch(text);
 
-        public static bool IsConsonant(string? cText){
+
+		/// <summary>
+		/// 音素が子音かどうか
+		/// </summary>
+		/// <param name="cText"></param>
+		/// <returns></returns>
+		public static bool IsConsonant(string? cText){
             if(string.IsNullOrEmpty(cText)) return false;
 
-            if(Regex.IsMatch(cText, $"{INVALID_PH}|{CL}|{PAU}|{SIL}")){
-                //no
+            if(NO_CONSONANT.IsMatch(cText)){
+                //no:子音
 				return false;
-			}else if(!IsVowel(cText)){
-				//yes
-				return true;
+			}else if(IsVowel(cText)){
+				//no:母音
+				return false;
 			}else{
-                return false;
+				//yes
+                return true;
             }
         }
 
@@ -57,7 +77,7 @@ namespace NodoAme.Models
 		/// <returns></returns>
         public static bool IsNasal(string? nText){
             if(string.IsNullOrEmpty(nText)) return false;
-			return Regex.IsMatch(nText, "[nmN]|ng");
+			return NASAL_JA.IsMatch(nText);
 		}
 
         /// <summary>
