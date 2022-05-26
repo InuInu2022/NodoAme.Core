@@ -344,8 +344,8 @@
 		},
 		{
 			"id":"ID-CHIS-A",
-			"name":"知声(tssprj出力)",
-			"songSoft":"CeVIO Pro",
+			"name":"知声",
+			"songSoft":"VoiSona",
 			"lyricsMode":"KANA",
 			"exportFile":1
 		},
