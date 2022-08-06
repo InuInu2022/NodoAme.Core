@@ -16,7 +16,7 @@
         mc:Ignorable="d"
         Title="{Binding WindowTitle}"
         Height="600"
-        Width="800"
+        Width="850"
         ResizeMode="CanResizeWithGrip">
   <Window.DataContext>
     <viewmodels:MainWindowViewModel />
@@ -159,7 +159,7 @@
       <Expander.Header>
         <WrapPanel>
           <fa:FontAwesome Icon="Solid_Sliders" FontSize="14" Margin="2" />
-          <TextBlock Text="トークパラメータ" />
+          <TextBlock Text="パラメータ" />
         </WrapPanel>
       </Expander.Header>
       <ScrollViewer Margin="0"
@@ -199,8 +199,8 @@
                           TickFrequency="{Binding SmallChange}"
                           SmallChange="{Binding SmallChange}"
                           Value="{Binding Value}" />
-                  <ui:NumberBox Width="58"
-                                FontSize="11"
+                  <ui:NumberBox Width="70"
+                                FontSize="10"
                                 Margin="1,0"
                                 SmallChange="{Binding SmallChange}"
                                 SpinButtonPlacementMode="Compact"
@@ -211,7 +211,7 @@
             </ItemsControl.ItemTemplate>
           </ItemsControl>
           <Separator
-            Margin="10,0"
+            Margin="5,0"
             Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
           <!-- talk voice params-->
           <ItemsControl x:Name="TalkVoiceParameterList"
@@ -247,7 +247,55 @@
                           TickFrequency="{Binding SmallChange}"
                           SmallChange="{Binding SmallChange}"
                           Value="{Binding Value}" />
-                  <ui:NumberBox Width="58"
+                  <ui:NumberBox Width="70"
+                                FontSize="11"
+                                Margin="1,0"
+                                SmallChange="{Binding SmallChange}"
+                                SpinButtonPlacementMode="Compact"
+                                ValidationMode="InvalidInputOverwritten"
+                                Value="{Binding Value, ElementName=slider}" />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Separator
+            Margin="5,0"
+            Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+          <!-- song voice params -->
+          <ItemsControl x:Name="SongVoiceParameterList"
+                        Margin="0,0,0,0"
+                        MaxHeight="300"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                        fw:PointerTracker.Enabled="True"
+                        ItemsSource="{Binding SongVoiceStyleParams}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Center"
+                            Height="Auto"
+                            Width="60">
+                  <TextBlock Text="{Binding Name}"
+                        Width="60"
+                        Margin="5,0"
+                        FontSize="11" />
+                  <Slider x:Name="slider"
+                          Width="45"
+                          Height="75"
+                          Margin="10"
+                          Orientation="Vertical"
+                          HorizontalContentAlignment="Center"
+                          Minimum="{Binding Min}"
+                          Maximum="{Binding Max}"
+                          IsSnapToTickEnabled="True"
+                          TickFrequency="{Binding SmallChange}"
+                          SmallChange="{Binding SmallChange}"
+                          Value="{Binding Value}" />
+                  <ui:NumberBox Width="70"
                                 FontSize="11"
                                 Margin="1,0"
                                 SmallChange="{Binding SmallChange}"

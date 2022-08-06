@@ -15,11 +15,24 @@ namespace NodoAme
 		public ExportLyricsMode LyricsMode { get; set; }
 		[JsonPropertyName("exportFile")]
 		public NodoAme.Models.ExportFileType ExportFile { get; set; }
+		[JsonPropertyName("hasEmotion")]
+		public bool? HasEmotion { get; set; }
 	}
 
 	public static class SongSoftName{
 		public static string CEVIO_AI = "CeVIO AI";
 		public static string CEVIO_CS = "CeVIO CS";
 		public static string CEVIO_Pro = "CeVIO Pro";
+	}
+
+	public class SongVoiceStyleParam{
+		public string? Id { get; set; }
+		public string? Name { get; set; }
+		public double Min { get; set; }
+		public double Max { get; set; }
+		public double DefaultValue { get; set; }
+
+		public double? SmallChange { get; set; }
+		public double Value { get; set; }
 	}
 }

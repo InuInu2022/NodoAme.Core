@@ -26,7 +26,7 @@ namespace NodoAme.ViewModels
 	[ViewModel]
 	public class MainWindowViewModel
 	{
-		
+
 		static public Logger logger = LogManager.GetCurrentClassLogger();
 		public string WindowTitle { get; set; }
 
@@ -49,6 +49,11 @@ namespace NodoAme.ViewModels
 
 		public ObservableCollection<SongCast> ExportCastItems { get; private set; }
 		public int ExportCastSelected { get; set; } = 0;
+
+		/// <summary>
+		/// ソングエクスポート用：声質や感情など
+		/// </summary>
+		public ObservableCollection<SongVoiceStyleParam> SongVoiceStyleParams{ get; set; }
 
 		public IConfigurationRoot Config { get; private set; }
 		public Models.UserSettings UserSettings { get; set; }
@@ -157,7 +162,7 @@ namespace NodoAme.ViewModels
 
 		public Command ExportSusuru { get; set; }
 
-		
+
 
 		//---------------------------------------------------
 		#endregion
@@ -184,6 +189,20 @@ namespace NodoAme.ViewModels
 			this.setting =  LoadSettings().Result;
 			this.japaneseRules = LoadJapanaseRule().Result;
 			InitTalkSofts();
+
+
+			//TODO:暫定感情対応
+			SongVoiceStyleParams = new ObservableCollection<SongVoiceStyleParam>
+			{
+				new SongVoiceStyleParam(){
+					Id="Emotion",
+					Name="♫感情",
+					Min=0.00,
+					Max=1.00,
+					DefaultValue=0.00,
+					SmallChange=0.01
+				}
+			};
 
 			this.Serifs
 				.Add(new SerifViewModel { ParentVM = this, SourceText = "サンプル：僕らの気持ちが、明日へ向かいます。チンプンカンプンな本に大変！" });
@@ -611,7 +630,7 @@ namespace NodoAme.ViewModels
 					default:
 						break;
 				}
-				
+
 			}
 		}
 
@@ -631,8 +650,8 @@ namespace NodoAme.ViewModels
 					break;
 				case VowelOptions.DoNothing:
 				default:
-					
-					
+
+
 					//return new ValueTask();
 					break;
 			}
@@ -688,7 +707,7 @@ namespace NodoAme.ViewModels
 			}
 			else if (ts.Interface != null)
 			{
-				if (ts.Interface.Type == "API" 
+				if (ts.Interface.Type == "API"
 					&& ts.Interface.Engine == TalkEngine.CEVIO)
 				{
 					//CeVIO Talk API interface
@@ -786,7 +805,7 @@ namespace NodoAme.ViewModels
 					VoiceStylePresetsSelected = 0;
 
 				}
-				else if(ts.Interface.Type=="REST" 
+				else if(ts.Interface.Type=="REST"
 				&& ts.Interface.Engine == TalkEngine.VOICEVOX){
 					if (TalkVoiceSelected < 0) return;
 					if(_voices.Count == 0)return;
@@ -881,9 +900,10 @@ namespace NodoAme.ViewModels
 				AdaptingNoteToPitchMode,
 				noteSplitMode: NoteSplitMode,
 				(exportFileType != 0) ? exportFileType : ExportFileType.CCS,
-				BreathSuppress
+				BreathSuppress,
+				songVoiceStyles:SongVoiceStyleParams
 			);
-			
+
 			if(IsExportSerifText){
 				await talkEngine.ExportSerifTextFileAsync(
 					serifText,
@@ -1004,7 +1024,7 @@ namespace NodoAme.ViewModels
 			UserSettings.IsExportSerifText = value;
 			await UserSettings.SaveAsync();
 		}
-		
+
 		[PropertyChanged(nameof(DefaultExportSerifTextFileName))]
 		private async ValueTask DefaultExportSerifTextFileNameChangedAsync(string value){
 			if(string.IsNullOrEmpty(value))value = UserSettings.SERIF_FILE_NAME;
@@ -1059,7 +1079,7 @@ namespace NodoAme.ViewModels
 			UserSettings.IsExportAsTrac = value;
 			await UserSettings.SaveAsync();
 		}
-		
+
 
 		[PropertyChanged(nameof(IsUseSeparaterSpace))]
 		private ValueTask IsUseSeparaterSpaceChangedAsync(bool useSpace)
@@ -1072,8 +1092,8 @@ namespace NodoAme.ViewModels
 				UserSettings.IsUseSeparaterSpace = useSpace;
 				var _ = UserSettings.SaveAsync();
 			}
-			
-			
+
+
 			return new ValueTask();
 		}
 

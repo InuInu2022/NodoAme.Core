@@ -206,7 +206,7 @@ namespace NodoAme
 		private readonly CancellationTokenSource cancelSource = new CancellationTokenSource();
 
 		private static readonly Logger logger = LogManager.GetCurrentClassLogger();
- 
+
 
 		internal Wrapper(
 			string type,
@@ -250,7 +250,7 @@ namespace NodoAme
 					if(soft.Interface.Talker is null)break;
 
 					//CeVIO Talk API interface 呼び出し
-					string cevioPath = 
+					string cevioPath =
 						Environment.ExpandEnvironmentVariables(soft.Interface.EnvironmentProgramVar)
 						+ soft.Interface.DllPath
 						+ soft.Interface.DllName;
@@ -259,12 +259,12 @@ namespace NodoAme
 						MessageBox.Show(
                             $"{engineType}が見つかりませんでした。",
                             $"{engineType}の呼び出しに失敗",
-                            MessageBoxButton.OK, 
+                            MessageBoxButton.OK,
                             MessageBoxImage.Error
                         );
 						logger
 							.Error($"CeVIO Dll not found:{engineType}の呼び出しに失敗");
-						
+
 						return;
 					}
 					try{
@@ -273,7 +273,7 @@ namespace NodoAme
 						MessageBox.Show(
 							$"{engineType}を呼び出せませんでした。{e.Message}",
                             $"{engineType}の呼び出しに失敗",
-                            MessageBoxButton.OK, 
+                            MessageBoxButton.OK,
                             MessageBoxImage.Error
                         );
 						logger
@@ -285,14 +285,14 @@ namespace NodoAme
 						MessageBox.Show(
 							$"{engineType}を呼び出せませんでした。",
                             $"{engineType}の呼び出しに失敗",
-                            MessageBoxButton.OK, 
+                            MessageBoxButton.OK,
                             MessageBoxImage.Error
                         );
 						logger
 							.Error($"CeVIO Dll cannot call:{engineType}の呼び出しに失敗");
 						return;
 					}
-					
+
 					try
 					{
 						 MethodInfo startHost = t.GetMethod("StartHost");
@@ -343,7 +343,7 @@ namespace NodoAme
 						MessageBox.Show(
                             noCast,
                             $"{engineType}のトークボイスが見つかりません",
-                            MessageBoxButton.OK, 
+                            MessageBoxButton.OK,
                             MessageBoxImage.Error
                         );
 						logger
@@ -408,7 +408,7 @@ namespace NodoAme
 						MessageBox.Show(
 							msg,
 							msg,
-							MessageBoxButton.OK, 
+							MessageBoxButton.OK,
 							MessageBoxImage.Error
 						);
 						logger
@@ -437,7 +437,7 @@ namespace NodoAme
 				MessageBox.Show(
 					"現在、利用できるボイスがありません！",
 					"利用できるボイスがありません",
-					MessageBoxButton.OK, 
+					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
 				logger
@@ -546,7 +546,7 @@ namespace NodoAme
 			for (int i = 0; i < phs.Length; i++)
 			{
 				var ph = phs[i];
-				
+
 				string s = $"{GetPhoneme(phs, i-2)}^{GetPhoneme(phs, i-1)}-{ph.Phoneme}+{GetPhoneme(phs, i+1)}={GetPhoneme(phs, i+2)}/";
 
 				list.Add(s);
@@ -740,7 +740,7 @@ namespace NodoAme
 					SetVoiceStyle();
 					var vv = this.engine as Voicevox;
 					vv!.Cast = TalkVoice!.Name!;
-					
+
 					time = await vv!.SpeakAsync(text);
 					break;
 				default:
@@ -800,7 +800,7 @@ namespace NodoAme
 				case TalkEngine.VOICEVOX:
 					var vv = this.engine as Voicevox;
 					vv!.Style = this.VoiceStyle;
-					//this.VoiceStyle = 
+					//this.VoiceStyle =
 					break;
 				default:
 					//なにもしない
@@ -842,7 +842,7 @@ namespace NodoAme
 					default:
 						break;
 				}
-				
+
 				//UI反映
 				p.Value = newParam;
 			}
@@ -867,7 +867,8 @@ namespace NodoAme
 			NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED,
 			NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND,
 			ExportFileType fileType = ExportFileType.CCS,
-			BreathSuppressMode breathSuppress = BreathSuppressMode.NONE
+			BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
+			ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null
 		)
 		{
 			if (this.engine is null)
@@ -886,7 +887,7 @@ namespace NodoAme
 
 
 			//テンプレートファイル読み込み
-			var tmplTrack = isExportAsTrack ? 
+			var tmplTrack = isExportAsTrack ?
 				XElement.Load(@"./template/temp.track.xml") :	//ccst file
 				XElement.Load(@"./template/temp.track.xml")		//TODO:ccs file（現在はトラックのみ）
 				;
@@ -944,6 +945,17 @@ namespace NodoAme
 				scoreRoot.SetAttributeValue("Alpha", newAlpha.ToString());
 			}
 			*/
+
+			//感情(Emotion)設定
+			if(cast?.HasEmotion != null && cast.HasEmotion == true)
+			{
+				var emo = songVoiceStyles.First(v => v.Id == "Emotion");
+				var emo1 = emo.Value;
+				var emo0 = emo.Max - emo.Value;
+				scoreRoot.SetAttributeValue("Emotion0", emo0);	//↓
+				scoreRoot.SetAttributeValue("Emotion1", emo1);	//↑
+			}
+
 
 			//tmplTrack.Element("Score");
 			//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
@@ -1004,12 +1016,12 @@ namespace NodoAme
 					}else{
 						pauCount++;
 					}
-					
-					
-					
+
+
+
 
 					//timing elements
-					
+
 					var count = (5 * (phCount + pauCount)) - 1;
 					var timingData = new XElement("Data",
 						new XAttribute("Index", count.ToString()),
@@ -1049,7 +1061,7 @@ namespace NodoAme
 					}
 				}
 				if(noteSplitMode==NoteSplitModes.IGNORE_NOSOUND)pauCount++;
-				
+
 				phText = phText.TrimEnd(",".ToCharArray());
 				Debug.WriteLine($"phText :{phText}");
 
@@ -1060,7 +1072,7 @@ namespace NodoAme
 				{
 					ExportLyricsMode.KANA
 						=> PhonemeConverter.ConvertToKana(phText.Replace("pau", "").Replace(",", "")),
-					//ExportLyricsMode.ALPHABET 
+					//ExportLyricsMode.ALPHABET
 					//	=> serifText.Split(ENGLISH_SPLITTER)[notesListCount],
 					_ => phText.Replace(",", ""),
 				};
@@ -1220,7 +1232,7 @@ namespace NodoAme
 				volumeNode.Add(tVol);
 			}
 
-			
+
 
 			//CeVIOのバグ終了部分のVOLを削る
 			var lastTime = phs.Last().EndTime ?? 0.0;
@@ -1301,7 +1313,7 @@ namespace NodoAme
 					int.Parse(logF0Node.Attribute("Length").Value),
 					GetDataList(logF0Node)
 				);
-				
+
 				Debug.WriteLine($"vol len: {volumeNode.Attribute("Length").Value}");
 				var volume = new Volume(
 					int.Parse(volumeNode.Attribute("Length").Value),
@@ -1339,7 +1351,7 @@ namespace NodoAme
 
 		}
 
-		private static List<Data> GetDataList(XElement baseNode) 
+		private static List<Data> GetDataList(XElement baseNode)
 		{
 			var data = baseNode
 				.Elements()
@@ -1545,7 +1557,7 @@ namespace NodoAme
 					);
 					logger.Error($"failed to create a export directory:{outDirPath}");
 					logger.Error($"{ e.Message }");
-					
+
 					throw;
 				}
 			}
@@ -1600,7 +1612,7 @@ namespace NodoAme
 			Debug.WriteLine($"songcast:{castId}");
 
 			//テンプレートxml読み込み
-			var tmplTrack = isExportAsTrack ? 
+			var tmplTrack = isExportAsTrack ?
 				await Task.Run(() => XElement.Load("./template/temp.SUSURU.xml")) :	//ccst file
 				await Task.Run(() => XElement.Load("./template/temp.SUSURU.xml"))	//TODO:ccs file（現在はトラックのみ）
 				;

@@ -287,6 +287,32 @@
 			]
 		}
 	],
+	"songSofts":[
+		{
+			"id":0,
+			"name":"CeVIO AI",
+			"voiceParam":[
+				{
+					"id":"Emotion",
+					"name":"♫感情",
+					"min":0.00,
+					"max":1.00,
+					"defaultValue":0.00,
+					"smallChange":0.01
+				}
+			]
+		},
+		{
+			"id":1,
+			"name":"VoiSona",
+			"voiceParam":[]
+		},
+		{
+			"id":2,
+			"name":"CeVIO CS",
+			"voiceParam":[]
+		}
+	],
 	"exportSongCasts":[
 		{
 			"id":"CSNV-JPF-THR1",
@@ -353,13 +379,15 @@
 			"id":"CSNV-JPF-THR2",
 			"name":"星界（SEKAI）",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"hasEmotion":true
 		},
 		{
 			"id":"CSNV-JPF-B",
-			"name":"⚠すずきつづみ",
+			"name":"すずきつづみ",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"hasEmotion":true
 		},
 		{
 			"id":"CSNV-JPF-KZN1",
