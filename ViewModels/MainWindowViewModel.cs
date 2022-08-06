@@ -947,7 +947,8 @@ namespace NodoAme.ViewModels
 					ExportCastItems[ExportCastSelected].Id,
 					IsExportAsTrac,
 					IsOpenCeVIOWhenExport,
-					PathToSaveDirectory
+					PathToSaveDirectory,
+					exportMode:SongExportLyricsMode
 				);
 
 				MainWindow.Logger.Info($"Special file export finished: {PathToSaveDirectory}");

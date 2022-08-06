@@ -1597,7 +1597,8 @@ namespace NodoAme
 			bool isExportAsTrack = true,
 			bool isOpenCeVIO = false,
 			string exportPath = "",
-			ExportFileType fileType = ExportFileType.CCS
+			ExportFileType fileType = ExportFileType.CCS,
+			ExportLyricsMode exportMode = ExportLyricsMode.KANA
 		){
 			if (this.engine is null)
 			{
@@ -1626,6 +1627,14 @@ namespace NodoAme
 			groupNode.SetAttributeValue("Name", TRACK_FILE_NAME);
 			groupNode.SetAttributeValue("Id", guid);
 			groupNode.SetAttributeValue("CastId", CastToExport);
+
+			var noteNode = tmplTrack.Descendants("Note").First();
+			string lyricZu = exportMode switch
+			{
+				ExportLyricsMode.KANA or ExportLyricsMode.EN_TO_JA => "ず",
+				_ => "zu"
+			};
+			noteNode.SetAttributeValue("Lyric", lyricZu);
 
 			await ExportCore(
 				TRACK_FILE_NAME,

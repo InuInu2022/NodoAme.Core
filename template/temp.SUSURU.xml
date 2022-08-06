@@ -59,7 +59,7 @@
         <Score>
           <Key Clock="0" Fifths="0" Mode="0" />
           <Dynamics Clock="0" Value="5" />
-          <Note Clock="3840" PitchStep="0" PitchOctave="4" Duration="3840" Lyric="zu" />
+          <Note Clock="3840" PitchStep="0" PitchOctave="4" Duration="3840" Lyric="ず" />
         </Score>
         <Parameter>
           <Timing Length="20">
