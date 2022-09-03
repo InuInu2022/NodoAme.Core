@@ -909,6 +909,7 @@ namespace NodoAme
 			else if (engineType == TalkEngine.VOICEVOX)
 			{
 				engine.Style = this.VoiceStyle;
+				SetVoiceStyle(false);
 			}
 			SetEngineParam();
 
@@ -1564,14 +1565,15 @@ namespace NodoAme
 			var outPath = Path.Combine(outDirPath, outFile);
 			//save
 			if(fileType == ExportFileType.CCS){
+				//save for cevio ccs
 				var xml = tmplTrack as XElement;
 				await Task.Run(() => xml!.Save(outPath));
 			}else if(fileType == ExportFileType.TSSPRJ){
+				//save for voisona tssprj
 				var bin = tmplTrack as byte[];
 				using var writer = new BinaryWriter(new FileStream(outPath, FileMode.Create));
 				writer.Write(bin);
 			}
-
 
 			if(isOpenCeVIO){
 				//CeVIOにファイルを渡す

@@ -94,7 +94,7 @@ namespace NodoAme.Models
                 MessageBox.Show(
                     $"{engineType}が見つかりませんでした。\n{host}は無効な文字列です。",
                     $"{engineType}の呼び出しに失敗",
-                    MessageBoxButton.OK, 
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error
                 );
 				return;
@@ -163,37 +163,38 @@ namespace NodoAme.Models
                     .Where(m => !(m is null))
 					;
 				var labels = new List<Label>();
-				double total = root.PrePhonemeLength;
+				var sc = this.SpeedScale;
+				double total = root.PrePhonemeLength / sc;
 
 				labels.Add(new Label("sil",0, total));  //前余白
 
 				foreach (var mora in moras)
                 {
-                    if(!string.IsNullOrEmpty(mora.Consonant)){
-						labels.Add(new Label (
-                            mora.Consonant!,
-                            total,
-                            total + (mora.ConsonantLength ?? 0)
-                        ));
-						total += mora.ConsonantLength ?? 0;
+                    if(!string.IsNullOrEmpty(mora.Consonant))
+					{
+						var sclen = mora.ConsonantLength / sc;
+						var p = mora.Consonant!;
+						total = CulcLengthWithAddLabel(labels, total, sclen, p);
 					}
-                    if(!string.IsNullOrEmpty(mora.Vowel) && 
-                    !(mora.VowelLength is null)){
-						labels.Add(new Label(
-                            mora.Vowel!,
-                            total,
-                            total + (mora.VowelLength ?? 0)
-                        ));
-						total += mora.VowelLength ?? 0;
+
+					if (!string.IsNullOrEmpty(mora.Vowel) &&
+						mora.VowelLength is not null){
+						var sclen = mora.VowelLength / sc;
+						var p = mora.Vowel!;
+						total = CulcLengthWithAddLabel(labels, total, sclen, p);
 					}
                 }
-				labels.Add(new Label("sil",
+
+				/*
+				labels.Add(new Label(
+					"sil",
 					total,
-                    total+root.PostPhonemeLength
+					total+root.PostPhonemeLength
                 ));  //後余白
 				total += root.PostPhonemeLength;
+				*/
+				total = CulcLengthWithAddLabel(labels, total, root.PostPhonemeLength / sc, "sil");
 				return (labels.ToArray(), total);
-
 			}else if(!(res is null))
 			{
 				CheckResponce(res);
@@ -204,7 +205,22 @@ namespace NodoAme.Models
 				logger.Error(msg);
 				throw new NullReferenceException(msg);
 			}
-        }
+
+			static double CulcLengthWithAddLabel(
+				List<Label> labels,
+				double total,
+				double? sclen,
+				string p)
+			{
+				labels.Add(new Label(
+					p,
+					total,
+					total + (sclen ?? 0)
+					));
+				total += sclen ?? 0;
+				return total;
+			}
+		}
 
         public async ValueTask<double> SpeakAsync(string serif){
             if(string.IsNullOrEmpty(serif))return -1;
