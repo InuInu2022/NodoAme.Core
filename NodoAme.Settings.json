@@ -376,6 +376,13 @@
 			"exportFile":1
 		},
 		{
+			"id":"ID-JPF-A",
+			"name":"さとうささら",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":1
+		},
+		{
 			"id":"CSNV-JPF-THR2",
 			"name":"星界（SEKAI）",
 			"songSoft":"CeVIO AI",
