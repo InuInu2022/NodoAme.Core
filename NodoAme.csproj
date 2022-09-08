@@ -13,7 +13,7 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <!-- info -->
         <Product>NodoAme</Product>
-        <Description>CeVIO AIソング / CSソング / VoiSona めE喋らせる補助チE�Eル</Description>
+        <Description>CeVIO AIソング / CSソング / VoiSona を喋らせる補助ツール</Description>
         <Copyright>InuInu</Copyright>
         <NeutralLanguage>ja-JP</NeutralLanguage>
         <Version>0.1.0.0</Version>
