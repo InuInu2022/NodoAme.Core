@@ -944,7 +944,7 @@ namespace NodoAme.ViewModels
 					TalkVoiceStyleParams
 				);
 				await talkEngine.ExportSpecialFile(
-					ExportCastItems[ExportCastSelected].Id,
+					ExportCastItems[ExportCastSelected],
 					IsExportAsTrac,
 					IsOpenCeVIOWhenExport,
 					PathToSaveDirectory,

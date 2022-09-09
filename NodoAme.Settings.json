@@ -369,18 +369,22 @@
 			"lyricsMode":"PHONEME"
 		},
 		{
-			"id":"ID-CHIS-A",
+			"id":"nitech-jp_ja_JP_f008_svss.tsnvoice",
 			"name":"知声",
 			"songSoft":"VoiSona",
 			"lyricsMode":"KANA",
-			"exportFile":1
+			"exportFile":1,
+			"charaNameAsAlphabet":"Chis-A",
+			"voiceVersion":"1.3.0"
 		},
 		{
-			"id":"ID-JPF-A",
+			"id":"techno-sp_ja_JP_f801_svss.tsnvoice",
 			"name":"さとうささら",
 			"songSoft":"VoiSona",
 			"lyricsMode":"KANA",
-			"exportFile":1
+			"exportFile":1,
+			"charaNameAsAlphabet":"Sato Sasara",
+			"voiceVersion":"1.0.1 ported from CeVIO AI"
 		},
 		{
 			"id":"CSNV-JPF-THR2",

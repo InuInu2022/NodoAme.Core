@@ -1289,6 +1289,23 @@ namespace NodoAme
 				var r = scoreRoot;
 				var es = scoreRoot.Elements();
 
+				//ボイス情報の置き換え
+				if(
+					//cast情報が空なら置き換えない
+					cast is not null
+						&& cast.CharaNameAsAlphabet is not null
+						&& cast.Id is not null
+						&& cast.VoiceVersion is not null
+				){
+					tssprj = tssprj
+						.AsSpan()
+						.ReplaceVoiceLibrary(
+							cast.CharaNameAsAlphabet,
+							cast.Id,
+							cast.VoiceVersion
+						);
+				}
+
 				var notes = scoreRoot
 					.Elements()
 					.Where(v => v.Name == "Note")
@@ -1340,7 +1357,8 @@ namespace NodoAme
 				exportPath,
 				exportData,
 				isOpenCeVIO,
-				fileType
+				fileType,
+				cast
 			);
 
 			sw.Stop();
@@ -1534,14 +1552,15 @@ namespace NodoAme
 			string exportPath,
 			dynamic/*XElement or byte[]*/ tmplTrack,
 			bool isOpenCeVIO,
-			ExportFileType fileType
+			ExportFileType fileType,
+			SongCast cast
 		){
 			var safeName = GetSafeFileName(trackFileName);
 			var outDirPath = exportPath;
 			var outFile = fileType switch{
-				ExportFileType.CCS => $"{GetSafeFileName(CastToExport)}_{safeName}.ccst",
-				ExportFileType.TSSPRJ =>  $"{GetSafeFileName(CastToExport)}_{safeName}.tssprj",
-				_ => $"{GetSafeFileName(CastToExport)}_{safeName}.ccst"
+				ExportFileType.CCS => $"{GetSafeFileName(cast.Id!)}_{safeName}.ccst",
+				ExportFileType.TSSPRJ =>  $"{GetSafeFileName(cast.CharaNameAsAlphabet!)}_{safeName}.tssprj",
+				_ => $"{GetSafeFileName(cast.Id!)}_{safeName}.ccst"
 			} ;
 			if(!Directory.Exists(outDirPath)){
 				try
@@ -1589,13 +1608,12 @@ namespace NodoAme
 		/// <summary>
 		/// カレーうどんをすするファイルを出力する
 		/// </summary>
-		/// <param name="castId"></param>
 		/// <param name="isExportAsTrack"></param>
 		/// <param name="isOpenCeVIO"></param>
 		/// <param name="exportPath"></param>
 		/// <returns></returns>
 		public async ValueTask<bool> ExportSpecialFile(
-			string castId,
+			SongCast cast,
 			bool isExportAsTrack = true,
 			bool isOpenCeVIO = false,
 			string exportPath = "",
@@ -1611,8 +1629,8 @@ namespace NodoAme
 			const string TRACK_FILE_NAME = "SUSURU";
 
 			//出力SongCast
-			this.CastToExport = castId;
-			Debug.WriteLine($"songcast:{castId}");
+			this.CastToExport = cast.Id;
+			Debug.WriteLine($"songcast:{cast.Id}");
 
 			//テンプレートxml読み込み
 			var tmplTrack = isExportAsTrack ?
@@ -1643,7 +1661,8 @@ namespace NodoAme
 				exportPath,
 				tmplTrack,
 				isOpenCeVIO,
-				fileType
+				fileType,
+				cast
 			);
 
 			return true;//new ValueTask<bool>(true);

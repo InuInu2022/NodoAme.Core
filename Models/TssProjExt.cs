@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Tssproj;
 
@@ -34,25 +35,25 @@ public static class TssProjExt
             Parameter, Data, NeuralVocoderList
         0x000101 (子が一つ)
             Timing, LogF0
-    
+
      区切り (3byte目は後続データのbyte数+1)
         //[0x0001] - [byte数+1] - [data型]
         0x00010501 (int32？)
-        0x00010102 
+        0x00010102
         0x00010904 (double(float64)？)
         0x0001**05 (string/utf8)
 
 
     Node - 0x000107
         Clock - 0x00010501 - int32
-        Duration - 
-        PitchStep - 
-        PitchOctave - 
+        Duration -
+        PitchStep -
+        PitchOctave -
         Lyric - 0x00011105 - utf8string - 0x00
         Syrabic - 0x0010501 - int32
         Phoneme - 0x00011405 - ascii - 0x00
         - 0x00
-    
+
      Parameter - 0x000102
         Timing - 0x000101 - Length - 0x00010501 - int32 - 0x0136
             Data - 0x000102|0x000101 (- Index - 0x00010501 - int32) - Value - 0x00010904 - double - 0x00
@@ -130,5 +131,44 @@ public static class TssProjExt
 			.ToArray();
 	}
 
-}
+	public static byte[] ReplaceVoiceLibrary(
+		this Span<byte> bin,
+		string charaNameAsAlphabet,
+		string voiceLibName,
+		string voiceVer
+	){
+		var span = bin
+			.ReplaceTextValue("CharacterName", "VoiceFileName", charaNameAsAlphabet)
+			.AsSpan<byte>();
+		span = span
+			.ReplaceTextValue("VoiceFileName", "Language", voiceLibName)
+			.AsSpan<byte>()
+			.ReplaceTextValue("VoiceVersion", "ActiveAfterThisVersion", voiceVer)
+			.AsSpan<byte>()
+			;
 
+		return span.ToArray();
+	}
+
+	private static byte[] ReplaceTextValue(
+		this Span<byte> bin,
+		string key,
+		string nextKey,
+		string text
+	){
+		var sIndex = bin.LastIndexOf(Encoding.UTF8.GetBytes(key));
+		var eIndex = bin.LastIndexOf(Encoding.UTF8.GetBytes(nextKey));
+
+		var before = bin.Slice(0, sIndex);
+		var after = bin.Slice(eIndex);
+
+		var replaced = new TssKeyValue(key, text);
+		Debug.WriteLine($"replaced[{key}]: {replaced.GetBytes().Count()}");
+
+		return before
+			.ToArray()
+			.Concat(replaced.GetBytes())
+			.Concat(after.ToArray())
+			.ToArray();
+	}
+}

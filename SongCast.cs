@@ -17,6 +17,18 @@ namespace NodoAme
 		public NodoAme.Models.ExportFileType ExportFile { get; set; }
 		[JsonPropertyName("hasEmotion")]
 		public bool? HasEmotion { get; set; }
+
+		/// <summary>
+		/// voice lib's character name text for VoiSona
+		/// </summary>
+		[JsonPropertyName("charaNameAsAlphabet")]
+		public string? CharaNameAsAlphabet { get; set; }
+
+		/// <summary>
+		/// Voice lib version number text.
+		/// </summary>
+		[JsonPropertyName("voiceVersion")]
+		public string? VoiceVersion { get; set; }
 	}
 
 	public static class SongSoftName{
