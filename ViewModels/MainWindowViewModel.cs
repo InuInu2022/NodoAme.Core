@@ -49,6 +49,10 @@ namespace NodoAme.ViewModels
 
 		public ObservableCollection<SongCast> ExportCastItems { get; private set; }
 		public int ExportCastSelected { get; set; } = 0;
+		public ObservableCollection<string> ExportSongSoftItems{ get; private set; }
+		public int ExportSongSoftSelected { get; set; } = 0;
+		public ObservableCollection<SongCast> ExportSongCastItems{ get; private set; }
+		public int ExportSongCastSelected { get; set; } = 0;
 
 		/// <summary>
 		/// ソングエクスポート用：声質や感情など
@@ -549,10 +553,25 @@ namespace NodoAme.ViewModels
 			//InitVoices();
 
 			//export song cast combo
-			if (ExportCastItems is null) ExportCastItems = new ObservableCollection<SongCast>();
+			if (ExportCastItems is null)
+			{
+				ExportCastItems = new();
+			}
 			foreach (var cast in this.setting.ExportSongCasts)
 			{
 				ExportCastItems.Add(cast);
+			}
+
+			if(ExportSongSoftItems is null){
+				ExportSongSoftItems = new();
+				setting
+					.ExportSongCasts
+					.GroupBy(x => x.SongSoft)
+					.Select(x => x.FirstOrDefault().SongSoft)
+					.ToList()
+					.ForEach(x => ExportSongSoftItems.Add(x))
+					;
+				ExportSongSoftSelected = 0;
 			}
 
 			EnableSerifButtons(TalkSoftSelected);
@@ -577,6 +596,21 @@ namespace NodoAme.ViewModels
 			}
 
 			//return new ValueTask();
+		}
+
+		[PropertyChanged(nameof(ExportSongSoftSelected))]
+		private async ValueTask ExportSongSoftSelectedChangedAsync(int index){
+			var soft = ExportSongSoftItems[index];
+			ExportSongCastItems = new();
+
+			setting
+				.ExportSongCasts
+				.GroupBy(x => x.SongSoft)
+				.Single(x => x.Key == soft)
+				.ToList()
+				.ForEach(x => ExportSongCastItems.Add(x));
+			var a = ExportSongCastItems;
+			ExportSongCastSelected = 0;
 		}
 
 		private void EnableSerifButtons(
@@ -663,13 +697,14 @@ namespace NodoAme.ViewModels
 
 		}
 
-		[PropertyChanged(nameof(ExportCastSelected))]
-		private ValueTask ExportCastSelectedChangedAsync(int index)
-		{
-			//if(IsTalkSoftComboEnabled)InitVoices();
-			if(ExportCastItems is null)return new ValueTask();
+		[PropertyChanged(nameof(ExportSongCastSelected))]
+		private ValueTask ExportSongCastSelectedChangedAsync(int index){
+			if(ExportSongCastItems is null || index < 0)
+			{
+				return new ValueTask();
+			}
 
-			var current = ExportCastItems[index];
+			var current = ExportSongCastItems[index];
 			SongExportLyricsMode = current.LyricsMode;
 			return new ValueTask();
 		}
@@ -887,7 +922,9 @@ namespace NodoAme.ViewModels
 			);
 
 			Debug.WriteLine("Export!");
-			var exportFileType = ExportCastItems.ElementAt(ExportCastSelected).ExportFile;
+			var exportFileType = //ExportCastItems.ElementAt(ExportCastSelected).ExportFile;
+			ExportSongCastItems[ExportSongCastSelected].ExportFile;
+
 			await this.talkEngine.ExportFileAsync(
 				serifText,
 				castId,

@@ -50,7 +50,7 @@ namespace NodoAme.ViewModels
 			{
 				EnabledExport = false;
 				ExportProgress = Visibility.Visible;
-				var cast = ParentVM!.ExportCastItems[ParentVM.ExportCastSelected];
+				var cast = ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected];
 				var alpha = 0.0;//TODO:
 				await ParentVM!.ExportFileFromList(
 					this.SourceText,
@@ -97,7 +97,7 @@ namespace NodoAme.ViewModels
 		{
 			if (sourceText?.Length == 0) return; //false;new ValueTask();    //抜ける
 			if(this.LastSourceText == sourceText
-			&& this.LastCast != ParentVM!.ExportCastItems[ParentVM.ExportCastSelected]) {return;  } //同じ文字列なら処理を抜ける
+				&& this.LastCast != ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected]) {return;} //同じ文字列なら処理を抜ける
 			this.LastSourceText = sourceText;
 			this.ConvertedText = await ParentVM!.ConvertFromListAsync(sourceText);
 			//var s = ConvertFromList(sourceText);
