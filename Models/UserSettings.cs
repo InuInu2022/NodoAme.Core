@@ -10,85 +10,88 @@ using System.Text.Unicode;
 using System.Threading.Tasks;
 using NodoAme.ViewModels;
 
-namespace NodoAme.Models
+namespace NodoAme.Models;
+
+/// <summary>
+/// A simple POCO class for configuration json
+/// </summary>
+public class UserSettings
 {
-	/// <summary>
-	/// A simple POCO class for configuration json
-	/// </summary>
-	public class UserSettings
-	{
-		[HideForUser]
-		public string Version { get; } = "0.3.0";
+	[HideForUser]
+	public string Version { get; } = "0.3.0";
 
-		public int DefaultSerifLines { get; set; } = 30;    //初期表示セリフ行
-		public string? PathToSaveDirectory { get; set; } = "./out/";
-		public ExportLyricsMode SongExportLyricsMode { get; set; } = ExportLyricsMode.PHONEME;
+	public int DefaultSerifLines { get; set; } = 30;    //初期表示セリフ行
+	public string? PathToSaveDirectory { get; set; } = "./out/";
+	public ExportLyricsMode SongExportLyricsMode { get; set; } = ExportLyricsMode.PHONEME;
 
-		#region export_serif_text_options
-		public bool IsExportSerifText { get; set; } = false;
-		public string PathToExportSerifTextDir { get; set; } = "./out/";
-		public string DefaultExportSerifTextFileName { get; set; } = SERIF_FILE_NAME;
+	#region export_serif_text_options
 
-		public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions
-			= new ObservableCollection<SongSoftTracFileExtSetting>{
-				new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_AI, FileExt="ccst"},
-				new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_CS, FileExt="ccst"}
-			};
+	public bool IsExportSerifText { get; set; } = false;
+	public string PathToExportSerifTextDir { get; set; } = "./out/";
+	public string DefaultExportSerifTextFileName { get; set; } = SERIF_FILE_NAME;
 
-		public const string SERIF_FILE_NAME = "$セリフ$.txt";
+	public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions
+		= new()
+		{
+			new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_AI, FileExt="ccst"},
+			new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_CS, FileExt="ccst"}
+		};
 
-		public bool IsOpenCeVIOWhenExport { get; set; } = true;
-		public bool IsExportAsTrac { get; set; } = true;
+	public const string SERIF_FILE_NAME = "$セリフ$.txt";
 
-		#endregion export_serif_text_options
+	public bool IsOpenCeVIOWhenExport { get; set; } = true;
+	public bool IsExportAsTrac { get; set; } = true;
 
-		#region display_phonemes_options
-		public bool IsUseSeparaterSpace { get; set; } = true;
-		public bool IsConvertToHiragana { get; set; } = false;
-		public bool IsConvertToPhoneme { get; set; } = true;
+	#endregion export_serif_text_options
 
-		public bool IsCheckJapaneseSyllabicNasal { get; set; }
-		public bool IsCheckJananeseNasalGa { get; set; } = false;
+	#region display_phonemes_options
 
-		public VowelOptions VowelOption { get; set; } = VowelOptions.DoNothing;
-		public bool IsCheckJapaneseRemoveNonSoundVowel { get; set; } = false;
-		public bool IsCheckJapaneseSmallVowel { get; set; } = false;
-		#endregion display_phonemes_options
+	public bool IsUseSeparaterSpace { get; set; } = true;
+	public bool IsConvertToHiragana { get; set; } = false;
+	public bool IsConvertToPhoneme { get; set; } = true;
 
-		public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
+	public bool IsCheckJapaneseSyllabicNasal { get; set; }
+	public bool IsCheckJananeseNasalGa { get; set; } = false;
 
-		public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY;
+	public VowelOptions VowelOption { get; set; } = VowelOptions.DoNothing;
+	public bool IsCheckJapaneseRemoveNonSoundVowel { get; set; } = false;
+	public bool IsCheckJapaneseSmallVowel { get; set; } = false;
 
-		public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NONE;
+	#endregion display_phonemes_options
 
-		[JsonIgnore]
-		public const string UserSettingsFileName = "usersettings.json";
-		[JsonIgnore]
-		public static string UserSettingsPath = $"{Directory.GetCurrentDirectory()}/{UserSettings.UserSettingsFileName}";
+	public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
 
-		private readonly static JsonSerializerOptions JsonOption
-			= new JsonSerializerOptions
-			{
-				Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-				WriteIndented = true
-			};
+	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY;
 
+	public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NO_BREATH;
 
-		public void CreateFile(string path){
-			var s = JsonSerializer.Serialize(this, JsonOption);
+	[JsonIgnore]
+	public const string UserSettingsFileName = "usersettings.json";
+	[JsonIgnore]
+	public static string UserSettingsPath
+		= $"{Directory.GetCurrentDirectory()}/{UserSettings.UserSettingsFileName}";
+
+	private static readonly JsonSerializerOptions JsonOption
+		= new()
+		{
+			Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+			WriteIndented = true
+		};
+
+	public void CreateFile(string path){
+		var s = JsonSerializer.Serialize(this, JsonOption);
             using var writer = new StreamWriter(path, false, Encoding.UTF8);
-			writer.WriteLine(s);
-			writer.Close();
-		}
-
-        public async ValueTask SaveAsync(){
-			var s = JsonSerializer.Serialize(this, JsonOption);
-            using var writer = new StreamWriter(UserSettingsPath, false, Encoding.UTF8);
-            await writer.WriteLineAsync(s);
-			writer.Close();
-        }
+		writer.WriteLine(s);
+		writer.Close();
 	}
 
-	[AttributeUsage(AttributeTargets.Property)]
-	public class HideForUserAttribute : Attribute{}
+	public async ValueTask SaveAsync(){
+		var s = JsonSerializer.Serialize(this, JsonOption);
+		using var writer = new StreamWriter(UserSettingsPath, false, Encoding.UTF8);
+		await writer.WriteLineAsync(s);
+		writer.Close();
+	}
 }
+
+[AttributeUsage(AttributeTargets.Property)]
+public class HideForUserAttribute : Attribute{}
