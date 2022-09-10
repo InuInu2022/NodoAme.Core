@@ -66,7 +66,7 @@
                 Text="Engine"
                 ToolTip="しゃべらせるお手本になるトークソフトを選びます。&#xA;最初は NodoAme 標準エンジンです。&#xA;「⚠」のつくトークソフトは制限があります。"
                 ToolTipService.ShowDuration="10000000"
-                Width="120"
+                Width="130"
                 Margin="10,10,0,0"
                 FontSize="16.0"
                 VerticalAlignment="Center"

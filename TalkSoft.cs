@@ -57,6 +57,8 @@ namespace NodoAme
 		public string? DicPath { get; set; }
 		[JsonPropertyName("voiceParam")]
 		public IList<TalkSoftParam>? TalkSoftParams { get; set; }
+		[JsonPropertyName("sampleRate")]
+		public int SampleRate { get; set; } = 48000;
 	}
 
 	public class TalkSoftVoice{

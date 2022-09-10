@@ -229,12 +229,13 @@ namespace NodoAme.Models
 			var sRes = await SynthesisAsync(serif);
 
 			double time = 0.0;
+			Debug.WriteLine($"SAMPLE RATE:{talkSoft.SampleRate}");
 			await Task.Run(() =>
 			{
 				using var ms = new MemoryStream(sRes.RawBytes);
 				var rs = new RawSourceWaveStream(
 					ms,
-					new WaveFormat(24000, 16, 1)
+					new WaveFormat(talkSoft.SampleRate, 16, 1)
 				);
 				time = rs.TotalTime.TotalSeconds;
 				var wo = new WaveOutEvent();
