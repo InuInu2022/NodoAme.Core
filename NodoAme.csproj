@@ -23,6 +23,9 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <!-- MinVer -->
         <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
     <Target Name="RemovePublishDirBeforeBuild"
             BeforeTargets="BeforeBuild">
         <RemoveDir Directories="$(OutputPath)/publish/" />
