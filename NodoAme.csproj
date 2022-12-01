@@ -80,23 +80,23 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         </Content>
         <!-- nuget libs -->
         <PackageReference Include="DotnetWorld" Version="1.2.5" />
-        <PackageReference Include="Epoxy.Wpf" Version="1.8.0" />
+        <PackageReference Include="Epoxy.Wpf" Version="1.9.0" />
         <PackageReference Include="FluentWPF" Version="0.10.2" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="ModernWpfUI" Version="0.9.6" />
         <PackageReference Include="NAudio" Version="2.1.0" />
         <PackageReference Include="SharpOpenJTalk" Version="1.4.0" />
-        <PackageReference Include="System.Text.Json" Version="6.0.6" />
-        <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" />
+        <PackageReference Include="System.Text.Json" Version="7.0.0" />
+        <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0" />
         <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
-        <PackageReference Include="RestSharp" Version="108.0.2" />
-        <PackageReference Include="NLog" Version="4.7.15" />
+        <PackageReference Include="RestSharp" Version="108.0.3" />
+        <PackageReference Include="NLog" Version="5.1.0" />
         <PackageReference Include="MinVer" Version="4.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.0" />
         <PackageReference Include="WanaKana-net" Version="1.0.0" />
         <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-        <PackageReference Include="FontAwesome6.Fonts" Version="2.4.2" />
+        <PackageReference Include="FontAwesome6.Fonts" Version="2.5.1" />
     </ItemGroup>
 </Project>
