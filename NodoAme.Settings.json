@@ -451,6 +451,24 @@
 			"voiceVersion":"1.0.1 ported from CeVIO AI"
 		},
 		{
+			"id":"techno-sp_ja_JP_f801_svss.tsnvoice",
+			"name":"⚠機流⾳",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Kirune",
+			"voiceVersion":"1.0.1 ported from CeVIO AI"
+		},
+		{
+			"id":"techno-sp_ja_JP_f801_svss.tsnvoice",
+			"name":"⚠AiSuu",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"AiSuu",
+			"voiceVersion":"1.0.1 ported from CeVIO AI"
+		},
+		{
 			"id":"CSNV-JPF-THR2",
 			"name":"星界（SEKAI）",
 			"songSoft":"CeVIO AI",
@@ -477,6 +495,12 @@
 			"lyricsMode":"PHONEME"
 		},
 		{
+			"id":"CSNV-JPF-GLA1",
+			"name":"双葉湊音",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME"
+		},
+		{
 			"id":"CSNV-JPF-BSRD1",
 			"name":"⚠POPY",
 			"songSoft":"CeVIO AI",
@@ -489,26 +513,20 @@
 			"lyricsMode":"PHONEME"
 		},
 		{
-			"id":"CSNV-JPF-GYND1",
-			"name":"⚠Ci flower",
-			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
-		},
-		{
 			"id":"CSNV-JPF-THR4",
 			"name":"⚠狐子（COKO）",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
 		},
 		{
-			"id":"CSNV-JPF-THR5",
-			"name":"⚠羽累（HARU）",
+			"id":"CSNV-JPF-GYND1",
+			"name":"⚠Ci flower",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
 		},
 		{
-			"id":"CSNV-JPF-GSA1",
-			"name":"⚠双葉湊音",
+			"id":"CSNV-JPF-THR5",
+			"name":"⚠羽累（HARU）",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
 		},
