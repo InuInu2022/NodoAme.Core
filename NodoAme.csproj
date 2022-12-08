@@ -11,6 +11,10 @@
         <ApplicationIcon>img\Fps.
 hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <ApplicationManifest>app.manifest</ApplicationManifest>
+        <Deterministic>true</Deterministic>
+        <DeterministicSourceRoot>/_/</DeterministicSourceRoot>
+        <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\'))</RepoRoot>
+        <PathMap>$(RepoRoot)=$(DeterministicSourceRoot)</PathMap>
         <!-- info -->
         <Product>NodoAme</Product>
         <Description>CeVIO AIソング / CSソング / VoiSona を喋らせる補助ツール</Description>
