@@ -985,7 +985,7 @@ namespace NodoAme.ViewModels
 					_stylePresets.ElementAt(VoiceStylePresetsSelected),
 					TalkVoiceStyleParams
 				);
-				await talkEngine.ExportSpecialFile(
+				await talkEngine.ExportSpecialFileAsync(
 					ExportCastItems[ExportCastSelected],
 					IsExportAsTrac,
 					IsOpenCeVIOWhenExport,

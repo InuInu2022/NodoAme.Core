@@ -1614,7 +1614,7 @@ namespace NodoAme
 		/// <param name="isOpenCeVIO"></param>
 		/// <param name="exportPath"></param>
 		/// <returns></returns>
-		public async ValueTask<bool> ExportSpecialFile(
+		public async ValueTask<bool> ExportSpecialFileAsync(
 			SongCast cast,
 			bool isExportAsTrack = true,
 			bool isOpenCeVIO = false,
