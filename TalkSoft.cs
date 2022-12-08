@@ -1513,13 +1513,14 @@ namespace NodoAme
 								item.EndTime
 							));
 						}
+
 						break;
 					}
 
 				case TalkEngine.VOICEVOX:
 					{
 						var vv = this.engine as Voicevox;
-						(phonemes, len) = await vv!.GetPhonemesAndLength(serifText);
+						(var phonemes, len) = await vv!.GetPhonemesAndLength(serifText);
 						phs = (phonemes as Label[]).ToList();
 						break;
 					}
@@ -1624,7 +1625,7 @@ namespace NodoAme
 						 		MessageBoxButton.OK,
 						 		MessageBoxImage.Error
 						);
-						logger.Error($"failed to create a export directory:{outPath}");
+						logger.Error($"failed to create a file:{outPath}");
 						logger.Error($"{ e.Message }");
 
 						return;
@@ -1633,8 +1634,24 @@ namespace NodoAme
 			}else if(fileType == ExportFileType.TSSPRJ){
 				//save for voisona tssprj
 				var bin = tmplTrack as byte[];
-				using var writer = new BinaryWriter(new FileStream(outPath, FileMode.Create));
-				writer.Write(bin);
+				try
+				{
+					using var writer = new BinaryWriter(new FileStream(outPath, FileMode.Create));
+					writer.Write(bin);
+				}
+				catch (Exception e)
+				{
+					 MessageBox.Show(
+					 		$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+					 		"ファイルの作成に失敗！",
+					 		MessageBoxButton.OK,
+					 		MessageBoxImage.Error
+					);
+					logger.Error($"failed to create a file:{outPath}");
+					logger.Error($"{ e.Message }");
+
+					return;
+				}
 			}
 
 			if(isOpenCeVIO){
