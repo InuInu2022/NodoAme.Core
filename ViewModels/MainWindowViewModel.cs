@@ -322,7 +322,7 @@ namespace NodoAme.ViewModels
 			}
 			catch (Exception ex)
 			{
-				var _ = ShowErrorMessageBox(
+				var _ = ShowErrorMessageBoxAsync(
 					title:"保存した設定の読み込みに失敗",
 					message:$"保存した設定の読み込みに失敗しました。{ex.Message}"
 				);
@@ -507,7 +507,7 @@ namespace NodoAme.ViewModels
 			catch (JsonException e)
 			{
 				Debug.WriteLine(e.Message);
-				await ShowErrorMessageBox(
+				await ShowErrorMessageBoxAsync(
 					title:"Json読み取りエラー",
 					message:e.Message
 				);
@@ -516,15 +516,16 @@ namespace NodoAme.ViewModels
 			}
 		}
 
-		public async ValueTask ShowErrorMessageBox(
+		public async ValueTask ShowErrorMessageBoxAsync(
 			string title,
 			string message,
 			Exception e = null
 		){
 			await Task.Run(() =>
 			{
+				MainWindow.Logger.Warn($"error dialog open. {e.Message}");
 				MessageBox.Show(
-					message ?? $"エラーが発生しました。{e}",
+					message ?? $"エラーが発生しました。\\n{e}",
 					title ?? "ERROR",
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
@@ -639,8 +640,13 @@ namespace NodoAme.ViewModels
 			var canExport = TalkSoftItems[index].EnabledExport ?? false;
 			foreach (var item in Serifs)
 			{
-				item.EnabledPreview = !isForceDisable && canPreview;
-				item.EnabledExport = !isForceDisable && canExport;
+				var isNoSerif =
+					string.IsNullOrEmpty(item.SourceText)
+						|| string.IsNullOrWhiteSpace(item.SourceText);
+				item.EnabledPreview =
+					!isForceDisable && !isNoSerif && canPreview;
+				item.EnabledExport =
+					!isForceDisable && !isNoSerif && canExport;
 				item.EnabledSerifInput = !isForceDisable;
 			}
 		}

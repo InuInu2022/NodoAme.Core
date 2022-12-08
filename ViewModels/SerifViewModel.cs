@@ -38,9 +38,11 @@ namespace NodoAme.ViewModels
 			this.PreviewTalk = CommandFactory.Create<RoutedEventArgs>(
 				async _ => {
 					EnabledPreview = false;
+					EnabledExport = false;
 					PreviewProgress = Visibility.Visible;
 					SerifTime = await ParentVM!.PreviewTalkFromList(this.SourceText);
 					EnabledPreview = true;
+					EnabledExport = true;
 					PreviewProgress = Visibility.Collapsed;
 				}
 			);
@@ -48,6 +50,7 @@ namespace NodoAme.ViewModels
 			this.ExportTrackFile = CommandFactory.Create<RoutedEventArgs>(async _ =>
 			{
 				EnabledExport = false;
+				EnabledPreview = false;
 				ExportProgress = Visibility.Visible;
 				var cast = ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected];
 				const double alpha = 0.0;	//TODO:
@@ -59,6 +62,7 @@ namespace NodoAme.ViewModels
 					songCast: cast
 				);
 				EnabledExport = true;
+				EnabledPreview = true;
 				ExportProgress = Visibility.Collapsed;
 			});
 
@@ -79,17 +83,30 @@ namespace NodoAme.ViewModels
 			{
 				Debug.WriteLine("e:" + e.ToString());
 				var k = (KeyEventArgs)e;
-				if (k.Key == Key.Enter)
+				if (k.Key != Key.Enter)
 				{
-					k.Handled = true;
+					return;
 				}
+
+				k.Handled = true;
 			});
 		}
 
 		[PropertyChanged(nameof(SourceText))]
 		private async ValueTask SourceTextChangedAsync(string sourceText)
 		{
-			if (sourceText?.Length == 0) return; //false;new ValueTask();    //抜ける
+			//空文字列なら抜ける
+			if (string.IsNullOrEmpty(sourceText) || string.IsNullOrWhiteSpace(sourceText)){
+				EnabledExport = false;
+				EnabledPreview = false;
+				ConvertedText = "";
+				SerifTime = "";
+				return;
+			}
+
+			EnabledExport = true;
+			EnabledPreview = true;
+
 			if(this.LastSourceText == sourceText
 				&& this.LastCast != ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected]) {return;} //同じ文字列なら処理を抜ける
 			this.LastSourceText = sourceText;

@@ -202,13 +202,12 @@ namespace NodoAme
 		/// </summary>
 		private Assembly? assembly;
 
-		private ObservableCollection<TalkSoftVoice>? voices = new ObservableCollection<TalkSoftVoice>();
+		private ObservableCollection<TalkSoftVoice>? voices = new();
 		private IList<string>? lastLabels;
 		private Task<dynamic?>? lastTaskGetLabel;
-		private readonly CancellationTokenSource cancelSource = new CancellationTokenSource();
+		private readonly CancellationTokenSource cancelSource = new();
 
 		private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
 
 		internal Wrapper(
 			string type,
@@ -247,49 +246,59 @@ namespace NodoAme
 
 			switch(engineType){
 				case TalkEngine.CEVIO:
-					if(soft.Interface is null)break;
-					if(soft.Interface.Service is null)break;
-					if(soft.Interface.Talker is null)break;
+				{
+					if (soft.Interface is null) break;
+					if (soft.Interface.Service is null) break;
+					if (soft.Interface.Talker is null) break;
 
 					//CeVIO Talk API interface 呼び出し
 					string cevioPath =
 						Environment.ExpandEnvironmentVariables(soft.Interface.EnvironmentProgramVar)
-						+ soft.Interface.DllPath
-						+ soft.Interface.DllName;
+							+ soft.Interface.DllPath
+							+ soft.Interface.DllName;
 					Debug.WriteLine($"cevioPath:{cevioPath}");
-					if(!File.Exists(cevioPath)){
+					if (!File.Exists(cevioPath))
+					{
+						logger.Warn($"error dialog opend:");
 						MessageBox.Show(
-                            $"{engineType}が見つかりませんでした。",
-                            $"{engineType}の呼び出しに失敗",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
+							$"{engineType}が見つかりませんでした。",
+							$"{engineType}の呼び出しに失敗",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
 						logger
 							.Error($"CeVIO Dll not found:{engineType}の呼び出しに失敗");
 
 						return;
 					}
-					try{
+
+					try
+					{
 						assembly = Assembly.LoadFrom(cevioPath);
-					}catch(Exception e){
+					}
+					catch (Exception e)
+					{
+						logger.Warn($"error dialog opend: {e?.Message}");
 						MessageBox.Show(
-							$"{engineType}を呼び出せませんでした。{e.Message}",
-                            $"{engineType}の呼び出しに失敗",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
+							$"{engineType}を呼び出せませんでした。{e?.Message}",
+							$"{engineType}の呼び出しに失敗",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
 						logger
-							.Fatal($"{e.Message}");
+							.Fatal($"{e?.Message}");
 						return;
 					}
 					Type? t = assembly.GetType(soft.Interface.Service);
-					if(t is null){
+					if (t is null)
+					{
+						logger.Warn($"error dialog opend: ");
 						MessageBox.Show(
 							$"{engineType}を呼び出せませんでした。",
-                            $"{engineType}の呼び出しに失敗",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
+							$"{engineType}の呼び出しに失敗",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
 						logger
 							.Error($"CeVIO Dll cannot call:{engineType}の呼び出しに失敗");
 						return;
@@ -297,11 +306,12 @@ namespace NodoAme
 
 					try
 					{
-						 MethodInfo startHost = t.GetMethod("StartHost");
+						MethodInfo startHost = t.GetMethod("StartHost");
 						var result = startHost.Invoke(null, new object[] { false });
 
 						if ((int)result > 1)
 						{
+							logger.Warn($"error dialog opend: ");
 							MessageBox.Show(
 								$"{engineType}を起動できませんでした。理由code:{result}",
 								$"{engineType}の起動に失敗",
@@ -312,7 +322,7 @@ namespace NodoAme
 							.Error($"{engineType}を起動できませんでした。理由code:{result}");
 							return;
 						}
-                    }
+					}
 					catch (System.Exception e)
 					{
 						var msg = $"{engineType}を起動できませんでした。理由:{e.Message}";
@@ -336,18 +346,19 @@ namespace NodoAme
 						Debug.WriteLine(n);
 						logger.Info($"Installed cevio cast: {n}");
 						voices!
-							.Add(new TalkSoftVoice{Id=$"Cast_{n}", Name=$"{n}"});
+							.Add(new TalkSoftVoice { Id = $"Cast_{n}", Name = $"{n}" });
 					}
 
 					//CeVIOはインストールされているが、トークがない場合
-					if(names is null || names.Length == 0){
+					if (names is null || names.Length == 0)
+					{
 						var noCast = $"{engineType}のトークボイスが見つかりません。{engineType}のボイスをしゃべりの参考に使用するにはトークエディタとトークボイスが必要です。";
 						MessageBox.Show(
-                            noCast,
-                            $"{engineType}のトークボイスが見つかりません",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
+							noCast,
+							$"{engineType}のトークボイスが見つかりません",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
 						logger
 							.Error(noCast);
 						return;
@@ -376,22 +387,28 @@ namespace NodoAme
 					Debug.WriteLine($"engine:{engine.GetType()}");
 
 					break;
+				}
+
 				case TalkEngine.VOICEVOX:
-
-
+				{
 					this.engine = await Models.Voicevox.Factory(engineType, soft, voice, style);
 					var vv = this.engine as Voicevox;
-					if(vv!.IsActive){
+					if (vv!.IsActive)
+					{
 						//GetAvailableCasts
-						foreach(var n in vv.AvailableCasts!){
+						foreach (var n in vv.AvailableCasts!)
+						{
 							voices!
-								.Add(new TalkSoftVoice{Id=$"Cast_{n}", Name=$"{n}"});
+								.Add(new TalkSoftVoice { Id = $"Cast_{n}", Name = $"{n}" });
 						}
 					}
 					IsActive = vv.IsActive;
 					break;
+				}
+
 				case TalkEngine.OPENJTALK:
 				default:
+				{
 					bool isInitialized = false;
 					await Task.Run(() =>
 					{
@@ -400,13 +417,15 @@ namespace NodoAme
 							soft.DicPath,
 							//voice!.Styles.ElementAt()
 							style?.Path ?? voice!.Styles![0].Path
-						) ?? false;
+						)
+							?? false;
 					});
 					IsActive = isInitialized;
 
 					if (!isInitialized)
 					{
 						var msg = $"{engineType} Initialize Failed";
+						logger.Warn($"error dialog opend: ");
 						MessageBox.Show(
 							msg,
 							msg,
@@ -419,6 +438,7 @@ namespace NodoAme
 						throw new Exception(msg);
 					}
 					break;
+				}
 			}
 
 			SetEngineParam(true);
@@ -436,6 +456,7 @@ namespace NodoAme
 		public ObservableCollection<TalkSoftVoice>? GetAvailableCasts(){
 			if (voices is null || voices.Count == 0)
 			{
+				logger.Warn($"error dialog opend: ");
 				MessageBox.Show(
 					"現在、利用できるボイスがありません！",
 					"利用できるボイスがありません",
@@ -697,6 +718,7 @@ namespace NodoAme
 					//var engine = new OpenJTalkAPI();
 					if (!(engine is OpenJTalkAPI jtalk))
 					{
+						logger.Warn($"error dialog opend");
 						MessageBox.Show(
 							"現在、利用できるボイスがありません！",
 							"利用できるボイスがありません",
@@ -1492,11 +1514,19 @@ namespace NodoAme
 			return (d+1) * TRACK_PARAM_OFFSET_INDEX;
 		}
 
-
-
+		/// <summary>
+        /// 文字列の長さ（秒）と音素リストを取得
+        /// </summary>
+        /// <param name="serifText"></param>
+        /// <returns></returns>
 		private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemes(string serifText){
 			var len = 0.0;
 			List<Models.Label>? phs = new();
+			if(string.IsNullOrEmpty(serifText)){
+				DefaultPhoneme(phs);
+				return (len, phs);
+			}
+
 			switch (engineType)
 			{
 				case TalkEngine.CEVIO:
@@ -1527,22 +1557,62 @@ namespace NodoAme
 
 				case TalkEngine.OPENJTALK:
 					{
-						engine!.SamplingFrequency = SAMPLE_RATE;
-						engine.Volume = 0.9;
-						engine.FramePeriod = 240;
+						OpenJTalkAPI? jtalk = engine;
+						if(jtalk is null){
+							logger.Error(
+								"OpenJTalk is null");
+							break;
+						}
+
+						jtalk.SamplingFrequency = SAMPLE_RATE;
+						jtalk.Volume = 0.9;
+						jtalk.FramePeriod = 240;
 						SetEngineParam();
 
-						/*
-						var jtalk = new OpenJTalkAPI();
-						jtalk.Synthesis(text, false, true);
-						jtalk.WavBuffer
-						*/
+						try
+						{
+							var result = jtalk.Synthesis(serifText, false, true);
+							if(!result){
+								throw new SystemException("Open JTalk Systhesis is not success!");
+							}
+						}
+						catch (Exception e)
+						{
+							logger.Error(
+								$"OpenJTalk Error: {e?.Message}");
+							MessageBox.Show(
+								$"申し訳ありません。内蔵ボイスでエラーが発生しました。\n詳細：{e?.Message}",
+								"内蔵ボイスエラー",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+							break;
+						}
 
-						engine.Synthesis(serifText, false, true);
-						List<List<string>> lbl = engine.Labels;
+						List<List<string>> lbl = jtalk.Labels;
+
+						//合成エラー反映
+						if(lbl is null
+							|| lbl.Count == 0
+							|| lbl.Last() is null)
+						{
+							const string error = "can't get labels";
+							logger.Error(
+								$"OpenJTalk Error: {error}");
+							MessageBox.Show(
+								$"申し訳ありません。内蔵ボイスでエラーが発生しました。\n詳細：{error}",
+								"内蔵ボイスエラー",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+							break;
+						}
+
 						//len
-						var s = lbl[1].Last<string>().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
-						if (!Double.TryParse(s, out len))
+						var s = lbl[1]
+							.Last()
+							.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
+						if (!double.TryParse(s, out len))
 						{
 							len = 0.0;
 						}
@@ -1569,7 +1639,14 @@ namespace NodoAme
 					break;
 			}
 
+			//デフォルト値を返す
+			DefaultPhoneme(phs);
 			return(len, phs);
+
+			static void DefaultPhoneme(List<Label> phs)
+			{
+				phs.Add(new("sil", 0, 0));
+			}
 		}
 
 		private async ValueTask ExportCoreAsync(
@@ -1595,14 +1672,15 @@ namespace NodoAme
 				}
 				catch (System.Exception e)
 				{
+					logger.Warn($"error dialog opend: {e?.Message}");
 					MessageBox.Show(
-						$"「{outDirPath}」に新しくフォルダを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+						$"「{outDirPath}」に新しくフォルダを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e?.Message}",
 						"フォルダの作成に失敗！",
 						MessageBoxButton.OK,
 						MessageBoxImage.Error
 					);
 					logger.Error($"failed to create a export directory:{outDirPath}");
-					logger.Error($"{ e.Message }");
+					logger.Error($"{ e?.Message }");
 
 					return;
 				}
