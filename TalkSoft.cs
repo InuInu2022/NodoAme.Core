@@ -886,8 +886,6 @@ namespace NodoAme
 			this.CastToExport = castId;
 			Debug.WriteLine($"songcast:{castId}");
 
-
-
 			//テンプレートファイル読み込み
 			var tmplTrack = isExportAsTrack ?
 				XElement.Load(@"./template/temp.track.xml") :	//ccst file
@@ -1439,8 +1437,9 @@ namespace NodoAme
 				case ExportLyricsMode.ALPHABET:
 				case ExportLyricsMode.EN_TO_JA:
 				{
-					//ModeForAI: pauの区切りでノートに分割する
-					await Task.Run(() =>
+					{
+						//ModeForAI: pauの区切りでノートに分割する
+						await Task.Run(() =>
 						{
 							for (int i = 0; i < phs.Count; i++)
 							{
@@ -1448,23 +1447,34 @@ namespace NodoAme
 								{
 									case "sil": //ignore phoneme
 										break;
+
 									case "pau": //split note
-										if(splitMode == NoteSplitModes.SPLIT_ONLY){
-											noteList.Add(phs[i]);
+										{
+											if (splitMode == NoteSplitModes.SPLIT_ONLY)
+											{
+												noteList.Add(phs[i]);
+											}
+
+											notesList.Add(new List<dynamic>(noteList));
+											noteList.Clear();
+											phNum++;
+											break;
 										}
-										notesList.Add(new List<dynamic>(noteList));
-										noteList.Clear();
-										phNum++;
-										break;
+
 									default:    //append
-										noteList.Add(phs[i]);
-										phNum++;
-										break;
+										{
+											noteList.Add(phs[i]);
+											phNum++;
+											break;
+										}
 								}
 							}
 						});
 						notesList.Add(new List<dynamic>(noteList));
-					}break;
+					}
+
+					break;
+				}
 
 				default:
 					logger.Error($"Export mode {mode} is invalid!");
@@ -1480,72 +1490,84 @@ namespace NodoAme
 			var offsetSerifIndex = serifIndexs + TRACK_PARAM_OFFSET_INDEX;
 			var d = Math.Ceiling(offsetSerifIndex / TRACK_PARAM_OFFSET_INDEX);
 			return (d+1) * TRACK_PARAM_OFFSET_INDEX;
-
 		}
 
 
 
 		private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemes(string serifText){
 			var len = 0.0;
-			List<Models.Label>? phs = new List<Models.Label>();
+			List<Models.Label>? phs = new();
 			switch (engineType)
 			{
 				case TalkEngine.CEVIO:
-					//len
-					len = engine!.GetTextDuration(serifText);
-					//phonemes
-					var phonemes = engine.GetPhonemes(serifText);
-					foreach (var item in phonemes)
 					{
-						phs.Add(new Models.Label(
-							item.Phoneme,
-							item.StartTime,
-							item.EndTime
-						));
-					}
-					break;
-				case TalkEngine.VOICEVOX:
-					var vv = this.engine as Voicevox;
-					(phonemes,len) = await vv!.GetPhonemesAndLength(serifText);
-					phs = (phonemes as Label[]).ToList();
-					break;
-				case TalkEngine.OPENJTALK:
-					engine!.SamplingFrequency = SAMPLE_RATE;
-					engine.Volume = 0.9;
-					engine.FramePeriod = 240;
-					SetEngineParam();
-
-					/*
-					var jtalk = new OpenJTalkAPI();
-					jtalk.Synthesis(text, false, true);
-					jtalk.WavBuffer
-					*/
-
-					engine.Synthesis(serifText, false, true);
-					List<List<string>> lbl = engine.Labels;
-					//len
-					var s = lbl[1].Last<string>().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
-					if(!Double.TryParse(s, out len)){
-						len = 0.0;
-					}else{
-						len /= SEC_RATE;
-					}
-					//phonemes
-					phs = lbl[1]
-						.ConvertAll(str =>
+						//len
+						len = engine!.GetTextDuration(serifText);
+						//phonemes
+						var phonemes = engine.GetPhonemes(serifText);
+						foreach (var item in phonemes)
 						{
-							var a = str.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-							var sTime = Double.Parse(a[0])/SEC_RATE;
-							var eTime = Double.Parse(a[1])/SEC_RATE;
-							var p = a[2]
-								.Split(new char[] { '/' })[0]
-								.Split(new char[] { '^', '-', '+', '=' })[2];
-							return new Label(p, sTime, eTime);
-						});
-					break;
+							phs.Add(new Models.Label(
+								item.Phoneme,
+								item.StartTime,
+								item.EndTime
+							));
+						}
+						break;
+					}
+
+				case TalkEngine.VOICEVOX:
+					{
+						var vv = this.engine as Voicevox;
+						(phonemes, len) = await vv!.GetPhonemesAndLength(serifText);
+						phs = (phonemes as Label[]).ToList();
+						break;
+					}
+
+				case TalkEngine.OPENJTALK:
+					{
+						engine!.SamplingFrequency = SAMPLE_RATE;
+						engine.Volume = 0.9;
+						engine.FramePeriod = 240;
+						SetEngineParam();
+
+						/*
+						var jtalk = new OpenJTalkAPI();
+						jtalk.Synthesis(text, false, true);
+						jtalk.WavBuffer
+						*/
+
+						engine.Synthesis(serifText, false, true);
+						List<List<string>> lbl = engine.Labels;
+						//len
+						var s = lbl[1].Last<string>().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
+						if (!Double.TryParse(s, out len))
+						{
+							len = 0.0;
+						}
+						else
+						{
+							len /= SEC_RATE;
+						}
+						//phonemes
+						phs = lbl[1]
+							.ConvertAll(str =>
+							{
+								var a = str.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+								var sTime = double.Parse(a[0]) / SEC_RATE;
+								var eTime = double.Parse(a[1]) / SEC_RATE;
+								var p = a[2]
+									.Split(new char[] { '/' })[0]
+									.Split(new char[] { '^', '-', '+', '=' })[2];
+								return new Label(p, sTime, eTime);
+							});
+						break;
+					}
+
 				default:
 					break;
 			}
+
 			return(len, phs);
 		}
 

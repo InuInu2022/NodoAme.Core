@@ -35,7 +35,6 @@ namespace NodoAme.ViewModels
 
 		public SerifViewModel()
 		{
-
 			this.PreviewTalk = CommandFactory.Create<RoutedEventArgs>(
 				async _ => {
 					EnabledPreview = false;
@@ -51,7 +50,7 @@ namespace NodoAme.ViewModels
 				EnabledExport = false;
 				ExportProgress = Visibility.Visible;
 				var cast = ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected];
-				var alpha = 0.0;//TODO:
+				const double alpha = 0.0;	//TODO:
 				await ParentVM!.ExportFileFromList(
 					this.SourceText,
 					cast.Id,
@@ -65,32 +64,27 @@ namespace NodoAme.ViewModels
 
 			ExportPreviewWav =
 				CommandFactory
-				.Create<RoutedEventArgs>(
-					async _ =>
-					{
-						EnabledExport = false;
-						//TODO:enable loading indicater
-						await ParentVM!
-							.ExportPreviewWavFromList(this.SourceText);
-						EnabledExport = true;
-					}
-				);
+					.Create<RoutedEventArgs>(
+						async _ =>
+						{
+							EnabledExport = false;
+							//TODO:enable loading indicater
+							await ParentVM!
+								.ExportPreviewWavFromList(this.SourceText);
+							EnabledExport = true;
+						}
+						);
 
 			this.CheckEnterAndAddRow = Command.Factory.CreateSync<RoutedEventArgs>(e =>
+			{
+				Debug.WriteLine("e:" + e.ToString());
+				var k = (KeyEventArgs)e;
+				if (k.Key == Key.Enter)
 				{
-					Debug.WriteLine("e:" + e.ToString());
-					var k = (KeyEventArgs)e;
-					if (k.Key == Key.Enter)
-					{
-						k.Handled = true;
-
-					}
-				});
-
+					k.Handled = true;
+				}
+			});
 		}
-
-
-
 
 		[PropertyChanged(nameof(SourceText))]
 		private async ValueTask SourceTextChangedAsync(string sourceText)
