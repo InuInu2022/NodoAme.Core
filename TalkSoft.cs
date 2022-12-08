@@ -1354,7 +1354,7 @@ namespace NodoAme
 				ExportFileType.CCS => tmplTrack,
 				_ => tmplTrack
 			};
-			await ExportCore(
+			await ExportCoreAsync(
 				serifText,
 				exportPath,
 				exportData,
@@ -1549,7 +1549,7 @@ namespace NodoAme
 			return(len, phs);
 		}
 
-		private async ValueTask ExportCore(
+		private async ValueTask ExportCoreAsync(
 			string trackFileName,
 			string exportPath,
 			dynamic/*XElement or byte[]*/ tmplTrack,
@@ -1580,15 +1580,34 @@ namespace NodoAme
 					logger.Error($"failed to create a export directory:{outDirPath}");
 					logger.Error($"{ e.Message }");
 
-					throw;
+					return;
 				}
 			}
+
 			var outPath = Path.Combine(outDirPath, outFile);
 			//save
 			if(fileType == ExportFileType.CCS){
 				//save for cevio ccs
 				var xml = tmplTrack as XElement;
-				await Task.Run(() => xml!.Save(outPath));
+				await Task.Run(() => {
+					try
+					{
+						xml!.Save(outPath);
+					}
+					catch (Exception e)
+					{
+						 MessageBox.Show(
+						 		$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+						 		"ファイルの作成に失敗！",
+						 		MessageBoxButton.OK,
+						 		MessageBoxImage.Error
+						);
+						logger.Error($"failed to create a export directory:{outPath}");
+						logger.Error($"{ e.Message }");
+
+						return;
+					}
+				});
 			}else if(fileType == ExportFileType.TSSPRJ){
 				//save for voisona tssprj
 				var bin = tmplTrack as byte[];
@@ -1631,7 +1650,7 @@ namespace NodoAme
 			const string TRACK_FILE_NAME = "SUSURU";
 
 			//出力SongCast
-			this.CastToExport = cast.Id;
+			this.CastToExport = cast.Id!;
 			Debug.WriteLine($"songcast:{cast.Id}");
 
 			//テンプレートxml読み込み
@@ -1658,7 +1677,7 @@ namespace NodoAme
 			};
 			noteNode.SetAttributeValue("Lyric", lyricZu);
 
-			await ExportCore(
+			await ExportCoreAsync(
 				TRACK_FILE_NAME,
 				exportPath,
 				tmplTrack,
