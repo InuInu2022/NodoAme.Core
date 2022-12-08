@@ -58,13 +58,13 @@ public partial class App : Application
         );
         var logger = LogManager.GetCurrentClassLogger();
         MessageBox.Show(
-            $"エラーが発生しました。\n詳細：{e.Message}",
-            "eエラーが発生",
+            $"エラーが発生しました。\n詳細：{e?.Message}",
+            "エラーが発生",
             MessageBoxButton.OK,
             MessageBoxImage.Error
 		);
         logger.Error($"Error!{e?.ToString()}");
         logger.Error($"{ e?.Message }");
-        Environment.Exit(1);
+        //Environment.Exit(1);
     }
 }

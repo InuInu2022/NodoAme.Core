@@ -580,26 +580,33 @@ namespace NodoAme.ViewModels
 		[PropertyChanged(nameof(TalkSoftSelected))]
 		private async ValueTask TalkSoftChangedAsync(int index)
 		{
-			if (IsTalkSoftComboEnabled)
+			if(!IsTalkSoftComboEnabled
+				|| TalkSoftItems[index]?.TalkSoftParams is null)
 			{
-				TalkSoftParams = new ObservableCollection<TalkSoftParam>();
-				var list = TalkSoftItems[index].TalkSoftParams;
-				foreach (var item in list)
-				{
-					TalkSoftParams.Add(item);
-				}
-				await InitVoicesAsync();
-
-
-				//enable preview & export
-				//EnableSerifButtons(index);
+				return;
 			}
 
-			//return new ValueTask();
+			TalkSoftParams = new ObservableCollection<TalkSoftParam>();
+			if (TalkSoftItems is null) { return; }
+
+			var list = TalkSoftItems[index]?.TalkSoftParams;
+			if(list is null){return;}
+
+			foreach (var item in list)
+			{
+				TalkSoftParams.Add(item);
+			}
+
+			await InitVoicesAsync();
 		}
 
 		[PropertyChanged(nameof(ExportSongSoftSelected))]
 		private async ValueTask ExportSongSoftSelectedChangedAsync(int index){
+			if( ExportSongSoftItems is null)
+			{
+				return;
+			}
+
 			var soft = ExportSongSoftItems[index];
 			ExportSongCastItems = new();
 
@@ -623,6 +630,11 @@ namespace NodoAme.ViewModels
 			bool isForceDisable = false
 		)
 		{
+			if(TalkSoftItems is null
+				|| TalkSoftItems[index] is null){
+				return;
+			}
+
 			var canPreview = TalkSoftItems[index].EnabledPreview ?? false;
 			var canExport = TalkSoftItems[index].EnabledExport ?? false;
 			foreach (var item in Serifs)
@@ -725,8 +737,13 @@ namespace NodoAme.ViewModels
 			var ts = _talksofts
 				.ElementAt(TalkSoftSelected);
 
+			if(ts is null){
+				return;
+			}
+
 			if (ts.TalkSoftVoices != null)
 			{
+				Debug.WriteLine("open j talk awaking");
 				IsPreviewComboEnabled = true;
 				TalkVoiceItems = new ObservableCollection<TalkSoftVoice>(ts.TalkSoftVoices);
 				TalkVoiceSelected = 0;
@@ -740,6 +757,11 @@ namespace NodoAme.ViewModels
 				this.currentEngine = TalkEngine.OPENJTALK;
 
 				IsPreviewButtonEnabled = true;
+
+				if(talkEngine?.IsActive is null){
+					return;
+				}
+
 				EnableSerifButtons(
 					TalkSoftSelected,
 					!this.talkEngine.IsActive
@@ -1052,73 +1074,125 @@ namespace NodoAme.ViewModels
 
 		[PropertyChanged(nameof(DefaultSerifLines))]
 		private async ValueTask DefaultSerifLinesChangedAsync(int value){
+			if(UserSettings?.DefaultSerifLines is null){
+				return;
+			}
+
 			UserSettings.DefaultSerifLines = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(SongExportLyricsMode))]
 		private async ValueTask SongExportLyricsModeChangedAsync(ExportLyricsMode value){
+			if(UserSettings?.SongExportLyricsMode is null){
+				return;
+			}
+
 			UserSettings.SongExportLyricsMode = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsExportSerifText))]
 		private async ValueTask IsExportSerifTextChangedAsync(bool value){
+			if(UserSettings?.IsExportSerifText is null){
+				return;
+			}
+
 			UserSettings.IsExportSerifText = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(DefaultExportSerifTextFileName))]
 		private async ValueTask DefaultExportSerifTextFileNameChangedAsync(string value){
-			if(string.IsNullOrEmpty(value))value = UserSettings.SERIF_FILE_NAME;
+			if(UserSettings?.DefaultExportSerifTextFileName is null){
+				return;
+			}
+
+			if(string.IsNullOrEmpty(value))
+			{
+				value = UserSettings.SERIF_FILE_NAME;
+			}
+
 			UserSettings.DefaultExportSerifTextFileName = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsConvertToHiragana))]
 		private async ValueTask IsConvertToHiraganaChangedAsync(bool value){
+			if(UserSettings?.IsConvertToHiragana is null){
+				return;
+			}
+
 			UserSettings.IsConvertToHiragana = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsConvertToPhoneme))]
 		private async ValueTask IsConvertToPhonemeChangedAsync(bool value){
+			if(UserSettings?.IsConvertToPhoneme is null){
+				return;
+			}
+
 			UserSettings.IsConvertToPhoneme = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsCheckJapaneseSyllabicNasal))]
 		private async ValueTask IsCheckJapaneseSyllabicNasalChangedAsync(bool value){
+			if(UserSettings?.IsCheckJapaneseSyllabicNasal is null){
+				return;
+			}
+
 			UserSettings.IsCheckJapaneseSyllabicNasal = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsCheckJananeseNasalGa))]
 		private async ValueTask IsCheckJananeseNasalGaChangedAsync(bool value){
+			if(UserSettings?.IsCheckJananeseNasalGa is null){
+				return;
+			}
+
 			UserSettings.IsCheckJananeseNasalGa = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsCheckJapaneseRemoveNonSoundVowel))]
 		private async ValueTask IsCheckJapaneseRemoveNonSoundVowelChangedAsync(bool value){
+			if(UserSettings?.IsCheckJapaneseRemoveNonSoundVowel is null){
+				return;
+			}
+
 			UserSettings.IsCheckJapaneseRemoveNonSoundVowel = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsCheckJapaneseSmallVowel))]
 		private async ValueTask IsCheckJapaneseSmallVowelChangedAsync(bool value){
+			if(UserSettings?.IsCheckJapaneseSmallVowel is null){
+				return;
+			}
+
 			UserSettings.IsCheckJapaneseSmallVowel = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsOpenCeVIOWhenExport))]
 		private async ValueTask IsOpenCeVIOWhenExportChangedAsync(bool value){
+			if(UserSettings?.IsOpenCeVIOWhenExport is null){
+				return;
+			}
+
 			UserSettings.IsOpenCeVIOWhenExport = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(IsExportAsTrac))]
 		private async ValueTask IsExportAsTracChangedAsync(bool value){
+			if(UserSettings?.IsExportAsTrac is null){
+				return;
+			}
+
 			UserSettings.IsExportAsTrac = value;
 			await UserSettings.SaveAsync();
 		}
@@ -1142,12 +1216,19 @@ namespace NodoAme.ViewModels
 
 		[PropertyChanged(nameof(AdaptingNoteToPitchMode))]
 		private async ValueTask IsAdaptingNoteToPitchChangedAsync(NoteAdaptMode value){
+			if(UserSettings?.AdaptingNoteToPitchMode is null){
+				return;
+			}
 			UserSettings.AdaptingNoteToPitchMode = value;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(NoteSplitMode))]
 		private async ValueTask NoteSplitModeChangedAsync(NoteSplitModes value){
+			if(UserSettings?.NoteSplitMode is null){
+				return;
+			}
+
 			UserSettings.NoteSplitMode = value;
 			await UserSettings.SaveAsync();
 		}
@@ -1155,12 +1236,20 @@ namespace NodoAme.ViewModels
 		[PropertyChanged(nameof(ExportFileExtentions))]
 		private async ValueTask ExportFileExtentionsChangedAsync(ObservableCollection<SongSoftTracFileExtSetting> value){
 			if(value is null || value.Count == 0) return;
+			if(UserSettings?.ExportFileExtentions is null){
+				return;
+			}
+
 			UserSettings.ExportFileExtentions = ExportFileExtentions;
 			await UserSettings.SaveAsync();
 		}
 
 		[PropertyChanged(nameof(BreathSuppress))]
 		private async ValueTask BreathSuppressChangedAsync(BreathSuppressMode value){
+			if(UserSettings?.BreathSuppress is null){
+				return;
+			}
+
 			UserSettings.BreathSuppress = value;
 			await UserSettings.SaveAsync();
 		}

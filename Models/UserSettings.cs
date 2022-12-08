@@ -86,6 +86,8 @@ public class UserSettings
 	}
 
 	public async ValueTask SaveAsync(){
+		if(this is null){return;}
+
 		var s = JsonSerializer.Serialize(this, JsonOption);
 		using var writer = new StreamWriter(UserSettingsPath, false, Encoding.UTF8);
 		await writer.WriteLineAsync(s);
