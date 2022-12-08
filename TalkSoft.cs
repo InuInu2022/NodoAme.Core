@@ -1580,6 +1580,7 @@ namespace NodoAme
 			ExportFileType fileType,
 			SongCast cast
 		){
+			logger.Error($"export start: {exportPath}/{trackFileName}");
 			var safeName = GetSafeFileName(trackFileName);
 			var outDirPath = exportPath;
 			var outFile = fileType switch{
@@ -1607,7 +1608,26 @@ namespace NodoAme
 				}
 			}
 
-			var outPath = Path.Combine(outDirPath, outFile);
+			//check path output
+			var outPath = "";
+			try
+			{
+				outPath = Path.Combine(outDirPath, outFile);
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show(
+					$"ファイルの書き出し先（{outDirPath}, {outFile}）を上手く作れませんでした。\n詳細：{e.Message}",
+					"ファイルの書き出し先作成に失敗！",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error
+				);
+				logger.Error($"failed to create a output path:{outDirPath}, {outFile}");
+				logger.Error($"{ e.Message }");
+
+				return;
+			}
+
 			//save
 			if(fileType == ExportFileType.CCS){
 				//save for cevio ccs
