@@ -603,12 +603,17 @@ namespace NodoAme.ViewModels
 			var soft = ExportSongSoftItems[index];
 			ExportSongCastItems = new();
 
-			setting
-				.ExportSongCasts
-				.GroupBy(x => x.SongSoft)
-				.Single(x => x.Key == soft)
-				.ToList()
-				.ForEach(x => ExportSongCastItems.Add(x));
+			var list = await Task.Run(() =>
+			{
+				return setting
+					.ExportSongCasts
+					.GroupBy(x => x.SongSoft)
+					.Single(x => x.Key == soft)
+					.ToList()
+					;
+			});
+			list.ForEach(x => ExportSongCastItems.Add(x));
+
 			var a = ExportSongCastItems;
 			ExportSongCastSelected = 0;
 		}
