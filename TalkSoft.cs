@@ -1195,14 +1195,13 @@ namespace NodoAme
 			sw.Restart();
 			#endregion
 
-
 			//VOL elements
 			//Volumeの線を書き込む
 			#region write_c0
+
 			//volume(C0) node root
-
-
-			var volumeNode = new XElement("C0",
+			var volumeNode = new XElement(
+				"C0",
 				new XAttribute("Length", paramLen)
 			);
 
@@ -1220,11 +1219,16 @@ namespace NodoAme
 					//4分の1拍無音化
 					TRACK_PARAM_OFFSET_INDEX / 4
 			};
-			var startVol = new XElement("Data",
-					new XAttribute("Index", 0),
-					new XAttribute("Repeat", startVolumeRep ),
-					VOL_ZERO
-				);
+			var startVol = new XElement(
+				"Data",
+				new XAttribute(
+					"Index",
+					0),
+				new XAttribute(
+					"Repeat",
+					startVolumeRep),
+				VOL_ZERO
+			);
 			volumeNode.Add(startVol);
 
 			//無声母音/ブレス音のVOLを削る
@@ -1236,9 +1240,8 @@ namespace NodoAme
 			} ;
 
 			var noSoundVowels = phs
-				.Where(l => !(l.Phoneme is null))
-				//.Where(l => l.Phoneme!.Length == 1 && char.IsUpper(Convert.ToChar(l.Phoneme)))
-				.Where(l => reg.IsMatch(l.Phoneme));
+				.Where(l => l.Phoneme is not null && reg.IsMatch(l.Phoneme))
+				;
 			foreach (var ph in noSoundVowels)
 			{
 				var s = ph.StartTime is null ? 0.0 : (double)ph.StartTime! / INDEX_SPAN_TIME;
@@ -1639,8 +1642,6 @@ namespace NodoAme
 					break;
 			}
 
-			//デフォルト値を返す
-			DefaultPhoneme(phs);
 			return(len, phs);
 
 			static void DefaultPhoneme(List<Label> phs)
@@ -1657,7 +1658,7 @@ namespace NodoAme
 			ExportFileType fileType,
 			SongCast cast
 		){
-			logger.Error($"export start: {exportPath}/{trackFileName}");
+			logger.Info($"export start: '{exportPath}', {trackFileName}");
 			var safeName = GetSafeFileName(trackFileName);
 			var outDirPath = exportPath;
 			var outFile = fileType switch{
