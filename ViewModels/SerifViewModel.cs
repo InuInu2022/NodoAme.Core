@@ -107,8 +107,10 @@ namespace NodoAme.ViewModels
 			EnabledExport = true;
 			EnabledPreview = true;
 
+			//同じ文字列なら処理を抜ける
 			if(this.LastSourceText == sourceText
-				&& this.LastCast != ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected]) {return;} //同じ文字列なら処理を抜ける
+				&& this.LastCast != ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected]) {return;}
+
 			this.LastSourceText = sourceText;
 			this.ConvertedText = await ParentVM!.ConvertFromListAsync(sourceText);
 			//var s = ConvertFromList(sourceText);

@@ -1059,11 +1059,19 @@ namespace NodoAme.ViewModels
 
 		public async ValueTask<string> ConvertFromListAsync(string sourceText)
 		{
-			this.talkEngine = await GenerateWrapper(
-				this.currentEngine,
-				_talksofts.ElementAt(TalkSoftSelected),
-				_voices.ElementAt(TalkVoiceSelected)
-			);
+			try
+			{
+				this.talkEngine = await GenerateWrapper(
+					this.currentEngine,
+					_talksofts.ElementAt(TalkSoftSelected),
+					_voices.ElementAt(TalkVoiceSelected)
+				);
+			}
+			catch
+			{
+				return "";
+			}
+
 			return await PhonemeConverter.ConvertAsync(
 				talkEngine: talkEngine,
 				sourceText: sourceText,

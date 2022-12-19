@@ -53,18 +53,16 @@ public partial class App : Application
 
     private void HandleException(Exception? e)
     {
-        MessageBox.Show(
-            $"エラーが発生しました\n{e?.ToString()}"
-        );
         var logger = LogManager.GetCurrentClassLogger();
+        logger.Error($"Error!:{e?.ToString()}");
+#if DEBUG
         MessageBox.Show(
             $"エラーが発生しました。\n詳細：{e?.Message}",
             "エラーが発生",
             MessageBoxButton.OK,
             MessageBoxImage.Error
 		);
-        logger.Error($"Error!{e?.ToString()}");
-        logger.Error($"{ e?.Message }");
+#endif
         //Environment.Exit(1);
     }
 }
