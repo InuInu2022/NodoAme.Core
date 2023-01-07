@@ -14,3 +14,5 @@ NodoAme.Core/obj/*
 NodoAme.Core/bin/*
 NodoAme.WPF/bin/*
 NodoAme.WPF/obj/*
+test/bin/*
+test/obj/*
