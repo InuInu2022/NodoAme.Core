@@ -8,7 +8,7 @@
         <LangVersion>10.0</LangVersion>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
-        <ApplicationIcon>img\Fps.
+        <ApplicationIcon>..\img\Fps.
 hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <!-- info -->
@@ -58,28 +58,28 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
             <InProject>false</InProject>
         </FluentValidationExcludedCultures>
         <!-- アプリに付与するファイル -->
-        <Content Include="dic/japanese.json">
+        <Content Include="../dic/japanese.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="dic/*.htsvoice">
+        <Content Include="../dic/*.htsvoice">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="dic/open_jtalk_dic_utf_8-1.11/*">
+        <Content Include="../dic/open_jtalk_dic_utf_8-1.11/*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="NodoAme.Settings.json">
+        <Content Include="../NodoAme.Settings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="template/temp.*.xml">
+        <Content Include="../template/temp.*.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="template/Template.tssprj">
+        <Content Include="../template/Template.tssprj">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="./Licenses/*/*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="./はじめによんでねReadme.md">
+        <Content Include="../はじめによんでねReadme.md">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <!-- nuget libs -->

@@ -7,7 +7,7 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/NodoAme.csproj",
+				"${workspaceFolder}/NodoAme.WPF/NodoAme.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary",
 				//"/property:Configuration=Release",
@@ -23,7 +23,7 @@
 			// ビルドツール（MSBuild.exe）の位置。以下の例ではv.4.0を使うのでその実行ファイルパスを指定します。
 			"command": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe",
 			// MSBuild.exeへの引数を指定します。
-			"args": [ 
+			"args": [
 			  // プロジェクトファイル（*.slnなど）のあるパスを指定します。
 			  "${workspaceFolder}/NodoAme.net48.csproj",
 			  // ターゲット（/target）をビルドする
@@ -54,7 +54,7 @@
 			"type": "process",
 			"args": [
 				"publish",
-				"${workspaceFolder}/NodoAme.csproj",
+				"${workspaceFolder}/NodoAme.WPF/NodoAme.csproj",
 				"/property:GenerateFullPaths=true",
 				//"/consoleloggerparameters:NoSummary",
 				"/property:Configuration=Release",
@@ -70,7 +70,7 @@
 			"args": [
 				"watch",
 				"run",
-				"${workspaceFolder}/NodoAme.csproj",
+				"${workspaceFolder}/NodoAme.WPF/NodoAme.csproj",
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],

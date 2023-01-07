@@ -272,7 +272,17 @@ namespace NodoAme.ViewModels
 			//open license folder
 			this.OpenLicenses = CommandFactory.Create<RoutedEventArgs>(_ =>
 			{
-				Process.Start(Path.GetFullPath("./Licenses/"));
+				var lpath = Path.GetFullPath(
+					Path.Combine(
+						AppDomain.CurrentDomain.BaseDirectory,
+						"./Licenses/"
+					));
+
+				Debug.WriteLine($"license: {lpath}");
+				if(!Directory.Exists(lpath)){
+					return new ValueTask();
+				}
+				Process.Start(lpath);
 				return new ValueTask();
 			});
 

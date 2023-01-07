@@ -15,7 +15,7 @@
 			"request": "launch",
 			"preLaunchTask": "build",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/bin/Debug/net48/win10-x64/NodoAme.exe",
+			"program": "${workspaceFolder}/NodoAme.WPF/bin/Debug/net48/win10-x64/NodoAme.exe",
 			"args": [],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -38,7 +38,7 @@
 			// 起動前のタスクを指定します。「tasks.json」内「label」で指定した名前を記載します。
 			"preLaunchTask": "debug msbuild",
 			// 起動する（ビルドされた）実行ファイルパスを指定します。
-			"program": "${workspaceFolder}/bin/Debug/net48/win10-x64/NodoAme.exe",
+			"program": "${workspaceFolder}/NodoAme.WPF/bin/Debug/net48/win10-x64/NodoAme.exe",
 			// 上記の実行ファイルに付加する引数を以下に記載します。
 			"args": [],
 			// 作業ファイルのあるディレクトリーパスを指定します。この例では実行ファイルのある場所です。
