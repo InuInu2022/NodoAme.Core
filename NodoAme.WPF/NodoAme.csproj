@@ -94,7 +94,7 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0" />
         <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
         <PackageReference Include="RestSharp" Version="108.0.3" />
-        <PackageReference Include="NLog" Version="5.1.0" />
+        <PackageReference Include="NLog" Version="5.1.1" />
         <PackageReference Include="MinVer" Version="4.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
@@ -102,5 +102,8 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <PackageReference Include="WanaKana-net" Version="1.0.0" />
         <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
         <PackageReference Include="FontAwesome6.Fonts" Version="2.5.1" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\NodoAme.Core\NodoAme.Core.csproj" />
     </ItemGroup>
 </Project>

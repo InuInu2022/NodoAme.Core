@@ -11,5 +11,6 @@ NodoAme.net48.csproj.tmp
 template/temp.track - コピー.ccst
 usersettings.json
 NodoAme.Core/obj/*
+NodoAme.Core/bin/*
 NodoAme.WPF/bin/*
 NodoAme.WPF/obj/*
