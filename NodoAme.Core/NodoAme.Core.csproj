@@ -19,8 +19,11 @@
 
   <ItemGroup>
     <PackageReference Include="DotnetWorld" Version="1.2.5" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="NAudio.Core" Version="2.1.0" />
     <PackageReference Include="NLog" Version="5.1.1" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 
 </Project>

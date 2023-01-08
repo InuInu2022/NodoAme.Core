@@ -163,7 +163,7 @@ public static class TssProjExt
 		var after = bin.Slice(eIndex);
 
 		var replaced = new TssKeyValue(key, text);
-		Debug.WriteLine($"replaced[{key}]: {replaced.GetBytes().Count()}");
+		Debug.WriteLine($"replaced[{key}]: {replaced.GetBytes().Length}");
 
 		return before
 			.ToArray()
