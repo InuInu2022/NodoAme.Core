@@ -30,7 +30,7 @@ namespace NodoAme;
 /// <summary>
 /// トークエンジンラッパー
 /// </summary>
-public class Wrapper
+public class Wrapper : ITalkWrapper
 {
 	private const double NOTE_OFFSET = 1.6;
 	/// <summary>
@@ -72,7 +72,8 @@ public class Wrapper
 		TalkSoftVoice? voice = null,
 		TalkSoftVoiceStylePreset? style = null,
 		IList<TalkVoiceStyleParam>? styleParams = null
-	){
+	)
+	{
 		engineType = type;
 		TalkSoft = soft;
 		TalkVoice = voice ?? null;
@@ -94,223 +95,229 @@ public class Wrapper
 	}
 
 
-	private async ValueTask Init(){
+	private async ValueTask Init()
+	{
 		var soft = TalkSoft;
 		var voice = TalkVoice;
 		var style = VoiceStyle;
 
 		IsActive = false;
 
-		switch(engineType){
+		switch (engineType)
+		{
 			case TalkEngine.CEVIO:
-			{
-				if (soft.Interface is null) break;
-				if (soft.Interface.Service is null) break;
-				if (soft.Interface.Talker is null) break;
-
-				//CeVIO Talk API interface 呼び出し
-				string cevioPath =
-					Environment.ExpandEnvironmentVariables(soft.Interface.EnvironmentProgramVar)
-						+ soft.Interface.DllPath
-						+ soft.Interface.DllName;
-				Debug.WriteLine($"cevioPath:{cevioPath}");
-				if (!File.Exists(cevioPath))
 				{
-					logger.Warn($"error dialog opend:");
-					MessageBox.Show(
-						$"{engineType}が見つかりませんでした。",
-						$"{engineType}の呼び出しに失敗",
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
-					);
-					logger
-						.Error($"CeVIO Dll not found:{engineType}の呼び出しに失敗");
+					if (soft.Interface is null) break;
+					if (soft.Interface.Service is null) break;
+					if (soft.Interface.Talker is null) break;
 
-					return;
-				}
-
-				try
-				{
-					assembly = Assembly.LoadFrom(cevioPath);
-				}
-				catch (Exception e)
-				{
-					logger.Warn($"error dialog opend: {e?.Message}");
-					MessageBox.Show(
-						$"{engineType}を呼び出せませんでした。{e?.Message}",
-						$"{engineType}の呼び出しに失敗",
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
-					);
-					logger
-						.Fatal($"{e?.Message}");
-					return;
-				}
-				Type? t = assembly.GetType(soft.Interface.Service);
-				if (t is null)
-				{
-					logger.Warn($"error dialog opend: ");
-					MessageBox.Show(
-						$"{engineType}を呼び出せませんでした。",
-						$"{engineType}の呼び出しに失敗",
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
-					);
-					logger
-						.Error($"CeVIO Dll cannot call:{engineType}の呼び出しに失敗");
-					return;
-				}
-
-				try
-				{
-					MethodInfo startHost = t.GetMethod("StartHost");
-					var result = startHost.Invoke(null, new object[] { false });
-
-					if ((int)result > 1)
+					//CeVIO Talk API interface 呼び出し
+					string cevioPath =
+						Environment.ExpandEnvironmentVariables(soft.Interface.EnvironmentProgramVar)
+							+ soft.Interface.DllPath
+							+ soft.Interface.DllName;
+					Debug.WriteLine($"cevioPath:{cevioPath}");
+					if (!File.Exists(cevioPath))
 					{
-						logger.Warn($"error dialog opend: ");
+						logger.Warn($"error dialog opend:");
 						MessageBox.Show(
-							$"{engineType}を起動できませんでした。理由code:{result}",
-							$"{engineType}の起動に失敗",
+							$"{engineType}が見つかりませんでした。",
+							$"{engineType}の呼び出しに失敗",
 							MessageBoxButton.OK,
 							MessageBoxImage.Error
 						);
 						logger
-						.Error($"{engineType}を起動できませんでした。理由code:{result}");
+							.Error($"CeVIO Dll not found:{engineType}の呼び出しに失敗");
+
 						return;
 					}
-				}
-				catch (System.Exception e)
-				{
-					var msg = $"{engineType}を起動できませんでした。理由:{e.Message}";
-					MessageBox.Show(
-							msg,
-							$"{engineType}の起動に失敗",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
-						);
-					logger
-						.Error(msg);
-					throw new Exception(msg);
-				}
 
-				Type? t2 = assembly.GetType(soft.Interface.Agent);
-
-				PropertyInfo property = t2.GetProperty("AvailableCasts");
-				string[] names = (string[])property.GetValue(null, new object[] { });
-				foreach (var n in names)
-				{
-					Debug.WriteLine(n);
-					logger.Info($"Installed cevio cast: {n}");
-					voices!
-						.Add(new TalkSoftVoice { Id = $"Cast_{n}", Name = $"{n}" });
-				}
-
-				//CeVIOはインストールされているが、トークがない場合
-				if (names is null || names.Length == 0)
-				{
-					var noCast = $"{engineType}のトークボイスが見つかりません。{engineType}のボイスをしゃべりの参考に使用するにはトークエディタとトークボイスが必要です。";
-					MessageBox.Show(
-						noCast,
-						$"{engineType}のトークボイスが見つかりません",
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
-					);
-					logger
-						.Error(noCast);
-					return;
-				}
-
-				//Type.GetTypeFromProgID(soft.Interface.Talker);
-				try
-				{
-					Type? talker = assembly.GetType(soft.Interface.Talker);
-					this.engine = Activator.CreateInstance(talker, new object[] { names[0] });
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(
-							ex.Message,
-							$"{engineType}の起動に失敗",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
-						);
-					logger
-						.Error($"can't awake cevio talker. {ex.Message}");
-					throw;
-				}
-
-				IsActive = true;
-				Debug.WriteLine($"engine:{engine.GetType()}");
-
-				break;
-			}
-
-			case TalkEngine.VOICEVOX:
-			{
-				this.engine = await Models.Voicevox.Factory(engineType, soft, voice, style);
-				var vv = this.engine as Voicevox;
-				if (vv!.IsActive)
-				{
-					//GetAvailableCasts
-					foreach (var n in vv.AvailableCasts!)
+					try
 					{
+						assembly = Assembly.LoadFrom(cevioPath);
+					}
+					catch (Exception e)
+					{
+						logger.Warn($"error dialog opend: {e?.Message}");
+						MessageBox.Show(
+							$"{engineType}を呼び出せませんでした。{e?.Message}",
+							$"{engineType}の呼び出しに失敗",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
+						logger
+							.Fatal($"{e?.Message}");
+						return;
+					}
+					Type? t = assembly.GetType(soft.Interface.Service);
+					if (t is null)
+					{
+						logger.Warn($"error dialog opend: ");
+						MessageBox.Show(
+							$"{engineType}を呼び出せませんでした。",
+							$"{engineType}の呼び出しに失敗",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
+						logger
+							.Error($"CeVIO Dll cannot call:{engineType}の呼び出しに失敗");
+						return;
+					}
+
+					try
+					{
+						MethodInfo startHost = t.GetMethod("StartHost");
+						var result = startHost.Invoke(null, new object[] { false });
+
+						if ((int)result > 1)
+						{
+							logger.Warn($"error dialog opend: ");
+							MessageBox.Show(
+								$"{engineType}を起動できませんでした。理由code:{result}",
+								$"{engineType}の起動に失敗",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+							logger
+							.Error($"{engineType}を起動できませんでした。理由code:{result}");
+							return;
+						}
+					}
+					catch (System.Exception e)
+					{
+						var msg = $"{engineType}を起動できませんでした。理由:{e.Message}";
+						MessageBox.Show(
+								msg,
+								$"{engineType}の起動に失敗",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+						logger
+							.Error(msg);
+						throw new Exception(msg);
+					}
+
+					Type? t2 = assembly.GetType(soft.Interface.Agent);
+
+					PropertyInfo property = t2.GetProperty("AvailableCasts");
+					string[] names = (string[])property.GetValue(null, new object[] { });
+					foreach (var n in names)
+					{
+						Debug.WriteLine(n);
+						logger.Info($"Installed cevio cast: {n}");
 						voices!
 							.Add(new TalkSoftVoice { Id = $"Cast_{n}", Name = $"{n}" });
 					}
+
+					//CeVIOはインストールされているが、トークがない場合
+					if (names is null || names.Length == 0)
+					{
+						var noCast = $"{engineType}のトークボイスが見つかりません。{engineType}のボイスをしゃべりの参考に使用するにはトークエディタとトークボイスが必要です。";
+						MessageBox.Show(
+							noCast,
+							$"{engineType}のトークボイスが見つかりません",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
+						logger
+							.Error(noCast);
+						return;
+					}
+
+					//Type.GetTypeFromProgID(soft.Interface.Talker);
+					try
+					{
+						Type? talker = assembly.GetType(soft.Interface.Talker);
+						this.engine = Activator.CreateInstance(talker, new object[] { names[0] });
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(
+								ex.Message,
+								$"{engineType}の起動に失敗",
+								MessageBoxButton.OK,
+								MessageBoxImage.Error
+							);
+						logger
+							.Error($"can't awake cevio talker. {ex.Message}");
+						throw;
+					}
+
+					IsActive = true;
+					Debug.WriteLine($"engine:{engine.GetType()}");
+
+					break;
 				}
-				IsActive = vv.IsActive;
-				break;
-			}
+
+			case TalkEngine.VOICEVOX:
+				{
+					this.engine = await Models.Voicevox.Factory(engineType, soft, voice, style);
+					var vv = this.engine as Voicevox;
+					if (vv!.IsActive)
+					{
+						//GetAvailableCasts
+						foreach (var n in vv.AvailableCasts!)
+						{
+							voices!
+								.Add(new TalkSoftVoice { Id = $"Cast_{n}", Name = $"{n}" });
+						}
+					}
+					IsActive = vv.IsActive;
+					break;
+				}
 
 			case TalkEngine.OPENJTALK:
 			default:
-			{
-				bool isInitialized = false;
-				await Task.Run(() =>
 				{
-					this.engine = new OpenJTalkAPI();
-					isInitialized = engine?.Initialize(
-						soft.DicPath,
-						//voice!.Styles.ElementAt()
-						style?.Path ?? voice!.Styles![0].Path
-					)
-						?? false;
-				});
-				IsActive = isInitialized;
+					bool isInitialized = false;
+					await Task.Run(() =>
+					{
+						this.engine = new OpenJTalkAPI();
+						isInitialized = engine?.Initialize(
+							soft.DicPath,
+							//voice!.Styles.ElementAt()
+							style?.Path ?? voice!.Styles![0].Path
+						)
+							?? false;
+					});
+					IsActive = isInitialized;
 
-				if (!isInitialized)
-				{
-					var msg = $"{engineType} Initialize Failed";
-					logger.Warn($"error dialog opend: ");
-					MessageBox.Show(
-						msg,
-						msg,
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
-					);
-					logger
-						.Error(msg);
-					this.engine?.Dispose();
-					throw new Exception(msg);
+					if (!isInitialized)
+					{
+						var msg = $"{engineType} Initialize Failed";
+						logger.Warn($"error dialog opend: ");
+						MessageBox.Show(
+							msg,
+							msg,
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
+						logger
+							.Error(msg);
+						this.engine?.Dispose();
+						throw new Exception(msg);
+					}
+					break;
 				}
-				break;
-			}
 		}
 
 		SetEngineParam(true);
 	}
 
-	~Wrapper(){
-		if(this.engine?.GetType().ToString() == "System.__ComObject"){
+	~Wrapper()
+	{
+		if (this.engine?.GetType().ToString() == "System.__ComObject")
+		{
 			System.Runtime.InteropServices.Marshal.ReleaseComObject(engine);
 		}
-		else if(typeof(OpenJTalkAPI) == this.engine?.GetType()){
+		else if (typeof(OpenJTalkAPI) == this.engine?.GetType())
+		{
 			this.engine.Dispose();
 		}
 
 	}
-	public ObservableCollection<TalkSoftVoice>? GetAvailableCasts(){
+	public ObservableCollection<TalkSoftVoice>? GetAvailableCasts()
+	{
 		if (voices is null || voices.Count == 0)
 		{
 			logger.Warn($"error dialog opend: ");
@@ -328,13 +335,16 @@ public class Wrapper
 		return this.voices;
 	}
 
-	public async ValueTask<IList<string>> GetLabelsAsync(string sourceText){
+	public async ValueTask<IList<string>> GetLabelsAsync(string sourceText)
+	{
 		//dynamic list;
-		if(this.engine is null){
+		if (this.engine is null)
+		{
 			logger.Error("GetLabelsAsync(): this.engine is null");
 			throw new NullReferenceException();
 		}
-		switch(engineType){
+		switch (engineType)
+		{
 			case TalkEngine.CEVIO:
 				//var talker = engine;
 
@@ -357,7 +367,7 @@ public class Wrapper
 
 				this.lastTaskGetLabel = Task.Run(() =>
 				{
-					if(cancelSource.Token.IsCancellationRequested)return null;
+					if (cancelSource.Token.IsCancellationRequested) return null;
 					return engine.GetPhonemes(sourceText);
 				},
 				cancelSource.Token);
@@ -374,28 +384,29 @@ public class Wrapper
 				}
 
 
-				if(ps is null){return this.lastLabels!;}
+				if (ps is null) { return this.lastLabels!; }
 
 				this.lastLabels = MakePsudoLabels(ps);
 				return this.lastLabels;
-				//break;
+			//break;
 			case TalkEngine.VOICEVOX:
 				var vv = this.engine as Voicevox;
 				var vps = await vv!.GetPhonemes(sourceText);
 				Debug.WriteLine(vps);
 				return MakePsudoLabels((dynamic)vps);
-				//TalkVoice.Id
-				//break;
+			//TalkVoice.Id
+			//break;
 			case TalkEngine.OPENJTALK:
 			default:
 				return await Task.Run(
-					() => {
+					() =>
+					{
 						var jtalk = engine as OpenJTalkAPI;
 
 						try
 						{
 							var s = //await Task.Run(
-								//()=>
+									//()=>
 								jtalk?.GetLabels(sourceText)
 								//)
 								;
@@ -427,7 +438,7 @@ public class Wrapper
 		{
 			var ph = phs[i];
 
-			string s = $"{GetPhoneme(phs, i-2)}^{GetPhoneme(phs, i-1)}-{ph.Phoneme}+{GetPhoneme(phs, i+1)}={GetPhoneme(phs, i+2)}/";
+			string s = $"{GetPhoneme(phs, i - 2)}^{GetPhoneme(phs, i - 1)}-{ph.Phoneme}+{GetPhoneme(phs, i + 1)}={GetPhoneme(phs, i + 2)}/";
 
 			list.Add(s);
 			//list += s;
@@ -437,7 +448,8 @@ public class Wrapper
 		return list;
 	}
 
-	private string GetPhoneme(dynamic phonemes, int index){
+	private string GetPhoneme(dynamic phonemes, int index)
+	{
 		if (index < 0) { return "xx"; }
 		else if (phonemes.Length - 1 < index) { return "xx"; }
 		else
@@ -446,7 +458,8 @@ public class Wrapper
 		}
 	}
 
-	public ObservableCollection<TalkSoftVoiceStylePreset> GetStylePresets(){
+	public ObservableCollection<TalkSoftVoiceStylePreset> GetStylePresets()
+	{
 		var styles = new ObservableCollection<TalkSoftVoiceStylePreset>();
 		switch (engineType)
 		{
@@ -455,7 +468,7 @@ public class Wrapper
 				Debug.WriteLine($"cast: {this.TalkVoice!.Name!}");
 				this.engine = Activator.CreateInstance(
 					talker,
-					new object[]{this.TalkVoice!.Name!}
+					new object[] { this.TalkVoice!.Name! }
 				);
 				var comps = engine.Components;
 				foreach (var c in comps)
@@ -495,7 +508,8 @@ public class Wrapper
 		return styles;
 	}
 
-	public ObservableCollection<TalkVoiceStyleParam> GetVoiceStyles(){
+	public ObservableCollection<TalkVoiceStyleParam> GetVoiceStyles()
+	{
 		var styles = new ObservableCollection<TalkVoiceStyleParam>();
 		switch (engineType)
 		{
@@ -504,13 +518,14 @@ public class Wrapper
 				Debug.WriteLine($"cast: {this.TalkVoice!.Name!}");
 				this.engine = Activator.CreateInstance(
 					talker,
-					new object[]{this.TalkVoice!.Name!}
+					new object[] { this.TalkVoice!.Name! }
 				);
 				var comps = engine.Components;
 				foreach (var c in comps)
 				{
 					//Debug.WriteLine($"c:{c}");
-					styles.Add(new TalkVoiceStyleParam {
+					styles.Add(new TalkVoiceStyleParam
+					{
 						Id = c.Id,
 						Name = c.Name,
 						Value = c.Value,
@@ -541,7 +556,8 @@ public class Wrapper
 	public async ValueTask<string> Speak(
 		string text,
 		bool withSave = false
-	){
+	)
+	{
 		if (this.engine is null)
 		{
 			logger.Error("Speak(): this.engine is null");
@@ -550,17 +566,19 @@ public class Wrapper
 		}
 
 		double time = 0;
-		switch(engineType){
+		switch (engineType)
+		{
 			case TalkEngine.CEVIO:
 				engine.Cast = TalkVoice!.Name;
-				Debug.WriteLine($"CAST:{engine.Cast}" );
+				Debug.WriteLine($"CAST:{engine.Cast}");
 				SetEngineParam();
 				SetVoiceStyle(false);
 
 				time = engine.GetTextDuration(text);
 				var state = engine.Speak(text);
 
-				if(withSave){
+				if (withSave)
+				{
 					var dialog = new SaveFileDialog
 					{
 						FileName = $"{GetSafeFileName(text)}.wav",
@@ -632,7 +650,8 @@ public class Wrapper
 		return Convert.ToString(time);
 	}
 
-	public async ValueTask PreviewSave(string serifText){
+	public async ValueTask PreviewSave(string serifText)
+	{
 		await Speak(serifText, true);
 	}
 
@@ -648,10 +667,11 @@ public class Wrapper
 
 
 
-		switch(this.engineType)
+		switch (this.engineType)
 		{
 			case TalkEngine.CEVIO:
-				if(usePreset){
+				if (usePreset)
+				{
 					//プリセット
 					foreach (var c in engine!.Components)
 					{
@@ -665,13 +685,15 @@ public class Wrapper
 							c.Value = 0;    //感情値Valueをゼロに
 						}
 					}
-				}else{
+				}
+				else
+				{
 					IList<TalkVoiceStyleParam>? voiceStyleParams = this.VoiceStyleParams;
 					//感情合成
 					foreach (var c in engine!.Components)
 					{
 						var p = voiceStyleParams.First(v => v.Id == c.Id);
-						if(p is null)continue;
+						if (p is null) continue;
 						Debug.WriteLine($"VoiceStyle: {p.Name} {p.Value}");
 						c.Value = (uint)p.Value;
 					}
@@ -767,8 +789,8 @@ public class Wrapper
 
 		//テンプレートファイル読み込み
 		var tmplTrack = isExportAsTrack ?
-			XElement.Load(@"./template/temp.track.xml") :	//ccst file
-			XElement.Load(@"./template/temp.track.xml")		//TODO:ccs file（現在はトラックのみ）
+			XElement.Load(@"./template/temp.track.xml") :   //ccst file
+			XElement.Load(@"./template/temp.track.xml")     //TODO:ccs file（現在はトラックのみ）
 			;
 		var guid = Guid.NewGuid().ToString("D");    //GUIDの生成
 
@@ -827,13 +849,13 @@ public class Wrapper
 		*/
 
 		//感情(Emotion)設定
-		if(cast?.HasEmotion != null && cast.HasEmotion == true)
+		if (cast?.HasEmotion != null && cast.HasEmotion == true)
 		{
 			var emo = songVoiceStyles.First(v => v.Id == "Emotion");
 			var emo1 = emo.Value;
 			var emo0 = emo.Max - emo.Value;
-			scoreRoot.SetAttributeValue("Emotion0", emo0);	//↓
-			scoreRoot.SetAttributeValue("Emotion1", emo1);	//↑
+			scoreRoot.SetAttributeValue("Emotion0", emo0);  //↓
+			scoreRoot.SetAttributeValue("Emotion1", emo1);  //↑
 		}
 
 
@@ -843,7 +865,8 @@ public class Wrapper
 		Debug.WriteLine($"duration :{duration}");
 
 		//Convert phonemes from En to Ja
-		if(exportMode == ExportLyricsMode.EN_TO_JA){
+		if (exportMode == ExportLyricsMode.EN_TO_JA)
+		{
 			phs = PhonemeConverter.EnglishToJapanese(phs);
 		}
 
@@ -873,7 +896,7 @@ public class Wrapper
 			for (int i = 0; i < nList.Count; i++)
 			{
 				var ph = nList[i];
-				if(ph is null)continue;
+				if (ph is null) continue;
 				string pText = ph.Phoneme ?? "";
 
 				double start = ph.StartTime ?? 0.0;
@@ -884,16 +907,19 @@ public class Wrapper
 					startClock = Math.Round(GetTickDuration(start));
 					startPhonemeTime = start;
 				}
-				if(!PhonemeUtil.IsPau(ph)){
+				if (!PhonemeUtil.IsPau(ph))
+				{
 					var addPhoneme = PhonemeUtil.IsNoSoundVowel(pText) switch
 					{
-						true => pText.ToLower(),	//無声母音は小文字化
+						true => pText.ToLower(),    //無声母音は小文字化
 						false => pText
 					};
 					phText += addPhoneme + ",";
-					noteLen += (int) GetTickDuration(end - start);
+					noteLen += (int)GetTickDuration(end - start);
 					phCount++;
-				}else{
+				}
+				else
+				{
 					pauCount++;
 				}
 
@@ -940,7 +966,7 @@ public class Wrapper
 					timingNode.Add(lastTimingData);
 				}
 			}
-			if(noteSplitMode==NoteSplitModes.IGNORE_NOSOUND)pauCount++;
+			if (noteSplitMode == NoteSplitModes.IGNORE_NOSOUND) pauCount++;
 
 			phText = phText.TrimEnd(",".ToCharArray());
 			Debug.WriteLine($"phText :{phText}");
@@ -1089,12 +1115,13 @@ public class Wrapper
 		volumeNode.Add(startVol);
 
 		//無声母音/ブレス音のVOLを削る
-		var reg = breathSuppress switch{
+		var reg = breathSuppress switch
+		{
 			BreathSuppressMode.NO_BREATH =>
 				new Regex("[AIUEO]|pau|sil", RegexOptions.Compiled),
 			BreathSuppressMode.NONE or _ =>
 				new Regex("[AIUEO]", RegexOptions.Compiled),
-		} ;
+		};
 
 		var noSoundVowels = phs
 			.Where(l => l.Phoneme is not null && reg.IsMatch(l.Phoneme))
@@ -1119,10 +1146,10 @@ public class Wrapper
 
 		//CeVIOのバグ終了部分のVOLを削る
 		var lastTime = phs.Last().EndTime ?? 0.0;
-		var lastIndex = Math.Round(lastTime / INDEX_SPAN_TIME,0,MidpointRounding.AwayFromZero);
+		var lastIndex = Math.Round(lastTime / INDEX_SPAN_TIME, 0, MidpointRounding.AwayFromZero);
 		var endVol = new XElement("Data",
 				new XAttribute("Index", TRACK_PARAM_OFFSET_INDEX + lastIndex),
-				new XAttribute("Repeat", paramLen - (lastIndex+TRACK_PARAM_OFFSET_INDEX)), //1小節
+				new XAttribute("Repeat", paramLen - (lastIndex + TRACK_PARAM_OFFSET_INDEX)), //1小節
 				VOL_ZERO
 			);
 		volumeNode.Add(endVol);
@@ -1158,13 +1185,14 @@ public class Wrapper
 		groupNode.SetAttributeValue("Name", serifText);
 		groupNode.SetAttributeValue("Id", guid);
 		groupNode.SetAttributeValue("CastId", CastToExport);
-		if(!(cast is null) && cast.SongSoft == TalkSoftName.CEVIO_CS){
+		if (!(cast is null) && cast.SongSoft == TalkSoftName.CEVIO_CS)
+		{
 			groupNode.SetAttributeValue("Volume", 10);
 		}
 
 		//tssprj
 		var tssprj = Array.Empty<byte>();
-		if(fileType == ExportFileType.TSSPRJ)
+		if (fileType == ExportFileType.TSSPRJ)
 		{
 			tssprj = File.ReadAllBytes("./template/Template.tssprj");
 
@@ -1172,13 +1200,14 @@ public class Wrapper
 			var es = scoreRoot.Elements();
 
 			//ボイス情報の置き換え
-			if(
+			if (
 				//cast情報が空なら置き換えない
 				cast is not null
 					&& cast.CharaNameAsAlphabet is not null
 					&& cast.Id is not null
 					&& cast.VoiceVersion is not null
-			){
+			)
+			{
 				tssprj = tssprj
 					.AsSpan()
 					.ReplaceVoiceLibrary(
@@ -1262,7 +1291,7 @@ public class Wrapper
 					int.Parse(v.Attribute("Index").Value) : null,
 				v.HasAttributes && v.Attribute("Repeat") is not null ?
 					int.Parse(v.Attribute("Repeat").Value) : null
-				//v.Attributes().Select(v => v.Name.LocalName).Contains("Repeat") ? int.Parse(v.Attribute("Repeat").Value) : null
+			//v.Attributes().Select(v => v.Name.LocalName).Contains("Repeat") ? int.Parse(v.Attribute("Repeat").Value) : null
 			))
 			.ToList();
 		return data;
@@ -1318,45 +1347,45 @@ public class Wrapper
 			case ExportLyricsMode.PHONEME:
 			case ExportLyricsMode.ALPHABET:
 			case ExportLyricsMode.EN_TO_JA:
-			{
 				{
-					//ModeForAI: pauの区切りでノートに分割する
-					await Task.Run(() =>
 					{
-						for (int i = 0; i < phs.Count; i++)
+						//ModeForAI: pauの区切りでノートに分割する
+						await Task.Run(() =>
 						{
-							switch (phs[i].Phoneme)
+							for (int i = 0; i < phs.Count; i++)
 							{
-								case "sil": //ignore phoneme
-									break;
+								switch (phs[i].Phoneme)
+								{
+									case "sil": //ignore phoneme
+										break;
 
-								case "pau": //split note
-									{
-										if (splitMode == NoteSplitModes.SPLIT_ONLY)
+									case "pau": //split note
 										{
-											noteList.Add(phs[i]);
+											if (splitMode == NoteSplitModes.SPLIT_ONLY)
+											{
+												noteList.Add(phs[i]);
+											}
+
+											notesList.Add(new List<dynamic>(noteList));
+											noteList.Clear();
+											phNum++;
+											break;
 										}
 
-										notesList.Add(new List<dynamic>(noteList));
-										noteList.Clear();
-										phNum++;
-										break;
-									}
-
-								default:    //append
-									{
-										noteList.Add(phs[i]);
-										phNum++;
-										break;
-									}
+									default:    //append
+										{
+											noteList.Add(phs[i]);
+											phNum++;
+											break;
+										}
+								}
 							}
-						}
-					});
-					notesList.Add(new List<dynamic>(noteList));
-				}
+						});
+						notesList.Add(new List<dynamic>(noteList));
+					}
 
-				break;
-			}
+					break;
+				}
 
 			default:
 				logger.Error($"Export mode {mode} is invalid!");
@@ -1371,18 +1400,20 @@ public class Wrapper
 		var serifIndexs = Math.Round(serifLen / INDEX_SPAN_TIME);
 		var offsetSerifIndex = serifIndexs + TRACK_PARAM_OFFSET_INDEX;
 		var d = Math.Ceiling(offsetSerifIndex / TRACK_PARAM_OFFSET_INDEX);
-		return (d+1) * TRACK_PARAM_OFFSET_INDEX;
+		return (d + 1) * TRACK_PARAM_OFFSET_INDEX;
 	}
 
 	/// <summary>
-        /// 文字列の長さ（秒）と音素リストを取得
-        /// </summary>
-        /// <param name="serifText"></param>
-        /// <returns></returns>
-	private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemes(string serifText){
+	/// 文字列の長さ（秒）と音素リストを取得
+	/// </summary>
+	/// <param name="serifText"></param>
+	/// <returns></returns>
+	private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemes(string serifText)
+	{
 		var len = 0.0;
 		List<Models.Label>? phs = new();
-		if(string.IsNullOrEmpty(serifText)){
+		if (string.IsNullOrEmpty(serifText))
+		{
 			DefaultPhoneme(phs);
 			return (len, phs);
 		}
@@ -1418,7 +1449,8 @@ public class Wrapper
 			case TalkEngine.OPENJTALK:
 				{
 					OpenJTalkAPI? jtalk = engine;
-					if(jtalk is null){
+					if (jtalk is null)
+					{
 						logger.Error(
 							"OpenJTalk is null");
 						break;
@@ -1432,7 +1464,8 @@ public class Wrapper
 					try
 					{
 						var result = jtalk.Synthesis(serifText, false, true);
-						if(!result){
+						if (!result)
+						{
 							throw new SystemException("Open JTalk Systhesis is not success!");
 						}
 					}
@@ -1452,7 +1485,7 @@ public class Wrapper
 					List<List<string>> lbl = jtalk.Labels;
 
 					//合成エラー反映
-					if(lbl is null
+					if (lbl is null
 						|| lbl.Count == 0
 						|| lbl.Last() is null)
 					{
@@ -1499,7 +1532,7 @@ public class Wrapper
 				break;
 		}
 
-		return(len, phs);
+		return (len, phs);
 
 		static void DefaultPhoneme(List<Label> phs)
 		{
@@ -1514,16 +1547,19 @@ public class Wrapper
 		bool isOpenCeVIO,
 		ExportFileType fileType,
 		SongCast cast
-	){
+	)
+	{
 		logger.Info($"export start: '{exportPath}', {trackFileName}");
 		var safeName = GetSafeFileName(trackFileName);
 		var outDirPath = exportPath;
-		var outFile = fileType switch{
+		var outFile = fileType switch
+		{
 			ExportFileType.CCS => $"{GetSafeFileName(cast.Id!)}_{safeName}.ccst",
-			ExportFileType.TSSPRJ =>  $"{GetSafeFileName(cast.CharaNameAsAlphabet!)}_{safeName}.tssprj",
+			ExportFileType.TSSPRJ => $"{GetSafeFileName(cast.CharaNameAsAlphabet!)}_{safeName}.tssprj",
 			_ => $"{GetSafeFileName(cast.Id!)}_{safeName}.ccst"
-		} ;
-		if(!Directory.Exists(outDirPath)){
+		};
+		if (!Directory.Exists(outDirPath))
+		{
 			try
 			{
 				Directory.CreateDirectory(outDirPath);
@@ -1538,7 +1574,7 @@ public class Wrapper
 					MessageBoxImage.Error
 				);
 				logger.Error($"failed to create a export directory:{outDirPath}");
-				logger.Error($"{ e?.Message }");
+				logger.Error($"{e?.Message}");
 
 				return;
 			}
@@ -1559,35 +1595,39 @@ public class Wrapper
 				MessageBoxImage.Error
 			);
 			logger.Error($"failed to create a output path:{outDirPath}, {outFile}");
-			logger.Error($"{ e.Message }");
+			logger.Error($"{e.Message}");
 
 			return;
 		}
 
 		//save
-		if(fileType == ExportFileType.CCS){
+		if (fileType == ExportFileType.CCS)
+		{
 			//save for cevio ccs
 			var xml = tmplTrack as XElement;
-			await Task.Run(() => {
+			await Task.Run(() =>
+			{
 				try
 				{
 					xml!.Save(outPath);
 				}
 				catch (Exception e)
 				{
-					 MessageBox.Show(
-					 		$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
-					 		"ファイルの作成に失敗！",
-					 		MessageBoxButton.OK,
-					 		MessageBoxImage.Error
-					);
+					MessageBox.Show(
+							$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+							"ファイルの作成に失敗！",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+				   );
 					logger.Error($"failed to create a file:{outPath}");
-					logger.Error($"{ e.Message }");
+					logger.Error($"{e.Message}");
 
 					return;
 				}
 			});
-		}else if(fileType == ExportFileType.TSSPRJ){
+		}
+		else if (fileType == ExportFileType.TSSPRJ)
+		{
 			//save for voisona tssprj
 			var bin = tmplTrack as byte[];
 			try
@@ -1597,27 +1637,28 @@ public class Wrapper
 			}
 			catch (Exception e)
 			{
-				 MessageBox.Show(
-				 		$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
-				 		"ファイルの作成に失敗！",
-				 		MessageBoxButton.OK,
-				 		MessageBoxImage.Error
-				);
+				MessageBox.Show(
+						$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+						"ファイルの作成に失敗！",
+						MessageBoxButton.OK,
+						MessageBoxImage.Error
+			   );
 				logger.Error($"failed to create a file:{outPath}");
-				logger.Error($"{ e.Message }");
+				logger.Error($"{e.Message}");
 
 				return;
 			}
 		}
 
-		if(isOpenCeVIO){
+		if (isOpenCeVIO)
+		{
 			//CeVIOにファイルを渡す
 			var psi = new ProcessStartInfo()
 			{
 				FileName = Path.GetFullPath(outPath)//,
-				//UseShellExecute = true
+													//UseShellExecute = true
 			};
-			await Task.Run(()=>Process.Start(psi));
+			await Task.Run(() => Process.Start(psi));
 		}
 	}
 
@@ -1635,7 +1676,8 @@ public class Wrapper
 		string exportPath = "",
 		ExportFileType fileType = ExportFileType.CCS,
 		ExportLyricsMode exportMode = ExportLyricsMode.KANA
-	){
+	)
+	{
 		if (this.engine is null)
 		{
 			return false;//new ValueTask<bool>(false);
@@ -1650,8 +1692,8 @@ public class Wrapper
 
 		//テンプレートxml読み込み
 		var tmplTrack = isExportAsTrack ?
-			await Task.Run(() => XElement.Load("./template/temp.SUSURU.xml")) :	//ccst file
-			await Task.Run(() => XElement.Load("./template/temp.SUSURU.xml"))	//TODO:ccs file（現在はトラックのみ）
+			await Task.Run(() => XElement.Load("./template/temp.SUSURU.xml")) : //ccst file
+			await Task.Run(() => XElement.Load("./template/temp.SUSURU.xml"))   //TODO:ccs file（現在はトラックのみ）
 			;
 		var guid = Guid.NewGuid().ToString("D");    //GUIDの生成
 
@@ -1696,7 +1738,8 @@ public class Wrapper
 		string exportPath,
 		string fileNamePattern,
 		string SongCastName
-	){
+	)
+	{
 		var safeName = GetSafeFileName(serifText);
 		var outDirPath = exportPath;
 
@@ -1708,7 +1751,8 @@ public class Wrapper
 		//TODO:outFile = FileNameReplace(outFile, "$連番$", "$連番$");
 		outFile = FileNameReplace(outFile, MetaTexts.TRACKNAME, safeName);
 
-		if(!Directory.Exists(outDirPath)){
+		if (!Directory.Exists(outDirPath))
+		{
 			try
 			{
 				Directory.CreateDirectory(outDirPath);
@@ -1722,7 +1766,7 @@ public class Wrapper
 					MessageBoxImage.Error
 				);
 				logger.Error($"failed to create a export directory:{outDirPath}");
-				logger.Error($"{ e.Message }");
+				logger.Error($"{e.Message}");
 
 				return false;
 			}
@@ -1747,7 +1791,7 @@ public class Wrapper
 				MessageBoxImage.Error
 			);
 			logger.Error($"failed to save a serif file:{outPath}");
-			logger.Error($"{ e.Message }");
+			logger.Error($"{e.Message}");
 
 			return false;
 		}
@@ -1759,7 +1803,8 @@ public class Wrapper
 		string outFile,
 		string pattern,
 		string replaceTo
-	){
+	)
+	{
 		return Regex.Replace(
 			outFile,
 			Regex.Escape(pattern),
@@ -1770,13 +1815,14 @@ public class Wrapper
 	private async ValueTask<bool> ExportWaveToFileAsync(
 		string serifText,
 		string pathToSave
-	){
+	)
+	{
 		bool result = true;
 		switch (engineType)
 		{
 			case TalkEngine.CEVIO:
 				result = await Task.Run(
-					()=>engine!.OutputWaveToFile(serifText, pathToSave)
+					() => engine!.OutputWaveToFile(serifText, pathToSave)
 				);
 				break;
 			case TalkEngine.OPENJTALK:
@@ -1821,24 +1867,24 @@ public class Wrapper
 			logger.Error(msg);
 			throw new Exception(msg);
 		}
-		var (fs, nbit, len, x) = await Task.Run(()=> WorldUtil.ReadWav(tempName));
+		var (fs, nbit, len, x) = await Task.Run(() => WorldUtil.ReadWav(tempName));
 		var parameters = new WorldParameters(fs);
 		//ピッチ推定
-		await Task.Run(()=> WorldUtil.EstimateF0(
+		await Task.Run(() => WorldUtil.EstimateF0(
 			WorldUtil.Estimaion.Harvest,
 			x,
 			len,
 			parameters
 		));
 		//音色推定
-		await Task.Run(()=> WorldUtil.EstimateSpectralEnvelope(
+		await Task.Run(() => WorldUtil.EstimateSpectralEnvelope(
 			x,
 			len,
 			parameters
 		));
 		if (tempName != null && File.Exists(tempName))
 		{
-			await Task.Run(()=> File.Delete(tempName));  //remove temp file
+			await Task.Run(() => File.Delete(tempName));  //remove temp file
 		}
 
 		return parameters;

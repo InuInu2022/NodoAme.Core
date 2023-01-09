@@ -27,7 +27,7 @@ public static class PhonemeConverter{
 	/// <param name="isDebugOutput">Debug出力</param>
 	/// <returns>音素</returns>
 	public static async ValueTask<string> ConvertAsync(
-		Wrapper talkEngine,
+		ITalkWrapper talkEngine,
 		string sourceText,
 		bool isUseSeparaterSpace = true,
 		bool isCheckJapaneseSyllabicNasal = false,
