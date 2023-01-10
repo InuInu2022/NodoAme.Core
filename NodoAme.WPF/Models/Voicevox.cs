@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -92,11 +93,13 @@ public class Voicevox
 		if (string.IsNullOrEmpty(host))
 		{
 			logger.Error($"host:{host} not found");
+			/*
 			MessageDialog.Show(
 				$"{engineType}が見つかりませんでした。\n{host}は無効な文字列です。",
 				$"{engineType}の呼び出しに失敗",
 				MessageDialogType.Error
-			);
+			);*/
+			throw new ExternalException($"{engineType}が見つかりませんでした。\n{host}は無効な文字列です。");
 			return;
 		}
 
@@ -124,10 +127,17 @@ public class Voicevox
 		TalkSoftVoice? voice = null,
 		TalkSoftVoiceStylePreset? style = null
 	){
-		var init = new Voicevox(engineType, talkSoft, voice, style);
-		if(init.restClient is null) return init;
-		await init.CheckActiveAsync();
-		await init.GetAvailableCastsAsync();
+		try
+		{
+			var init = new Voicevox(engineType, talkSoft, voice, style);
+			if (init.restClient is null) return init;
+			await init.CheckActiveAsync();
+			await init.GetAvailableCastsAsync();
+		}
+		catch (Exception)
+		{
+			throw;
+		}
 		return init;
 	}
 
@@ -300,11 +310,11 @@ public class Voicevox
 
 		if(!sRes.IsSuccessful){
 			CheckResponce(sRes);
-			throw new Exception("response error!");
+			throw new ExternalException("response error!");
 		}
 		if(sRes is null){
 			logger.Error("voicevox synthesis responce is null");
-			throw new Exception("response error!");
+			throw new ExternalException("response error!");
 		}
 
 		return sRes;
@@ -324,13 +334,17 @@ public class Voicevox
 		}
 		else
 		{
+			/*
 			MessageDialog.Show(
 				$"{engineType}が起動していない、または見つかりません。\n{res.ErrorMessage}",
 				$"{engineType} Initialize Failed",
 				MessageDialogType.Error
 			);
+			*/
 			logger.Error($"checkversion:{engineType}が起動していない、または見つかりません。\n{res.ErrorMessage}");
 			IsActive = false;
+			throw new ExternalException(
+				$"{engineType}が起動していない、または見つかりません。\n{res.ErrorMessage}");
 		}
 	}
 
@@ -409,14 +423,17 @@ public class Voicevox
 			return;
 		}
 
-		var msg = $"エラーコード:{res.StatusCode}\nエラー内容：{res.ErrorException}\n{res.ErrorMessage}";
+		var msg = $"{engineType} への通信失敗\nエラーコード:{res.StatusCode}\nエラー内容：{res.ErrorException}\n{res.ErrorMessage}";
+		/*
 		MessageDialog.Show(
 			msg,
 			$"{engineType} への通信失敗",
 			MessageDialogType.Error
 		);
+		*/
 		Debug.WriteLine($"REST responce:\n{res}");
 		logger.Error(msg);
+		throw new ExternalException(msg);
 	}
 
 	private void CheckRestClient()
@@ -426,11 +443,13 @@ public class Voicevox
 			return;
 		}
 
+		/*
 		MessageDialog.Show(
 			$"{engineType}が起動していない、または見つかりません。",
 			$"{engineType} への通信失敗",
 			MessageDialogType.Error
 		);
+		*/
 		logger.Error($"CheckRestClient: restClient is null");
 		throw new Exception($"{engineType}が起動していない、または見つかりません。");
 	}
