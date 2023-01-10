@@ -100,7 +100,7 @@ public class Voicevox
 				MessageDialogType.Error
 			);*/
 			throw new ExternalException($"{engineType}が見つかりませんでした。\n{host}は無効な文字列です。");
-			return;
+			//return;
 		}
 
 		restClient = new RestClient();
@@ -133,12 +133,12 @@ public class Voicevox
 			if (init.restClient is null) return init;
 			await init.CheckActiveAsync();
 			await init.GetAvailableCastsAsync();
+			return init;
 		}
 		catch (Exception)
 		{
 			throw;
 		}
-		return init;
 	}
 
 	public async ValueTask<Label[]> GetPhonemes(string serif){
