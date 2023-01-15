@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotnetWorld" Version="1.2.5" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="NAudio.Core" Version="2.1.0" />
     <PackageReference Include="NLog" Version="5.1.1" />

@@ -869,19 +869,7 @@ public class Wrapper : ITalkWrapper
 		var scoreRoot = scoreNodes.First();
 
 		//声質(Alpha)指定
-		/*0.0がデフォルトではないので0を指定すると可笑しくなる
-		scoreRoot.SetAttributeValue("Alpha", 0.0);
-		if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
-		{
-			var alphaParam = TalkSoft
-			.TalkSoftParams
-			.First(a => a.Id == "Alpha");
-			var newAlpha = (alphaParam.Value / 100 * 2) - 1.0;
-			if (engineType == TalkEngine.OPENJTALK) newAlpha = 0;   //TODO:暫定対応
-
-			scoreRoot.SetAttributeValue("Alpha", newAlpha.ToString());
-		}
-		*/
+		ProjectWriter.WriteAttributeAlpha(scoreRoot,engineType);
 
 		//感情(Emotion)設定
 		ProjectWriter.WriteAttributeEmotion(cast, songVoiceStyles, scoreRoot);
@@ -1061,21 +1049,6 @@ public class Wrapper : ITalkWrapper
 
 		logger.Info($"Export file sucess!{exportPath}:{serifText}");
 		return true;//new ValueTask<bool>(true);
-	}
-
-	public static void WriteAttributeEmotion(
-		SongCast? cast,
-		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles,
-		XElement scoreRoot)
-	{
-		if (cast?.HasEmotion != null && cast.HasEmotion == true)
-		{
-			var emo = songVoiceStyles.First(v => v.Id == "Emotion");
-			var emo1 = emo.Value;
-			var emo0 = emo.Max - emo.Value;
-			scoreRoot.SetAttributeValue("Emotion0", emo0);  //↓
-			scoreRoot.SetAttributeValue("Emotion1", emo1);  //↑
-		}
 	}
 
 	private static List<Data> GetDataList(XElement baseNode)
