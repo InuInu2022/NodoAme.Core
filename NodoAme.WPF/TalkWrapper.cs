@@ -884,14 +884,7 @@ public class Wrapper : ITalkWrapper
 		*/
 
 		//感情(Emotion)設定
-		if (cast?.HasEmotion != null && cast.HasEmotion == true)
-		{
-			var emo = songVoiceStyles.First(v => v.Id == "Emotion");
-			var emo1 = emo.Value;
-			var emo0 = emo.Max - emo.Value;
-			scoreRoot.SetAttributeValue("Emotion0", emo0);  //↓
-			scoreRoot.SetAttributeValue("Emotion1", emo1);  //↑
-		}
+		ProjectWriter.WriteAttributeEmotion(cast, songVoiceStyles, scoreRoot);
 
 		//tmplTrack.Element("Score");
 		//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
@@ -1068,6 +1061,21 @@ public class Wrapper : ITalkWrapper
 
 		logger.Info($"Export file sucess!{exportPath}:{serifText}");
 		return true;//new ValueTask<bool>(true);
+	}
+
+	public static void WriteAttributeEmotion(
+		SongCast? cast,
+		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles,
+		XElement scoreRoot)
+	{
+		if (cast?.HasEmotion != null && cast.HasEmotion == true)
+		{
+			var emo = songVoiceStyles.First(v => v.Id == "Emotion");
+			var emo1 = emo.Value;
+			var emo0 = emo.Max - emo.Value;
+			scoreRoot.SetAttributeValue("Emotion0", emo0);  //↓
+			scoreRoot.SetAttributeValue("Emotion1", emo1);  //↑
+		}
 	}
 
 	private static List<Data> GetDataList(XElement baseNode)

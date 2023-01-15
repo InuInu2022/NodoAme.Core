@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -163,12 +164,36 @@ public static class ProjectWriter{
 	}
 
 	/// <summary>
-    /// F0をピッチ線として書き込む
+    /// 感情(Emotion)設定
     /// </summary>
-    /// <param name="parameters"></param>
-    /// <param name="parameterRoot"></param>
-    /// <param name="paramLen"></param>
-    /// <returns></returns>
+    /// <param name="cast"></param>
+    /// <param name="songVoiceStyles"></param>
+    /// <param name="scoreRoot"></param>
+	public static void WriteAttributeEmotion(
+		SongCast? cast,
+		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles,
+		XElement scoreRoot)
+	{
+		if (cast?.HasEmotion == null
+			|| cast.HasEmotion != true)
+		{
+			return;
+		}
+
+		var emo = songVoiceStyles.First(v => v.Id == "Emotion");
+		var emo1 = emo.Value;
+		var emo0 = emo.Max - emo.Value;
+		scoreRoot.SetAttributeValue("Emotion0", emo0);  //↓
+		scoreRoot.SetAttributeValue("Emotion1", emo1);  //↑
+	}
+
+	/// <summary>
+	/// F0をピッチ線として書き込む
+	/// </summary>
+	/// <param name="parameters"></param>
+	/// <param name="parameterRoot"></param>
+	/// <param name="paramLen"></param>
+	/// <returns></returns>
 	public static XElement WriteElementsLogF0(
 		WorldParameters parameters,
 		XElement parameterRoot,
