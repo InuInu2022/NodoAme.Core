@@ -16,6 +16,17 @@ namespace NodoAme.Models
 			var st = num == 0 ? 0 : num % 12;
 			return (oc, st);
 		}
+
+		/// <summary>
+		/// Get MIDI Tick duration
+		/// </summary>
+		/// <param name="serifLen">serif duration seconds.</param>
+		/// <returns></returns>
+		public static double GetTickDuration(double serifLen)
+		{
+			return 960 / 0.4 * serifLen;
+		}
+
     }
 
     public enum NoteAdaptMode{
