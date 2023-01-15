@@ -58,25 +58,22 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
             <InProject>false</InProject>
         </FluentValidationExcludedCultures>
         <!-- アプリに付与するファイル -->
-        <Content Include="../dic/japanese.json">
+        <Content Include="../dic/japanese.json" LinkBase="dic">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="../dic/*.htsvoice">
+        <Content Include="../dic/*.htsvoice" LinkBase="dic">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="../dic/open_jtalk_dic_utf_8-1.11/*">
+        <Content Include="../dic/open_jtalk_dic_utf_8-1.11/*" LinkBase="dic/open_jtalk_dic_utf_8-1.11/">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="../NodoAme.Settings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="../template/temp.*.xml">
+        <Content Include="../template/**/*" LinkBase="template">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="../template/Template.tssprj">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="./Licenses/*/*">
+        <Content Include="./Licenses/*/*"  LinkBase="Licenses">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="../はじめによんでねReadme.md">
