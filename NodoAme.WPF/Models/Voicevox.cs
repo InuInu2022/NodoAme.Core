@@ -121,7 +121,7 @@ public class Voicevox
 	/// <param name="voice"></param>
 	/// <param name="style"></param>
 	/// <returns>VoiceVoxインスタンス</returns>
-	public static async ValueTask<Voicevox> Factory(
+	public static async ValueTask<Voicevox> FactoryAsync(
 		string engineType,
 		TalkSoft talkSoft,
 		TalkSoftVoice? voice = null,

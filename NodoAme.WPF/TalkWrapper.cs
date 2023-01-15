@@ -179,7 +179,7 @@ public class Wrapper : ITalkWrapper
 								MessageBoxImage.Error
 							);
 							logger
-							.Error($"{engineType}を起動できませんでした。理由code:{result}");
+								.Error($"{engineType}を起動できませんでした。理由code:{result}");
 							return;
 						}
 					}
@@ -187,10 +187,10 @@ public class Wrapper : ITalkWrapper
 					{
 						var msg = $"{engineType}を起動できませんでした。理由:{e.Message}";
 						MessageBox.Show(
-								msg,
-								$"{engineType}の起動に失敗",
-								MessageBoxButton.OK,
-								MessageBoxImage.Error
+							msg,
+							$"{engineType}の起動に失敗",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
 							);
 						logger
 							.Error(msg);
@@ -233,10 +233,10 @@ public class Wrapper : ITalkWrapper
 					catch (Exception ex)
 					{
 						MessageBox.Show(
-								ex.Message,
-								$"{engineType}の起動に失敗",
-								MessageBoxButton.OK,
-								MessageBoxImage.Error
+							ex.Message,
+							$"{engineType}の起動に失敗",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
 							);
 						logger
 							.Error($"can't awake cevio talker. {ex.Message}");
@@ -251,7 +251,7 @@ public class Wrapper : ITalkWrapper
 
 			case TalkEngine.VOICEVOX:
 				{
-					this.engine = await Models.Voicevox.Factory(engineType, soft, voice, style);
+					this.engine = await Models.Voicevox.FactoryAsync(engineType, soft, voice, style);
 					var vv = this.engine as Voicevox;
 					if (vv!.IsActive)
 					{
@@ -346,54 +346,56 @@ public class Wrapper : ITalkWrapper
 		switch (engineType)
 		{
 			case TalkEngine.CEVIO:
-				//var talker = engine;
-
-				engine.Cast = TalkVoice!.Name;
-
-				/*
-				var phs = engine.GetPhonemes(sourceText);
-				for (int i = 0; i < phs.Length; i++)
 				{
-					var ph = phs.At(i);
-					Debug.WriteLine(ph.Phoneme);
+					//var talker = engine;
+
+					engine.Cast = TalkVoice!.Name;
+
+					/*
+					var phs = engine.GetPhonemes(sourceText);
+					for (int i = 0; i < phs.Length; i++)
+					{
+						var ph = phs.At(i);
+						Debug.WriteLine(ph.Phoneme);
+					}
+					*/
+					if (
+						lastTaskGetLabel?.IsCompleted == false &&
+							cancelSource.Token.CanBeCanceled)
+					{
+						cancelSource.Cancel();
+					}
+
+					this.lastTaskGetLabel = Task.Run(
+						() => cancelSource.Token.IsCancellationRequested
+							? null
+							: engine.GetPhonemes(sourceText),
+						cancelSource.Token);
+
+					dynamic? ps = null;
+					try
+					{
+						ps = await lastTaskGetLabel;
+					}
+					catch (OperationCanceledException)
+					{
+						Debug.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
+						return new List<string>() { "" };
+					}
+
+					if (ps is null) { return this.lastLabels!; }
+
+					this.lastLabels = MakePsudoLabels(ps);
+					return this.lastLabels;
 				}
-				*/
-				if (
-					lastTaskGetLabel?.IsCompleted == false &&
-					cancelSource.Token.CanBeCanceled)
-				{
-					cancelSource.Cancel();
-				}
-
-				this.lastTaskGetLabel = Task.Run(() =>
-				{
-					if (cancelSource.Token.IsCancellationRequested) return null;
-					return engine.GetPhonemes(sourceText);
-				},
-				cancelSource.Token);
-
-				dynamic? ps = null;
-				try
-				{
-					ps = await lastTaskGetLabel;
-				}
-				catch (OperationCanceledException)
-				{
-					Debug.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
-					return new List<string>() { "" };
-				}
-
-
-				if (ps is null) { return this.lastLabels!; }
-
-				this.lastLabels = MakePsudoLabels(ps);
-				return this.lastLabels;
 			//break;
 			case TalkEngine.VOICEVOX:
-				var vv = this.engine as Voicevox;
-				var vps = await vv!.GetPhonemes(sourceText);
-				Debug.WriteLine(vps);
-				return MakePsudoLabels((dynamic)vps);
+				{
+					var vv = this.engine as Voicevox;
+					var vps = await vv!.GetPhonemes(sourceText);
+					Debug.WriteLine(vps);
+					return MakePsudoLabels((dynamic)vps);
+				}
 			//TalkVoice.Id
 			//break;
 			case TalkEngine.OPENJTALK:
@@ -444,7 +446,6 @@ public class Wrapper : ITalkWrapper
 			//list += s;
 		}
 
-
 		return list;
 	}
 
@@ -464,47 +465,59 @@ public class Wrapper : ITalkWrapper
 		switch (engineType)
 		{
 			case TalkEngine.CEVIO:
-				Type? talker = assembly!.GetType(TalkSoft.Interface!.Talker);
-				Debug.WriteLine($"cast: {this.TalkVoice!.Name!}");
-				this.engine = Activator.CreateInstance(
-					talker,
-					new object[] { this.TalkVoice!.Name! }
-				);
-				var comps = engine.Components;
-				foreach (var c in comps)
 				{
-					//Debug.WriteLine($"c:{c}");
-					styles.Add(new TalkSoftVoiceStylePreset { Id = c.Id, Name = c.Name, Value = c.Value });
-				}
-
-				//return styles;
-
-				break;
-			case TalkEngine.OPENJTALK:
-				foreach (var style in this.TalkVoice!.Styles!)
-				{
-					styles.Add(style);
-				}
-				break;
-			case TalkEngine.VOICEVOX:
-				var vv = engine as Models.Voicevox;
-				var temp = vv!
-					.VoicevoxCasts
-					.Find(cast => cast.Name == this.TalkVoice!.Name!)
-					.Styles;
-				foreach (var s in temp!)
-				{
-					styles.Add(new TalkSoftVoiceStylePreset
+					Type? talker = assembly!.GetType(TalkSoft.Interface!.Talker);
+					Debug.WriteLine($"cast: {this.TalkVoice!.Name!}");
+					this.engine = Activator.CreateInstance(
+						talker,
+						new object[] { this.TalkVoice!.Name! }
+					);
+					var comps = engine.Components;
+					foreach (var c in comps)
 					{
-						Name = s.Name,
-						Id = s.Id.ToString()
-					});
+						//Debug.WriteLine($"c:{c}");
+						styles.Add(new TalkSoftVoiceStylePreset { Id = c.Id, Name = c.Name, Value = c.Value });
+					}
+
+					//return styles;
+
+					break;
 				}
-				break;
+
+			case TalkEngine.OPENJTALK:
+				{
+					foreach (var style in this.TalkVoice!.Styles!)
+					{
+						styles.Add(style);
+					}
+
+					break;
+				}
+
+			case TalkEngine.VOICEVOX:
+				{
+					var vv = engine as Models.Voicevox;
+					var temp = vv!
+						.VoicevoxCasts
+						.Find(cast => cast.Name == this.TalkVoice!.Name!)
+						.Styles;
+					foreach (var s in temp!)
+					{
+						styles.Add(new TalkSoftVoiceStylePreset
+							{
+								Name = s.Name,
+								Id = s.Id.ToString()
+							});
+					}
+
+					break;
+				}
+
 			default:
 				//return styles;
 				break;
 		}
+
 		return styles;
 	}
 
@@ -514,37 +527,41 @@ public class Wrapper : ITalkWrapper
 		switch (engineType)
 		{
 			case TalkEngine.CEVIO:
-				Type? talker = assembly!.GetType(TalkSoft.Interface!.Talker);
-				Debug.WriteLine($"cast: {this.TalkVoice!.Name!}");
-				this.engine = Activator.CreateInstance(
-					talker,
-					new object[] { this.TalkVoice!.Name! }
-				);
-				var comps = engine.Components;
-				foreach (var c in comps)
 				{
-					//Debug.WriteLine($"c:{c}");
-					styles.Add(new TalkVoiceStyleParam
+					Type? talker = assembly!.GetType(TalkSoft.Interface!.Talker);
+					Debug.WriteLine($"cast: {this.TalkVoice!.Name!}");
+					this.engine = Activator.CreateInstance(
+						talker,
+						new object[] { this.TalkVoice!.Name! }
+					);
+					var comps = engine.Components;
+					foreach (var c in comps)
 					{
-						Id = c.Id,
-						Name = c.Name,
-						Value = c.Value,
-						DefaultValue = c.Value,
-						Min = 0,
-						Max = 100,
-						SmallChange = 1
-					});
+						//Debug.WriteLine($"c:{c}");
+						styles.Add(new TalkVoiceStyleParam
+							{
+								Id = c.Id,
+								Name = c.Name,
+								Value = c.Value,
+								DefaultValue = c.Value,
+								Min = 0,
+								Max = 100,
+								SmallChange = 1
+							});
+					}
+
+					//return styles;
+
+					break;
 				}
 
-				//return styles;
-
-				break;
 			case TalkEngine.OPENJTALK:
 			case TalkEngine.VOICEVOX:
 			default:
 				//return styles;
 				break;
 		}
+
 		return styles;
 	}
 
@@ -569,79 +586,88 @@ public class Wrapper : ITalkWrapper
 		switch (engineType)
 		{
 			case TalkEngine.CEVIO:
-				engine.Cast = TalkVoice!.Name;
-				Debug.WriteLine($"CAST:{engine.Cast}");
-				SetEngineParam();
-				SetVoiceStyle(false);
-
-				time = engine.GetTextDuration(text);
-				var state = engine.Speak(text);
-
-				if (withSave)
 				{
-					var dialog = new SaveFileDialog
+					engine.Cast = TalkVoice!.Name;
+					Debug.WriteLine($"CAST:{engine.Cast}");
+					SetEngineParam();
+					SetVoiceStyle(false);
+
+					time = engine.GetTextDuration(text);
+					var state = engine.Speak(text);
+
+					if (withSave)
 					{
-						FileName = $"{GetSafeFileName(text)}.wav",
-						Filter = "*.wav",
-						Title = "Save preview voice"
-					};
-					dialog.ShowDialog();
-				}
-				//state.Wait();
-				break;
-			case TalkEngine.OPENJTALK:
-				//var engine = new OpenJTalkAPI();
-				if (!(engine is OpenJTalkAPI jtalk))
-				{
-					logger.Warn($"error dialog opend");
-					MessageBox.Show(
-						"現在、利用できるボイスがありません！",
-						"利用できるボイスがありません",
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
-					);
-					const string msg = "OpenJTalk.Speak(): this.engine is null";
-					logger.Error(msg);
-					throw new Exception(msg);
-				}
-				jtalk.FramePeriod = 240;
-				jtalk.SamplingFrequency = SAMPLE_RATE;
-				jtalk.Volume = 0.9;
-
-				SetEngineParam();
-
-				//var jtalk = new OpenJTalkAPI();
-				//jtalk.Synthesis(text, false, true);
-				await Task.Run(() =>
-				{
-					jtalk.Synthesis(text, false, true);
-					List<byte> buf = jtalk.WavBuffer;
-
-					//play audio wav data
-					using var ms = new MemoryStream(buf.ToArray());
-					var rs = new RawSourceWaveStream(
-						ms,
-						new WaveFormat(SAMPLE_RATE, 16, 1)
-					);
-					time = rs.TotalTime.TotalSeconds;
-					var wo = new WaveOutEvent();
-					wo.Init(rs);
-					wo.Play();
-					while (wo.PlaybackState == PlaybackState.Playing)
-					{
-						Thread.Sleep(500);
+						var dialog = new SaveFileDialog
+						{
+							FileName = $"{GetSafeFileName(text)}.wav",
+							Filter = "*.wav",
+							Title = "Save preview voice"
+						};
+						dialog.ShowDialog();
 					}
-					wo.Dispose();
-				});
-				break;
-			case TalkEngine.VOICEVOX:
-				SetEngineParam();
-				SetVoiceStyle();
-				var vv = this.engine as Voicevox;
-				vv!.Cast = TalkVoice!.Name!;
+					//state.Wait();
+					break;
+				}
 
-				time = await vv!.SpeakAsync(text);
-				break;
+			case TalkEngine.OPENJTALK:
+				{
+					//var engine = new OpenJTalkAPI();
+					if (!(engine is OpenJTalkAPI jtalk))
+					{
+						logger.Warn($"error dialog opend");
+						MessageBox.Show(
+							"現在、利用できるボイスがありません！",
+							"利用できるボイスがありません",
+							MessageBoxButton.OK,
+							MessageBoxImage.Error
+						);
+						const string msg = "OpenJTalk.Speak(): this.engine is null";
+						logger.Error(msg);
+						throw new Exception(msg);
+					}
+					jtalk.FramePeriod = 240;
+					jtalk.SamplingFrequency = SAMPLE_RATE;
+					jtalk.Volume = 0.9;
+
+					SetEngineParam();
+
+					//var jtalk = new OpenJTalkAPI();
+					//jtalk.Synthesis(text, false, true);
+					await Task.Run(() =>
+					{
+						jtalk.Synthesis(text, false, true);
+						List<byte> buf = jtalk.WavBuffer;
+
+						//play audio wav data
+						using var ms = new MemoryStream(buf.ToArray());
+						var rs = new RawSourceWaveStream(
+							ms,
+							new WaveFormat(SAMPLE_RATE, 16, 1)
+						);
+						time = rs.TotalTime.TotalSeconds;
+						var wo = new WaveOutEvent();
+						wo.Init(rs);
+						wo.Play();
+						while (wo.PlaybackState == PlaybackState.Playing)
+						{
+							Thread.Sleep(500);
+						}
+						wo.Dispose();
+					});
+					break;
+				}
+
+			case TalkEngine.VOICEVOX:
+				{
+					SetEngineParam();
+					SetVoiceStyle();
+					var vv = this.engine as Voicevox;
+					vv!.Cast = TalkVoice!.Name!;
+
+					time = await vv!.SpeakAsync(text);
+					break;
+				}
+
 			default:
 
 				break;
@@ -650,7 +676,7 @@ public class Wrapper : ITalkWrapper
 		return Convert.ToString(time);
 	}
 
-	public async ValueTask PreviewSave(string serifText)
+	public async ValueTask PreviewSaveAsync(string serifText)
 	{
 		await Speak(serifText, true);
 	}
@@ -663,48 +689,52 @@ public class Wrapper : ITalkWrapper
 		{
 			logger.Warn("no voice styles.");
 			return;
-		};
-
-
+		}
 
 		switch (this.engineType)
 		{
 			case TalkEngine.CEVIO:
-				if (usePreset)
 				{
-					//プリセット
-					foreach (var c in engine!.Components)
+					if (usePreset)
 					{
-						if (this.VoiceStyle.Id == c.Id)
+						//プリセット
+						foreach (var c in engine!.Components)
 						{
-							c.Value = 100;  //感情値ValueをMAXに
-							Debug.WriteLine($"Current Style:{c.Name}");
-						}
-						else
-						{
-							c.Value = 0;    //感情値Valueをゼロに
+							if (this.VoiceStyle.Id == c.Id)
+							{
+								c.Value = 100;  //感情値ValueをMAXに
+								Debug.WriteLine($"Current Style:{c.Name}");
+							}
+							else
+							{
+								c.Value = 0;    //感情値Valueをゼロに
+							}
 						}
 					}
-				}
-				else
-				{
-					IList<TalkVoiceStyleParam>? voiceStyleParams = this.VoiceStyleParams;
-					//感情合成
-					foreach (var c in engine!.Components)
+					else
 					{
-						var p = voiceStyleParams.First(v => v.Id == c.Id);
-						if (p is null) continue;
-						Debug.WriteLine($"VoiceStyle: {p.Name} {p.Value}");
-						c.Value = (uint)p.Value;
+						IList<TalkVoiceStyleParam>? voiceStyleParams = this.VoiceStyleParams;
+						//感情合成
+						foreach (var c in engine!.Components)
+						{
+							var p = voiceStyleParams.First(v => v.Id == c.Id);
+							if (p is null) continue;
+							Debug.WriteLine($"VoiceStyle: {p.Name} {p.Value}");
+							c.Value = (uint)p.Value;
+						}
 					}
+
+					break;
 				}
 
-				break;
 			case TalkEngine.VOICEVOX:
-				var vv = this.engine as Voicevox;
-				vv!.Style = this.VoiceStyle;
-				//this.VoiceStyle =
-				break;
+				{
+					var vv = this.engine as Voicevox;
+					vv!.Style = this.VoiceStyle;
+					//this.VoiceStyle =
+					break;
+				}
+
 			default:
 				//なにもしない
 				break;
@@ -729,19 +759,25 @@ public class Wrapper : ITalkWrapper
 			switch (engineType)
 			{
 				case TalkEngine.CEVIO:
-					uint val = (uint)Math.Round(notNullDouble);
-					prop.SetValue(
-						engine,
-						val
-					);
-					break;
+					{
+						uint val = (uint)Math.Round(notNullDouble);
+						prop.SetValue(
+							engine,
+							val
+						);
+						break;
+					}
+
 				case TalkEngine.OPENJTALK:
 				case TalkEngine.VOICEVOX:
-					prop.SetValue(
-						engine,
-						newParam
-					);
-					break;
+					{
+						prop.SetValue(
+							engine,
+							newParam
+						);
+						break;
+					}
+
 				default:
 					break;
 			}
@@ -812,10 +848,11 @@ public class Wrapper : ITalkWrapper
 			engine.Style = this.VoiceStyle;
 			SetVoiceStyle(false);
 		}
+
 		SetEngineParam();
 
 		//serifLen = engine.GetTextDuration(serifText);
-		var dandp = await this.GetTextDurationAndPhonemes(serifText);
+		var dandp = await this.GetTextDurationAndPhonemesAsync(serifText);
 		serifLen = dandp.duration;
 		var phs = dandp.phs;
 		var labels = await GetLabelsAsync(serifText);
@@ -858,7 +895,6 @@ public class Wrapper : ITalkWrapper
 			scoreRoot.SetAttributeValue("Emotion1", emo1);  //↑
 		}
 
-
 		//tmplTrack.Element("Score");
 		//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
 		var duration = GetTickDuration(serifLen);
@@ -872,26 +908,29 @@ public class Wrapper : ITalkWrapper
 
 		//split notes
 		(List<dynamic>? notesList, int phNum)
-			= await SplitPhonemesToNotes(phs, exportMode, noteSplitMode);
+			= await SplitPhonemesToNotesAsync(phs, exportMode, noteSplitMode);
 
 		Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
 
 		if (notesList is null) return false;// new ValueTask<bool>(false);
 
-		///<summary>timing node root</summary>
-		var timingNode = new XElement("Timing",
+		///<summary>
+		/// timing node root
+		/// </summary>
+		var timingNode = new XElement(
+			"Timing",
 			new XAttribute("Length", (phNum * 5) + 10)
 		);
 
 		var phCount = 0;
 		var pauCount = 0;
 		var notesListCount = 0;
-		foreach (List<dynamic> nList in notesList)
+		foreach (List<dynamic> nList in notesList.Cast<List<dynamic>>())
 		{
 			var phText = "";
 			var noteLen = 0;
-			var startClock = Double.MaxValue;
-			var startPhonemeTime = Double.MaxValue;
+			var startClock = double.MaxValue;
+			var startPhonemeTime = double.MaxValue;
 
 			for (int i = 0; i < nList.Count; i++)
 			{
@@ -923,13 +962,10 @@ public class Wrapper : ITalkWrapper
 					pauCount++;
 				}
 
-
-
-
 				//timing elements
-
 				var count = (5 * (phCount + pauCount)) - 1;
-				var timingData = new XElement("Data",
+				var timingData = new XElement(
+					"Data",
 					new XAttribute("Index", count.ToString()),
 					NOTE_OFFSET + start
 				);
@@ -958,9 +994,10 @@ public class Wrapper : ITalkWrapper
 				}
 
 				//最後の処理
-				if ((i + 1 == nList.Count))
+				if (i + 1 == nList.Count)
 				{
-					var lastTimingData = new XElement("Data",
+					var lastTimingData = new XElement(
+						"Data",
 						NOTE_OFFSET + ph.EndTime
 					);
 					timingNode.Add(lastTimingData);
@@ -970,8 +1007,6 @@ public class Wrapper : ITalkWrapper
 
 			phText = phText.TrimEnd(",".ToCharArray());
 			Debug.WriteLine($"phText :{phText}");
-
-
 
 			//CS対策：CSは有効な文字種の歌詞でないとちゃんと発音しない（音素指定でも）
 			var lyricText = exportMode switch
@@ -1004,7 +1039,8 @@ public class Wrapper : ITalkWrapper
 			};
 
 			//note
-			var note = new XElement("Note",
+			var note = new XElement(
+				"Note",
 				new XAttribute("Clock", 3840 + startClock),
 				new XAttribute("PitchStep", step),
 				new XAttribute("PitchOctave", octave),
@@ -1014,12 +1050,9 @@ public class Wrapper : ITalkWrapper
 				new XAttribute("Phonetic", phText)
 			);
 			scoreRoot.Add(note);
-
-
 		}
 
-
-
+		#region write_timing
 
 		//Timing elements
 		//TMGの線を書き込む
@@ -1033,6 +1066,8 @@ public class Wrapper : ITalkWrapper
 		Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
 		sw.Restart();
 
+		#endregion
+
 		//LogF0 elements
 
 		//LogF0, Alpha等のルート要素を取得
@@ -1043,12 +1078,12 @@ public class Wrapper : ITalkWrapper
 
 		//F0をピッチ線として書き込む
 		#region write_logf0
-		var logF0Node = new XElement("LogF0",
+
+		var logF0Node = new XElement(
+			"LogF0",
 			new XAttribute("Length", paramLen)
 		);
 
-		//double lastLogF0 = 0;
-		//int repeatCount = 0;
 		for (int i = 0; i < parameters.f0_length; i++)
 		{
 			var logF0 = engineType switch
@@ -1063,14 +1098,13 @@ public class Wrapper : ITalkWrapper
 			};
 			if (parameters.f0![i] <= 0) { continue; }
 
-			var node = new XElement("Data",
+			var node = new XElement(
+				"Data",
 				new XAttribute("Index", (TRACK_PARAM_OFFSET_INDEX + i).ToString()),
 				logF0.ToString()
 			);
 			logF0Node.Add(node);
-
 		}
-
 
 		parameterRoot.Add(logF0Node);
 		sw.Stop();
@@ -1331,7 +1365,7 @@ public class Wrapper : ITalkWrapper
 	}
 
 	private async ValueTask<(List<dynamic> notesList, int phNum)>
-	SplitPhonemesToNotes(
+	SplitPhonemesToNotesAsync(
 		List<Label> phs,
 		ExportLyricsMode mode,
 		NoteSplitModes splitMode
@@ -1348,48 +1382,48 @@ public class Wrapper : ITalkWrapper
 			case ExportLyricsMode.ALPHABET:
 			case ExportLyricsMode.EN_TO_JA:
 				{
+					//ModeForAI: pauの区切りでノートに分割する
+					await Task.Run(() =>
 					{
-						//ModeForAI: pauの区切りでノートに分割する
-						await Task.Run(() =>
+						for (int i = 0; i < phs.Count; i++)
 						{
-							for (int i = 0; i < phs.Count; i++)
+							switch (phs[i].Phoneme)
 							{
-								switch (phs[i].Phoneme)
-								{
-									case "sil": //ignore phoneme
-										break;
+								case "sil": //ignore phoneme
+									break;
 
-									case "pau": //split note
-										{
-											if (splitMode == NoteSplitModes.SPLIT_ONLY)
-											{
-												noteList.Add(phs[i]);
-											}
-
-											notesList.Add(new List<dynamic>(noteList));
-											noteList.Clear();
-											phNum++;
-											break;
-										}
-
-									default:    //append
+								case "pau": //split note
+									{
+										if (splitMode == NoteSplitModes.SPLIT_ONLY)
 										{
 											noteList.Add(phs[i]);
-											phNum++;
-											break;
 										}
-								}
+
+										notesList.Add(new List<dynamic>(noteList));
+										noteList.Clear();
+										phNum++;
+										break;
+									}
+
+								default:    //append
+									{
+										noteList.Add(phs[i]);
+										phNum++;
+										break;
+									}
 							}
-						});
-						notesList.Add(new List<dynamic>(noteList));
-					}
+						}
+					});
+					notesList.Add(new List<dynamic>(noteList));
 
 					break;
 				}
 
 			default:
-				logger.Error($"Export mode {mode} is invalid!");
-				break;
+				{
+					logger.Error($"Export mode {mode} is invalid!");
+					break;
+				}
 		}
 
 		return (notesList, phNum);
@@ -1408,7 +1442,7 @@ public class Wrapper : ITalkWrapper
 	/// </summary>
 	/// <param name="serifText"></param>
 	/// <returns></returns>
-	private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemes(string serifText)
+	private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemesAsync(string serifText)
 	{
 		var len = 0.0;
 		List<Models.Label>? phs = new();
@@ -1614,10 +1648,10 @@ public class Wrapper : ITalkWrapper
 				catch (Exception e)
 				{
 					MessageBox.Show(
-							$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
-							"ファイルの作成に失敗！",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+						$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+						"ファイルの作成に失敗！",
+						MessageBoxButton.OK,
+						MessageBoxImage.Error
 				   );
 					logger.Error($"failed to create a file:{outPath}");
 					logger.Error($"{e.Message}");
@@ -1638,10 +1672,10 @@ public class Wrapper : ITalkWrapper
 			catch (Exception e)
 			{
 				MessageBox.Show(
-						$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
-						"ファイルの作成に失敗！",
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
+					$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
+					"ファイルの作成に失敗！",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error
 			   );
 				logger.Error($"failed to create a file:{outPath}");
 				logger.Error($"{e.Message}");
@@ -1656,7 +1690,7 @@ public class Wrapper : ITalkWrapper
 			var psi = new ProcessStartInfo()
 			{
 				FileName = Path.GetFullPath(outPath)//,
-													//UseShellExecute = true
+				//UseShellExecute = true
 			};
 			await Task.Run(() => Process.Start(psi));
 		}
@@ -1821,30 +1855,40 @@ public class Wrapper : ITalkWrapper
 		switch (engineType)
 		{
 			case TalkEngine.CEVIO:
-				result = await Task.Run(
-					() => engine!.OutputWaveToFile(serifText, pathToSave)
-				);
-				break;
-			case TalkEngine.OPENJTALK:
-				List<byte> buf = engine!.WavBuffer;
-				//var ms = new MemoryStream(buf.ToArray());
-				//var rs = new RawSourceWaveStream(ms, new WaveFormat(SAMPLE_RATE, 16, 1));
-				//WaveFileWriter.CreateWaveFile(pathToSave, rs);
-
-				using (WaveFileWriter writer = new WaveFileWriter(pathToSave, new WaveFormat(SAMPLE_RATE, 16, 1)))
 				{
+					result = await Task.Run(
+						() => engine!.OutputWaveToFile(serifText, pathToSave)
+					);
+					break;
+				}
+
+			case TalkEngine.OPENJTALK:
+				{
+					List<byte> buf = engine!.WavBuffer;
+					//var ms = new MemoryStream(buf.ToArray());
+					//var rs = new RawSourceWaveStream(ms, new WaveFormat(SAMPLE_RATE, 16, 1));
+					//WaveFileWriter.CreateWaveFile(pathToSave, rs);
+
+					using var writer = new WaveFileWriter(pathToSave, new WaveFormat(SAMPLE_RATE, 16, 1));
 					//writer.WriteData(buf.ToArray(), 0, buf.ToArray().Length);
 					await writer.WriteAsync(buf.ToArray(), 0, buf.ToArray().Length);
+					break;
 				}
-				break;
+
 			case TalkEngine.VOICEVOX:
-				var vv = engine as Voicevox;
-				result = await vv!.OutputWaveToFile(serifText, pathToSave);
-				break;
+				{
+					var vv = engine as Voicevox;
+					result = await vv!.OutputWaveToFile(serifText, pathToSave);
+					break;
+				}
+
 			default:
-				result = false;
-				break;
+				{
+					result = false;
+					break;
+				}
 		}
+
 		logger
 			.Info($"Success save wav file.:{pathToSave}:{serifText}");
 		return result;

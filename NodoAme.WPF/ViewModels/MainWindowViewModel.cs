@@ -1009,7 +1009,7 @@ namespace NodoAme.ViewModels
 
 			talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
 			await talkEngine.Speak(serifText);
-			await talkEngine.PreviewSave(serifText);
+			await talkEngine.PreviewSaveAsync(serifText);
 		}
 
 		private Func<RoutedEventArgs, ValueTask> ExportSusuruTrack()
