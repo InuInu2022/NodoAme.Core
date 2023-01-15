@@ -853,7 +853,7 @@ public class Wrapper : ITalkWrapper
 		var dandp = await this.GetTextDurationAndPhonemesAsync(serifText);
 		serifLen = dandp.duration;
 		var phs = dandp.phs;
-		var labels = await GetLabelsAsync(serifText);
+		//var labels = await GetLabelsAsync(serifText);
 
 		Debug.WriteLine($"--TIME[tmg eliminate(text duration)]:{sw.ElapsedMilliseconds}");
 
@@ -869,7 +869,7 @@ public class Wrapper : ITalkWrapper
 		var scoreRoot = scoreNodes.First();
 
 		//声質(Alpha)指定
-		ProjectWriter.WriteAttributeAlpha(scoreRoot,engineType);
+		ProjectWriter.WriteAttributeAlpha(scoreRoot, engineType);
 
 		//感情(Emotion)設定
 		ProjectWriter.WriteAttributeEmotion(cast, songVoiceStyles, scoreRoot);
@@ -963,65 +963,14 @@ public class Wrapper : ITalkWrapper
 		ProjectWriter.WriteElementsGroup(serifText, cast, tmplTrack, guid, CastToExport);
 
 		//tssprj
-		var tssprj = Array.Empty<byte>();
-		if (fileType == ExportFileType.TSSPRJ)
-		{
-			tssprj = File.ReadAllBytes("./template/Template.tssprj");
-
-			var r = scoreRoot;
-			var es = scoreRoot.Elements();
-
-			//ボイス情報の置き換え
-			if (
-				//cast情報が空なら置き換えない
-				cast?.CharaNameAsAlphabet is not null
-					&& cast.Id is not null
-					&& cast.VoiceVersion is not null
-			)
-			{
-				tssprj = tssprj
-					.AsSpan()
-					.ReplaceVoiceLibrary(
-						cast.CharaNameAsAlphabet,
-						cast.Id,
-						cast.VoiceVersion
-					);
-			}
-
-			var notes = scoreRoot
-				.Elements()
-				.Where(v => v.Name == "Note")
-				.Select(v => new Tssproj.Note(
-					int.Parse(v.Attribute("Clock").Value),
-					int.Parse(v.Attribute("Duration").Value),
-					v.Attribute("Lyric").Value,
-					v.Attribute("Phonetic").Value,
-					int.Parse(v.Attribute("PitchOctave").Value),
-					int.Parse(v.Attribute("PitchStep").Value)
-				))
-				.ToList();
-			tssprj = tssprj.AsSpan().ReplaceNotes(notes);
-
-			Debug.WriteLine($"tmg len: {timingNode.Attribute("Length").Value}");
-			var timing = new Timing(
-				int.Parse(timingNode.Attribute("Length").Value),
-				GetDataList(timingNode)
-			);
-
-			Debug.WriteLine($"pit len: {logF0Node.Attribute("Length").Value}");
-			var pitch = new Pitch(
-				int.Parse(logF0Node.Attribute("Length").Value),
-				GetDataList(logF0Node)
-			);
-
-			Debug.WriteLine($"vol len: {volumeNode.Attribute("Length").Value}");
-			var volume = new Volume(
-				int.Parse(volumeNode.Attribute("Length").Value),
-				GetDataList(volumeNode)
-			);
-
-			tssprj = tssprj.AsSpan().ReplaceParamters(timing, pitch, volume);
-		}
+		var tssprj = fileType == ExportFileType.TSSPRJ
+			? ProjectWriter.WriteTssprj(
+				cast,
+				scoreRoot,
+				timingNode,
+				logF0Node,
+				volumeNode)
+			: Array.Empty<byte>();
 
 		sw.Stop();
 		Debug.WriteLine($"TIME[end genarate xml]:{sw.ElapsedMilliseconds}");
@@ -1049,22 +998,6 @@ public class Wrapper : ITalkWrapper
 
 		logger.Info($"Export file sucess!{exportPath}:{serifText}");
 		return true;//new ValueTask<bool>(true);
-	}
-
-	private static List<Data> GetDataList(XElement baseNode)
-	{
-		var data = baseNode
-			.Elements()
-			.Select(v => new Tssproj.Data(
-				double.Parse(v.Value),
-				v.HasAttributes && v.Attribute("Index") is not null ?
-					int.Parse(v.Attribute("Index").Value) : null,
-				v.HasAttributes && v.Attribute("Repeat") is not null ?
-					int.Parse(v.Attribute("Repeat").Value) : null
-			//v.Attributes().Select(v => v.Name.LocalName).Contains("Repeat") ? int.Parse(v.Attribute("Repeat").Value) : null
-			))
-			.ToList();
-		return data;
 	}
 
 	/// <summary>

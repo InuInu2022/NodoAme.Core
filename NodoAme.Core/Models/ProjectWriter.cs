@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -9,6 +10,7 @@ using System.Xml.Linq;
 using MathNet.Numerics.Statistics;
 
 using NodoAme.Models;
+using Tssproj;
 
 namespace NodoAme;
 
@@ -436,5 +438,88 @@ public static class ProjectWriter{
 		{
 			groupNode.SetAttributeValue("Volume", 10);
 		}
+	}
+
+	public static byte[] WriteTssprj(
+		SongCast? cast,
+		XElement scoreRoot,
+		XElement timingNode,
+		XElement logF0Node,
+		XElement volumeNode)
+	{
+		var tssprj = Array.Empty<byte>();
+
+		tssprj = File.ReadAllBytes("./template/Template.tssprj");
+
+		var r = scoreRoot;
+		var es = scoreRoot.Elements();
+
+		//ボイス情報の置き換え
+		if (
+			//cast情報が空なら置き換えない
+			cast?.CharaNameAsAlphabet is not null
+				&& cast.Id is not null
+				&& cast.VoiceVersion is not null
+		)
+		{
+			tssprj = tssprj
+				.AsSpan()
+				.ReplaceVoiceLibrary(
+					cast.CharaNameAsAlphabet,
+					cast.Id,
+					cast.VoiceVersion
+				);
+		}
+
+		var notes = scoreRoot
+			.Elements()
+			.Where(v => v.Name == "Note")
+			.Select(v => new Tssproj.Note(
+				int.Parse(v.Attribute("Clock").Value),
+				int.Parse(v.Attribute("Duration").Value),
+				v.Attribute("Lyric").Value,
+				v.Attribute("Phonetic").Value,
+				int.Parse(v.Attribute("PitchOctave").Value),
+				int.Parse(v.Attribute("PitchStep").Value)
+			))
+			.ToList();
+		tssprj = tssprj.AsSpan().ReplaceNotes(notes);
+
+		Debug.WriteLine($"tmg len: {timingNode.Attribute("Length").Value}");
+		var timing = new Timing(
+			int.Parse(timingNode.Attribute("Length").Value),
+			GetDataList(timingNode)
+		);
+
+		Debug.WriteLine($"pit len: {logF0Node.Attribute("Length").Value}");
+		var pitch = new Pitch(
+			int.Parse(logF0Node.Attribute("Length").Value),
+			GetDataList(logF0Node)
+		);
+
+		Debug.WriteLine($"vol len: {volumeNode.Attribute("Length").Value}");
+		var volume = new Volume(
+			int.Parse(volumeNode.Attribute("Length").Value),
+			GetDataList(volumeNode)
+		);
+
+		return tssprj
+			.AsSpan()
+			.ReplaceParamters(timing, pitch, volume);
+	}
+
+	private static List<Data> GetDataList(XElement baseNode)
+	{
+		var data = baseNode
+			.Elements()
+			.Select(v => new Tssproj.Data(
+				double.Parse(v.Value),
+				v.HasAttributes && v.Attribute("Index") is not null ?
+					int.Parse(v.Attribute("Index").Value) : null,
+				v.HasAttributes && v.Attribute("Repeat") is not null ?
+					int.Parse(v.Attribute("Repeat").Value) : null
+			))
+			.ToList();
+		return data;
 	}
 }
