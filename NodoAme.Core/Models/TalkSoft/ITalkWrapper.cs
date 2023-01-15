@@ -49,5 +49,5 @@ public interface ITalkWrapper
 	ObservableCollection<TalkVoiceStyleParam> GetVoiceStyles();
 	ValueTask PreviewSaveAsync(string serifText);
 	void SetVoiceStyle(bool usePreset = true);
-	ValueTask<string> Speak(string text, bool withSave = false);
+	ValueTask<string> SpeakAsync(string text, bool withSave = false);
 }

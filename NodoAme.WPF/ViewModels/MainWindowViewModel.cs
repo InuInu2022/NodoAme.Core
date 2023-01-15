@@ -944,7 +944,7 @@ namespace NodoAme.ViewModels
 			);
 
 			talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
-			return await talkEngine.Speak(serifText);
+			return await talkEngine.SpeakAsync(serifText);
 
 		}
 
@@ -1008,7 +1008,7 @@ namespace NodoAme.ViewModels
 			);
 
 			talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
-			await talkEngine.Speak(serifText);
+			await talkEngine.SpeakAsync(serifText);
 			await talkEngine.PreviewSaveAsync(serifText);
 		}
 

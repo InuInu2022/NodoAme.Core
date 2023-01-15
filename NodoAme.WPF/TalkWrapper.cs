@@ -570,16 +570,16 @@ public class Wrapper : ITalkWrapper
 	/// </summary>
 	/// <param name="text">発話させるテキスト</param>
 	/// <returns>秒数</returns>
-	public async ValueTask<string> Speak(
+	public async ValueTask<string> SpeakAsync(
 		string text,
 		bool withSave = false
 	)
 	{
 		if (this.engine is null)
 		{
-			logger.Error("Speak(): this.engine is null");
+			logger.Error("SpeakAsync(): this.engine is null");
 			return "ERROR";
-			throw new NullReferenceException("Speak(): this.engine is null");
+			throw new NullReferenceException("SpeakAsync(): this.engine is null");
 		}
 
 		double time = 0;
@@ -678,7 +678,7 @@ public class Wrapper : ITalkWrapper
 
 	public async ValueTask PreviewSaveAsync(string serifText)
 	{
-		await Speak(serifText, true);
+		await SpeakAsync(serifText, true);
 	}
 
 	public void SetVoiceStyle(
@@ -912,7 +912,10 @@ public class Wrapper : ITalkWrapper
 
 		Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
 
-		if (notesList is null) return false;// new ValueTask<bool>(false);
+		if (notesList is null)
+		{
+			return false;
+		}
 
 		///<summary>
 		/// timing node root
@@ -935,7 +938,11 @@ public class Wrapper : ITalkWrapper
 			for (int i = 0; i < nList.Count; i++)
 			{
 				var ph = nList[i];
-				if (ph is null) continue;
+				if (ph is null)
+				{
+					continue;
+				}
+
 				string pText = ph.Phoneme ?? "";
 
 				double start = ph.StartTime ?? 0.0;
@@ -946,6 +953,7 @@ public class Wrapper : ITalkWrapper
 					startClock = Math.Round(GetTickDuration(start));
 					startPhonemeTime = start;
 				}
+
 				if (!PhonemeUtil.IsPau(ph))
 				{
 					var addPhoneme = PhonemeUtil.IsNoSoundVowel(pText) switch
@@ -1003,7 +1011,11 @@ public class Wrapper : ITalkWrapper
 					timingNode.Add(lastTimingData);
 				}
 			}
-			if (noteSplitMode == NoteSplitModes.IGNORE_NOSOUND) pauCount++;
+
+			if (noteSplitMode == NoteSplitModes.IGNORE_NOSOUND)
+			{
+				pauCount++;
+			}
 
 			phText = phText.TrimEnd(",".ToCharArray());
 			Debug.WriteLine($"phText :{phText}");
@@ -1019,7 +1031,6 @@ public class Wrapper : ITalkWrapper
 			};
 			notesListCount++;
 			Debug.WriteLine($"lyric: {lyricText}");
-
 
 			var pitches = parameters.f0.Where(d => d > 0);
 			pitches = engineType switch
@@ -1052,21 +1063,11 @@ public class Wrapper : ITalkWrapper
 			scoreRoot.Add(note);
 		}
 
-		#region write_timing
-
-		//Timing elements
-		//TMGの線を書き込む
-		var songRoot = tmplTrack
-			.Descendants("Song")
-			.First();
-		songRoot
-			.Add(new XElement("Parameter", timingNode));
-
+		// TMGの線を書き込む
+		ProjectWriter.WriteElementsTiming(tmplTrack, timingNode);
 		sw.Stop();
 		Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
 		sw.Restart();
-
-		#endregion
 
 		//LogF0 elements
 
@@ -1077,152 +1078,31 @@ public class Wrapper : ITalkWrapper
 		double paramLen = GetParametersLength(serifLen);
 
 		//F0をピッチ線として書き込む
-		#region write_logf0
-
-		var logF0Node = new XElement(
-			"LogF0",
-			new XAttribute("Length", paramLen)
-		);
-
-		for (int i = 0; i < parameters.f0_length; i++)
-		{
-			var logF0 = engineType switch
-			{
-				TalkEngine.CEVIO
-						=> Math.Log(parameters.f0![i]),
-				TalkEngine.OPENJTALK
-						=> parameters.f0![i],
-				TalkEngine.VOICEVOX
-						=> Math.Log(parameters.f0![i]),
-				_ => 0
-			};
-			if (parameters.f0![i] <= 0) { continue; }
-
-			var node = new XElement(
-				"Data",
-				new XAttribute("Index", (TRACK_PARAM_OFFSET_INDEX + i).ToString()),
-				logF0.ToString()
-			);
-			logF0Node.Add(node);
-		}
-
-		parameterRoot.Add(logF0Node);
+		XElement logF0Node = ProjectWriter.WriteElementsLogF0(parameters, parameterRoot, paramLen, engineType, TRACK_PARAM_OFFSET_INDEX);
 		sw.Stop();
 		Debug.WriteLine($"TIME[end f0]:{sw.ElapsedMilliseconds}");
 		sw.Restart();
-		#endregion
 
 		//VOL elements
-		//Volumeの線を書き込む
-		#region write_c0
-
-		//volume(C0) node root
-		var volumeNode = new XElement(
-			"C0",
-			new XAttribute("Length", paramLen)
-		);
-
-		const string VOL_ZERO = "-2.4";
-
-		//CeVIOのバグ開始部分のVOLを削る
-		var startVolumeRep = breathSuppress switch
-		{
-			BreathSuppressMode.NO_BREATH =>
-				//最初の音素開始まで無音
-				//Math.Round((double)(phs.Find(v => v.Phoneme! == "sil")!.EndTime! / INDEX_SPAN_TIME), 0, MidpointRounding.AwayFromZero)
-				TRACK_PARAM_OFFSET_INDEX
-				,
-			BreathSuppressMode.NONE or _ =>
-				//4分の1拍無音化
-				TRACK_PARAM_OFFSET_INDEX / 4
-		};
-		var startVol = new XElement(
-			"Data",
-			new XAttribute(
-				"Index",
-				0),
-			new XAttribute(
-				"Repeat",
-				startVolumeRep),
-			VOL_ZERO
-		);
-		volumeNode.Add(startVol);
-
-		//無声母音/ブレス音のVOLを削る
-		var reg = breathSuppress switch
-		{
-			BreathSuppressMode.NO_BREATH =>
-				new Regex("[AIUEO]|pau|sil", RegexOptions.Compiled),
-			BreathSuppressMode.NONE or _ =>
-				new Regex("[AIUEO]", RegexOptions.Compiled),
-		};
-
-		var noSoundVowels = phs
-			.Where(l => l.Phoneme is not null && reg.IsMatch(l.Phoneme))
-			;
-		foreach (var ph in noSoundVowels)
-		{
-			var s = ph.StartTime is null ? 0.0 : (double)ph.StartTime! / INDEX_SPAN_TIME;
-			var index = Math.Round(s, 0, MidpointRounding.AwayFromZero);
-			var e = ph.EndTime is null ? 0.0 : (double)ph.EndTime! / INDEX_SPAN_TIME;
-			var eIndex = Math.Round(e, 0, MidpointRounding.AwayFromZero);
-			var rep = eIndex - index;
-
-			var tVol = new XElement("Data",
-				new XAttribute("Index", TRACK_PARAM_OFFSET_INDEX + index),
-				new XAttribute("Repeat", rep),
-				VOL_ZERO
-			);
-			volumeNode.Add(tVol);
-		}
-
-
-
-		//CeVIOのバグ終了部分のVOLを削る
-		var lastTime = phs.Last().EndTime ?? 0.0;
-		var lastIndex = Math.Round(lastTime / INDEX_SPAN_TIME, 0, MidpointRounding.AwayFromZero);
-		var endVol = new XElement("Data",
-				new XAttribute("Index", TRACK_PARAM_OFFSET_INDEX + lastIndex),
-				new XAttribute("Repeat", paramLen - (lastIndex + TRACK_PARAM_OFFSET_INDEX)), //1小節
-				VOL_ZERO
-			);
-		volumeNode.Add(endVol);
-
-
-		parameterRoot.Add(volumeNode);
-
+		XElement volumeNode = ProjectWriter.WriteElementsC0(
+			breathSuppress,
+			phs,
+			parameterRoot,
+			paramLen,
+			TRACK_PARAM_OFFSET_INDEX,
+			INDEX_SPAN_TIME);
 		sw.Stop();
 		Debug.WriteLine($"TIME[end vol]:{sw.ElapsedMilliseconds}");
 		sw.Restart();
-		#endregion
 
 		//TODO:エンジンごとの解析部分とccst加工部分を分ける
 		//TODO:ccst加工部分の共通処理化
 
 		//Unit elements
-		#region unit_elements
-		var unitNode = tmplTrack.Descendants("Unit").First();
-		var span = new TimeSpan(0, 0, (int)Math.Ceiling(serifLen));
-		var hhmmss = span.ToString(@"hh\:mm\:ss");
-		unitNode.SetAttributeValue("Group", guid);
-		unitNode.SetAttributeValue(
-			"Duration",
-			hhmmss              //track duration
-		);
-		//Castを選択可能にする
-		unitNode.SetAttributeValue("CastId", CastToExport);
-		#endregion
+		ProjectWriter.WriteElementsUnit(tmplTrack, guid, serifLen, CastToExport);
 
 		//Group elements
-		//トラック名とIDを書き込む
-		var groupNode = tmplTrack.Descendants("Group").First();
-		groupNode.SetAttributeValue("Name", serifText);
-		groupNode.SetAttributeValue("Id", guid);
-		groupNode.SetAttributeValue("CastId", CastToExport);
-		if (!(cast is null) && cast.SongSoft == TalkSoftName.CEVIO_CS)
-		{
-			groupNode.SetAttributeValue("Volume", 10);
-		}
+		ProjectWriter.WriteElementsGroup(serifText, cast, tmplTrack, guid, CastToExport);
 
 		//tssprj
 		var tssprj = Array.Empty<byte>();
@@ -1236,8 +1116,7 @@ public class Wrapper : ITalkWrapper
 			//ボイス情報の置き換え
 			if (
 				//cast情報が空なら置き換えない
-				cast is not null
-					&& cast.CharaNameAsAlphabet is not null
+				cast?.CharaNameAsAlphabet is not null
 					&& cast.Id is not null
 					&& cast.VoiceVersion is not null
 			)
@@ -1312,7 +1191,67 @@ public class Wrapper : ITalkWrapper
 
 		logger.Info($"Export file sucess!{exportPath}:{serifText}");
 		return true;//new ValueTask<bool>(true);
+	}
 
+	private string GetEngineType()
+	{
+		return engineType;
+	}
+
+	private XElement WriteElementsLogF0(
+		WorldParameters parameters,
+		XElement parameterRoot,
+		double paramLen,
+		string engineType)
+	{
+		#region write_logf0
+
+		var logF0Node = new XElement(
+			"LogF0",
+			new XAttribute("Length", paramLen)
+		);
+
+		for (int i = 0; i < parameters.f0_length; i++)
+		{
+			var logF0 = engineType switch
+			{
+				TalkEngine.CEVIO
+						=> Math.Log(parameters.f0![i]),
+				TalkEngine.OPENJTALK
+						=> parameters.f0![i],
+				TalkEngine.VOICEVOX
+						=> Math.Log(parameters.f0![i]),
+				_ => 0
+			};
+			if (parameters.f0![i] <= 0) { continue; }
+
+			var node = new XElement(
+				"Data",
+				new XAttribute("Index", (TRACK_PARAM_OFFSET_INDEX + i).ToString()),
+				logF0.ToString()
+			);
+			logF0Node.Add(node);
+		}
+
+		parameterRoot.Add(logF0Node);
+
+		#endregion
+		return logF0Node;
+	}
+
+	private static void WriteElementsTiming(XElement tmplTrack, XElement timingNode)
+	{
+		#region write_timing
+
+		//Timing elements
+		//TMGの線を書き込む
+		var songRoot = tmplTrack
+			.Descendants("Song")
+			.First();
+		songRoot
+			.Add(new XElement("Parameter", timingNode));
+
+		#endregion
 	}
 
 	private static List<Data> GetDataList(XElement baseNode)
@@ -1960,5 +1899,233 @@ public class Wrapper : ITalkWrapper
 		}
 		Debug.WriteLine("lab:\n" + lab);
 		//TODO:.labファイル出力
+	}
+}
+
+public static class ProjectWriter{
+	/// <summary>
+    /// F0をピッチ線として書き込む
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <param name="parameterRoot"></param>
+    /// <param name="paramLen"></param>
+    /// <returns></returns>
+	public static XElement WriteElementsLogF0(
+		WorldParameters parameters,
+		XElement parameterRoot,
+		double paramLen,
+		string engineType,
+		int trackParamOffsetIndex)
+	{
+		#region write_logf0
+
+		var logF0Node = new XElement(
+			"LogF0",
+			new XAttribute("Length", paramLen)
+		);
+
+		for (int i = 0; i < parameters.f0_length; i++)
+		{
+			var logF0 = engineType switch
+			{
+				TalkEngine.CEVIO
+						=> Math.Log(parameters.f0![i]),
+				TalkEngine.OPENJTALK
+						=> parameters.f0![i],
+				TalkEngine.VOICEVOX
+						=> Math.Log(parameters.f0![i]),
+				_ => 0
+			};
+			if (parameters.f0![i] <= 0) { continue; }
+
+			var node = new XElement(
+				"Data",
+				new XAttribute("Index", (trackParamOffsetIndex + i).ToString()),
+				logF0.ToString()
+			);
+			logF0Node.Add(node);
+		}
+
+		parameterRoot.Add(logF0Node);
+
+		#endregion
+		return logF0Node;
+	}
+
+	/// <summary>
+    /// TMGの線を書き込む
+    /// </summary>
+    /// <param name="tmplTrack"></param>
+    /// <param name="timingNode"></param>
+	public static void WriteElementsTiming(
+		XElement tmplTrack,
+		XElement timingNode)
+	{
+		#region write_timing
+
+		//Timing elements
+		//TMGの線を書き込む
+		var songRoot = tmplTrack
+			.Descendants("Song")
+			.First();
+		songRoot
+			.Add(new XElement("Parameter", timingNode));
+
+		#endregion
+	}
+
+	/// <summary>
+    /// Volumeの線を書き込む
+    /// </summary>
+    /// <param name="breathSuppress"></param>
+    /// <param name="phs"></param>
+    /// <param name="parameterRoot"></param>
+    /// <param name="paramLen"></param>
+    /// <param name="trackParamOffsetIndex"></param>
+    /// <param name="indexSpanTime"></param>
+    /// <returns></returns>
+	public static XElement WriteElementsC0(
+		BreathSuppressMode breathSuppress,
+		List<Label> phs,
+		XElement parameterRoot,
+		double paramLen,
+		int trackParamOffsetIndex,
+		double indexSpanTime
+	)
+	{
+		//Volumeの線を書き込む
+		#region write_c0
+
+		//volume(C0) node root
+		var volumeNode = new XElement(
+			"C0",
+			new XAttribute("Length", paramLen)
+		);
+
+		const string VOL_ZERO = "-2.4";
+
+		//CeVIOのバグ開始部分のVOLを削る
+		var startVolumeRep = breathSuppress switch
+		{
+			BreathSuppressMode.NO_BREATH =>
+				//最初の音素開始まで無音
+				//Math.Round((double)(phs.Find(v => v.Phoneme! == "sil")!.EndTime! / INDEX_SPAN_TIME), 0, MidpointRounding.AwayFromZero)
+				trackParamOffsetIndex
+				,
+			BreathSuppressMode.NONE or _ =>
+				//4分の1拍無音化
+				trackParamOffsetIndex / 4
+		};
+		var startVol = new XElement(
+			"Data",
+			new XAttribute(
+				"Index",
+				0),
+			new XAttribute(
+				"Repeat",
+				startVolumeRep),
+			VOL_ZERO
+		);
+		volumeNode.Add(startVol);
+
+		//無声母音/ブレス音のVOLを削る
+		var reg = breathSuppress switch
+		{
+			BreathSuppressMode.NO_BREATH =>
+				new Regex("[AIUEO]|pau|sil", RegexOptions.Compiled),
+			BreathSuppressMode.NONE or _ =>
+				new Regex("[AIUEO]", RegexOptions.Compiled),
+		};
+
+		var noSoundVowels = phs
+			.Where(l => l.Phoneme is not null && reg.IsMatch(l.Phoneme))
+			;
+		foreach (var ph in noSoundVowels)
+		{
+			var s = ph.StartTime is null ? 0.0 : (double)ph.StartTime! / indexSpanTime;
+			var index = Math.Round(s, 0, MidpointRounding.AwayFromZero);
+			var e = ph.EndTime is null ? 0.0 : (double)ph.EndTime! / indexSpanTime;
+			var eIndex = Math.Round(e, 0, MidpointRounding.AwayFromZero);
+			var rep = eIndex - index;
+
+			var tVol = new XElement(
+				"Data",
+				new XAttribute("Index", trackParamOffsetIndex + index),
+				new XAttribute("Repeat", rep),
+				VOL_ZERO
+			);
+			volumeNode.Add(tVol);
+		}
+
+		//CeVIOのバグ終了部分のVOLを削る
+		var lastTime = phs.Last().EndTime ?? 0.0;
+		var lastIndex = Math.Round(lastTime / indexSpanTime, 0, MidpointRounding.AwayFromZero);
+		var endVol = new XElement(
+			"Data",
+			new XAttribute("Index", trackParamOffsetIndex + lastIndex),
+			new XAttribute("Repeat", paramLen - (lastIndex + trackParamOffsetIndex)), //1小節
+			VOL_ZERO
+			);
+		volumeNode.Add(endVol);
+
+		parameterRoot.Add(volumeNode);
+
+		#endregion
+		return volumeNode;
+	}
+
+	/// <summary>
+    /// Unit要素に書き加える
+    /// </summary>
+    /// <param name="tmplTrack"></param>
+    /// <param name="guid"></param>
+    /// <param name="serifLen"></param>
+    /// <param name="castToExport"></param>
+	public static void WriteElementsUnit(
+		XElement tmplTrack,
+		string guid,
+		double serifLen,
+		string castToExport)
+	{
+		#region unit_elements
+
+		var unitNode = tmplTrack.Descendants("Unit").First();
+		var span = new TimeSpan(0, 0, (int)Math.Ceiling(serifLen));
+		var hhmmss = span.ToString(@"hh\:mm\:ss");
+		unitNode.SetAttributeValue("Group", guid);
+		unitNode.SetAttributeValue(
+			"Duration",
+			hhmmss              //track duration
+		);
+		//Castを選択可能にする
+		unitNode.SetAttributeValue("CastId", castToExport);
+
+		#endregion
+	}
+
+	/// <summary>
+    /// トラック名とIDを書き込む
+    /// </summary>
+    /// <param name="serifText"></param>
+    /// <param name="cast"></param>
+    /// <param name="tmplTrack"></param>
+    /// <param name="guid"></param>
+    /// <param name="CastToExport"></param>
+	public static void WriteElementsGroup(
+		string serifText,
+		SongCast? cast,
+		XElement tmplTrack,
+		string guid,
+		string CastToExport)
+	{
+		//トラック名とIDを書き込む
+		var groupNode = tmplTrack.Descendants("Group").First();
+		groupNode.SetAttributeValue("Name", serifText);
+		groupNode.SetAttributeValue("Id", guid);
+		groupNode.SetAttributeValue("CastId", CastToExport);
+		if (cast?.SongSoft == TalkSoftName.CEVIO_CS)
+		{
+			groupNode.SetAttributeValue("Volume", 10);
+		}
 	}
 }
