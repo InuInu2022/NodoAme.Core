@@ -652,6 +652,20 @@
                         ItemsSource="{Binding BreathSuppressModeList}"
                         SelectedItem="{Binding BreathSuppress}"
                         />
+              <Label Content="ノート分割:"
+                     Margin="10,10,5,0"
+                     VerticalAlignment="Center"
+                     />
+              <ComboBox x:Name="noteSplitMode"
+                        Width="Auto"
+                        ToolTip="【⚠実験機能】IGNORE_NOSOUND:0.3までの文節単位分割、SILLABLE_IGNORE_NOSOUND:音節単位分割（日本語のみ）"
+                        Margin="3,10,0,0"
+                        FontSize="12.5"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding NoteSplitModeList}"
+                        SelectedItem="{Binding NoteSplitMode}"
+                        />
               <ItemsControl x:Name="songExportFileExtList"
                       Margin="0,0,0,0"
                       MaxHeight="300"

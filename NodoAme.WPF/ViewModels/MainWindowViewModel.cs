@@ -125,10 +125,12 @@ namespace NodoAme.ViewModels
 		public IEnumerable<BreathSuppressMode> BreathSuppressModeList { get; set; }
 			= Enum.GetValues(typeof(BreathSuppressMode)).Cast<BreathSuppressMode>();
 
+		public NoteSplitModes NoteSplitMode {get;set;}
+		public IEnumerable<NoteSplitModes> NoteSplitModeList {get;set;}
+			= Enum.GetValues(typeof(NoteSplitModes)).Cast<NoteSplitModes>();
+
 		public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
 			= new ObservableCollection<SongSoftTracFileExtSetting>();
-
-		public NoteSplitModes NoteSplitMode { get; set; }
 
 		#endregion
 
@@ -1275,6 +1277,12 @@ namespace NodoAme.ViewModels
 			}
 
 			UserSettings.BreathSuppress = value;
+			await UserSettings.SaveAsync();
+		}
+
+		[PropertyChanged(nameof(NoteSplitModeList))]
+		private async ValueTask NoteSpliteModeChangedAsync(NoteSplitModes value){
+			UserSettings.NoteSplitMode = value;
 			await UserSettings.SaveAsync();
 		}
 	}
