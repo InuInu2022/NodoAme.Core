@@ -49,6 +49,10 @@ public static class PhonemeConverter{
 		{
 			//phonome only
 			var phenoms = GetPhonemeFromContextLabel(label);
+			if(phenoms.Length-1 < CURRENT_PHENOME_IDY){
+				continue;
+			}
+
 			var p3 = phenoms[CURRENT_PHENOME_IDY];
 
 			switch (p3)
