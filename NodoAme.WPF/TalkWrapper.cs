@@ -1087,7 +1087,7 @@ public class Wrapper : ITalkWrapper
 			}
 
 			//音節単位分割
-			case NoteSplitModes.SILLABLE_IGNORE_NOSOUND:
+			case NoteSplitModes.SYLLABLE_IGNORE_NOSOUND:
 			{
 				break;
 			}

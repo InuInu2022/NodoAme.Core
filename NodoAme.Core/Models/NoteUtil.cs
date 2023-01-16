@@ -58,6 +58,6 @@ namespace NodoAme.Models
 		/// <summary>
         /// 音節毎で分割、sil, pauなどを無視
         /// </summary>
-		SILLABLE_IGNORE_NOSOUND,
+		SYLLABLE_IGNORE_NOSOUND,
     }
 }
