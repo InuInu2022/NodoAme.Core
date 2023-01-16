@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
 

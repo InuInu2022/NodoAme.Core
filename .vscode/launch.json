@@ -49,5 +49,26 @@
 			// デバッグ中にデバッグコンソール表示をどうするかを指定します。ここではスタートと同時に表示としています。
 			"internalConsoleOptions": "openOnSessionStart"
 		  },
+		  {
+			  // デバッグ時のウィンドウから実行を選択する際のメニュー項目名になります。
+			  "name": ".NET Launch (test debug)",
+			  // プログラムの種類は「Desktop CLR debugger」を指定します。
+			  "type": "clr",
+			  // 起動設定のリクエストの種類です。ここでは単純に「launch」です。
+			  "request": "launch",
+			  // 起動前のタスクを指定します。「tasks.json」内「label」で指定した名前を記載します。
+			  "preLaunchTask": "debug msbuild",
+			  // 起動する（ビルドされた）実行ファイルパスを指定します。
+			  "program": "${workspaceFolder}/test/bin/Debug/net48/win10-x64/NodoAme.exe",
+			  // 上記の実行ファイルに付加する引数を以下に記載します。
+			  "args": [],
+			  // 作業ファイルのあるディレクトリーパスを指定します。この例では実行ファイルのある場所です。
+			  "cwd": "${workspaceFolder}",
+			  // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+			  // 上記URLにあるとおり、コンソールは、VSCode内のコンソールに表示されるように指定します。
+			  "console": "internalConsole",
+			  // デバッグ中にデバッグコンソール表示をどうするかを指定します。ここではスタートと同時に表示としています。
+			  "internalConsoleOptions": "openOnSessionStart"
+			},
 	]
 }

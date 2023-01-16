@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using MathNet.Numerics.Statistics;
@@ -113,7 +114,7 @@ public static class ProjectWriter{
 				}
 			}
 
-			if (noteSplitMode == NoteSplitModes.IGNORE_NOSOUND)
+			if (noteSplitMode is NoteSplitModes.IGNORE_NOSOUND)
 			{
 				pauCount++;
 			}
@@ -151,9 +152,33 @@ public static class ProjectWriter{
 			};
 
 			//note
+			const int offset = 3840;
+			var last = scoreRoot.Elements("Note").LastOrDefault();
+			if(last?.HasAttributes == true && last.Attribute("Clock") is not null)
+			{
+				//前のノートと差が小さい場合は詰める
+				//
+				var clock = last.Attribute("Clock").Value;
+				var len = last.Attribute("Duration").Value;
+				var isSafeStart = double.TryParse(
+					clock,
+					out double start);
+				var isSafeDuration = double.TryParse(
+					len,
+					out double duration);
+
+				if(isSafeStart && isSafeDuration){
+					var lastEnd = start + duration;
+					startClock =
+						offset + (int)startClock - lastEnd < 50 ?
+						lastEnd - offset :
+						startClock;
+				}
+			}
+
 			var note = new XElement(
 				"Note",
-				new XAttribute("Clock", 3840 + startClock),
+				new XAttribute("Clock", offset + startClock),
 				new XAttribute("PitchStep", step),
 				new XAttribute("PitchOctave", octave),
 				new XAttribute("Duration", noteLen),
@@ -506,6 +531,122 @@ public static class ProjectWriter{
 		return tssprj
 			.AsSpan()
 			.ReplaceParamters(timing, pitch, volume);
+	}
+
+	public static async ValueTask<(List<dynamic> notesList, int phNum)>
+	SplitPhonemesToNotesAsync(
+		List<Label> phs,
+		ExportLyricsMode mode,
+		NoteSplitModes splitMode
+	)
+	{
+		var notesList = new List<dynamic>();
+		var noteList = new List<dynamic>();
+		var phNum = 0;
+
+		switch (splitMode)
+		{
+			//文節単位分割
+			case NoteSplitModes.SPLIT_ONLY:
+			case NoteSplitModes.IGNORE_NOSOUND:
+			{
+				await Task.Run(() =>
+				{
+					for (int i = 0; i < phs.Count; i++)
+					{
+						switch (phs[i].Phoneme)
+						{
+							case "sil": //ignore phoneme
+								break;
+
+							case "pau": //split note
+							{
+								if (splitMode == NoteSplitModes.SPLIT_ONLY)
+								{
+									noteList.Add(phs[i]);
+								}
+
+								phNum = Split();
+								break;
+							}
+
+							default:    //append
+							{
+								noteList.Add(phs[i]);
+								phNum++;
+								break;
+							}
+						}
+					}
+				});
+				notesList.Add(new List<dynamic>(noteList));
+
+				break;
+			}
+
+			//音節単位分割
+			case NoteSplitModes.SILLABLE_IGNORE_NOSOUND:
+			{
+				for (int i = 0; i < phs.Count; i++)
+				{
+					var v = phs[i];
+
+					switch (v.Phoneme)
+					{
+						case "sil":
+							break;
+
+						//split note
+						case "pau":
+							{
+								noteList.Add(phs[i]);	//test
+								phNum = Split();
+								break;
+							}
+						//日本語の「ん」「っ」の時は音節の区切りとみなす
+						case "N":
+						case "cl":
+							{
+								noteList.Add(v);
+								phNum = Split();
+								break;
+							}
+
+						//append
+						default:
+							{
+							var isVowel = PhonemeUtil.IsVowel(v);
+							var isAdd = i < phs.Count - 1 &&
+
+								phs[i+1].Phoneme is "N" or "cl";
+
+							if(isVowel && !isAdd){
+								noteList.Add(v);
+								phNum = Split();
+
+								break;
+							}
+
+							noteList.Add(v);
+							phNum++;
+							break;
+							}
+					}
+				}
+
+				break;
+			}
+		}
+
+		return (notesList, phNum);
+
+		int Split()
+		{
+			notesList.Add(new List<dynamic>(noteList));
+			noteList.Clear();
+			phNum++;
+			return phNum;
+		}
 	}
 
 	private static List<Data> GetDataList(XElement baseNode)

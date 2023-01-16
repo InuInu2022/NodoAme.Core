@@ -887,7 +887,7 @@ public class Wrapper : ITalkWrapper
 
 		//split notes
 		(List<dynamic>? notesList, int phNum)
-			= await SplitPhonemesToNotesAsync(phs, exportMode, noteSplitMode);
+			= await ProjectWriter.SplitPhonemesToNotesAsync(phs, exportMode, noteSplitMode);
 
 		Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
 
@@ -1044,55 +1044,59 @@ public class Wrapper : ITalkWrapper
 		var noteList = new List<dynamic>();
 		var phNum = 0;
 
-		switch (mode)
+		switch (splitMode)
 		{
-			case ExportLyricsMode.KANA:
-			case ExportLyricsMode.PHONEME:
-			case ExportLyricsMode.ALPHABET:
-			case ExportLyricsMode.EN_TO_JA:
+			//文節単位分割
+			case NoteSplitModes.SPLIT_ONLY:
+			case NoteSplitModes.IGNORE_NOSOUND:
+			{
+				await Task.Run(() =>
 				{
-					//ModeForAI: pauの区切りでノートに分割する
-					await Task.Run(() =>
+					for (int i = 0; i < phs.Count; i++)
 					{
-						for (int i = 0; i < phs.Count; i++)
+						switch (phs[i].Phoneme)
 						{
-							switch (phs[i].Phoneme)
+							case "sil": //ignore phoneme
+								break;
+
+							case "pau": //split note
 							{
-								case "sil": //ignore phoneme
-									break;
+								if (splitMode == NoteSplitModes.SPLIT_ONLY)
+								{
+									noteList.Add(phs[i]);
+								}
 
-								case "pau": //split note
-									{
-										if (splitMode == NoteSplitModes.SPLIT_ONLY)
-										{
-											noteList.Add(phs[i]);
-										}
+								notesList.Add(new List<dynamic>(noteList));
+								noteList.Clear();
+								phNum++;
+								break;
+							}
 
-										notesList.Add(new List<dynamic>(noteList));
-										noteList.Clear();
-										phNum++;
-										break;
-									}
-
-								default:    //append
-									{
-										noteList.Add(phs[i]);
-										phNum++;
-										break;
-									}
+							default:    //append
+							{
+								noteList.Add(phs[i]);
+								phNum++;
+								break;
 							}
 						}
-					});
-					notesList.Add(new List<dynamic>(noteList));
+					}
+				});
+				notesList.Add(new List<dynamic>(noteList));
 
-					break;
-				}
+				break;
+			}
+
+			//音節単位分割
+			case NoteSplitModes.SILLABLE_IGNORE_NOSOUND:
+			{
+				break;
+			}
 
 			default:
-				{
-					logger.Error($"Export mode {mode} is invalid!");
-					break;
-				}
+			{
+				logger.Error($"Export mode {mode} is invalid!");
+				break;
+			}
 		}
 
 		return (notesList, phNum);

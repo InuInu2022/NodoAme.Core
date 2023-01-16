@@ -49,9 +49,15 @@ namespace NodoAme.Models
 		/// sil, pauなどを無視し、分割する
 		/// </summary>
         IGNORE_NOSOUND,
+
         /// <summary>
 		/// sil, pauは分割に使うが無視しない
 		/// </summary>
-        SPLIT_ONLY
+        SPLIT_ONLY,
+
+		/// <summary>
+        /// 音節毎で分割、sil, pauなどを無視
+        /// </summary>
+		SILLABLE_IGNORE_NOSOUND,
     }
 }
