@@ -82,7 +82,7 @@
                 Width="130"
                 Margin="3,10,0,0"
                 FontSize="16.0"
-                VerticalAlignment="Top"
+                VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 SelectedValuePath="Id"
                 DisplayMemberPath="Name"
@@ -95,7 +95,7 @@
                 Width="100"
                 Margin="3,10,0,0"
                 FontSize="16.0"
-                VerticalAlignment="Top"
+                VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 SelectedValuePath="Id"
                 DisplayMemberPath="Name"
@@ -109,55 +109,77 @@
                 HorizontalAlignment="Center"
                 />
       <WrapPanel
+                Orientation="Vertical"
                 ToolTip="SONG VOICE: しゃべらせたい”ソング”ボイスを選択してください">
-        <fa:FontAwesome Icon="Solid_Music"
-                  FontSize="20"
-                  Margin="0,5,10,0"
-                  VerticalAlignment="Center"
-                  HorizontalAlignment="Center"
-                  />
-        <ComboBox x:Name="ExportSongSoftComboBox"
-                  ToolTip="Song soft: ソングソフトを選びます。"
-                  Width="Auto"
-                  Margin="0,10,0,0"
-                  FontSize="12.5"
-                  Foreground="{DynamicResource SystemBaseMediumColorBrush}"
-                  VerticalAlignment="Top"
-                  HorizontalAlignment="Left"
-                  ItemsSource="{Binding ExportSongSoftItems}"
-                  SelectedIndex="{Binding ExportSongSoftSelected}"
-                  />
-        <ComboBox x:Name="ExportSongCastComboBox"
-                  ToolTip="Song cast: 喋らせるソングキャストを選びます&#xA;「⚠」のついたキャストはまだ上手くしゃべれません。"
-                  Width="Auto"
-                  Margin="0,10,0,0"
-                  FontSize="16.0"
-                  VerticalAlignment="Top"
-                  HorizontalAlignment="Left"
-                  ItemsSource="{Binding ExportSongCastItems}"
-                  SelectedIndex="{Binding ExportSongCastSelected}"
-                  >
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <StackPanel Orientation="Horizontal">
-                <TextBlock>
-                  <Run Text="{Binding Name}" />
-                </TextBlock>
-              </StackPanel>
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
-        <ComboBox x:Name="exportLyricesMode"
-            Width="Auto"
-            ToolTip="歌詞の出力方法を選びます。&#xA;CeVIO AIは「PHONEME」（音素）、CeVIO CSは「KANA」（ひらがな）がベストです。"
-            ToolTipService.ShowDuration="10000000"
-            Margin="3,10,0,0"
-            FontSize="12.5"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Left"
-            ItemsSource="{Binding ExportLyricsModeList}"
-            SelectedItem="{Binding SongExportLyricsMode}"
-            />
+        <WrapPanel Orientation="Horizontal">
+          <fa:FontAwesome Icon="Solid_Music"
+                    FontSize="20"
+                    Margin="0,5,10,0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    />
+          <ComboBox x:Name="ExportSongSoftComboBox"
+                    ToolTip="Song soft: ソングソフトを選びます。"
+                    Width="Auto"
+                    Margin="0,10,0,0"
+                    FontSize="12.5"
+                    Foreground="{DynamicResource SystemBaseMediumColorBrush}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding ExportSongSoftItems}"
+                    SelectedIndex="{Binding ExportSongSoftSelected}"
+                    />
+          <ComboBox x:Name="ExportSongCastComboBox"
+                    ToolTip="Song cast: 喋らせるソングキャストを選びます&#xA;「⚠」のついたキャストはまだ上手くしゃべれません。"
+                    Width="Auto"
+                    Margin="0,10,0,0"
+                    FontSize="16.0"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding ExportSongCastItems}"
+                    SelectedIndex="{Binding ExportSongCastSelected}"
+                    >
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock>
+                    <Run Text="{Binding Name}" />
+                  </TextBlock>
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </WrapPanel>
+      <Expander x:Name="SongVoiceExportParameters"
+
+                ExpandDirection="Down"
+                IsExpanded="False"
+                VerticalAlignment="Stretch"
+                >
+        <WrapPanel Orientation="Horizontal">
+          <ComboBox x:Name="exportLyricesMode"
+              Width="Auto"
+              ToolTip="歌詞の出力方法を選びます。&#xA;CeVIO AIは「PHONEME」（音素）、CeVIO CSは「KANA」（ひらがな）がベストです。"
+              ToolTipService.ShowDuration="10000000"
+              Margin="3,10,0,0"
+              FontSize="12.5"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Left"
+              ItemsSource="{Binding ExportLyricsModeList}"
+              SelectedItem="{Binding SongExportLyricsMode}"
+              />
+          <ComboBox x:Name="noteSplitModeByCast"
+              Width="Auto"
+              ToolTip="【⚠実験機能】IGNORE_NOSOUND:0.3までの文節単位分割、SILLABLE_IGNORE_NOSOUND:音節単位分割（日本語のみ）"
+              Margin="3,10,0,0"
+              FontSize="12.5"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Left"
+              ItemsSource="{Binding NoteSplitModeList}"
+              SelectedItem="{Binding NoteSplitMode}"
+              />
+          </WrapPanel>
+        </Expander>
       </WrapPanel>
       <!--
       <ComboBox x:Name="ExportCastComboBox2"
