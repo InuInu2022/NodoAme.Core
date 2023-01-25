@@ -73,12 +73,14 @@ public static class ProjectWriter{
 				}
 
 				//timing elements
+				//TODO: silも計算しないとダメかも
 				var count = (5 * (phCount + pauCount)) - 1;
-				var timingData = new XElement(
-					"Data",
-					new XAttribute("Index", count.ToString()),
-					noteOffset + start
-				);
+				var timingData =
+					new XElement(
+						"Data",
+						new XAttribute("Index", count.ToString()),
+						noteOffset + start
+					);
 				timingNode.Add(timingData);
 				Debug.WriteLine($"Index: {count} [{ph.Phoneme}]");
 
@@ -98,13 +100,14 @@ public static class ProjectWriter{
 					timingNode
 						.Add(new XElement(
 							"Data",
+							//new XAttribute("Index", count+t),
 							noteOffset + start + add
 						));
 					//Debug.WriteLine($"add:{add}");
 				}
 
 				//最後の処理
-				if (i + 1 == nList.Count)
+				if (noteSplitMode is not NoteSplitModes.SPLIT_ONLY && i + 1 == nList.Count)
 				{
 					var lastTimingData = new XElement(
 						"Data",
@@ -554,7 +557,8 @@ public static class ProjectWriter{
 				{
 					for (int i = 0; i < phs.Count; i++)
 					{
-						switch (phs[i].Phoneme)
+						var v = phs[i];
+						switch (v.Phoneme)
 						{
 							case "sil": //ignore phoneme
 								break;
@@ -563,7 +567,7 @@ public static class ProjectWriter{
 							{
 								if (splitMode == NoteSplitModes.SPLIT_ONLY)
 								{
-									noteList.Add(phs[i]);
+									noteList.Add(v);
 								}
 
 								phNum = Split();
@@ -572,7 +576,7 @@ public static class ProjectWriter{
 
 							default:    //append
 							{
-								noteList.Add(phs[i]);
+								noteList.Add(v);
 								phNum++;
 								break;
 							}
@@ -599,7 +603,7 @@ public static class ProjectWriter{
 						//split note
 						case "pau":
 							{
-								noteList.Add(phs[i]);	//test
+								noteList.Add(v);
 								phNum = Split();
 								break;
 							}
