@@ -19,10 +19,8 @@ public static class PhonemeUtil
 	/// </summary>
 	/// <param name="pText"></param>
 	/// <returns></returns>
-	public static bool IsVowel(string? pText){
-		if(string.IsNullOrEmpty(pText)) return false;
-		return VOWELS_JA.IsMatch(pText);
-	}
+	public static bool IsVowel(string? pText) =>
+		!string.IsNullOrEmpty(pText) && VOWELS_JA.IsMatch(pText);
 
 	/// <summary>
 	/// ラベルの音素が母音かどうか
