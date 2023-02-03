@@ -52,6 +52,7 @@ public enum NoteSplitModes
 	/// <summary>
 	/// sil, pauなどを無視し、分割する
 	/// </summary>
+    [System.ComponentModel.Browsable(false)]
 	IGNORE_NOSOUND,
 
 	/// <summary>
