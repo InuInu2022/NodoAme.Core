@@ -105,7 +105,7 @@ public static class ProjectWriter{
 				}
 
 				//最後の処理
-				if (noteSplitMode is not NoteSplitModes.SPLIT_ONLY
+				if (noteSplitMode is not NoteSplitModes.SPLIT_ONLY_OLD
 					&& i + 1 == nList.Count)
 				{
 					var lastTimingData = new XElement(
@@ -559,7 +559,7 @@ public static class ProjectWriter{
 		switch (splitMode)
 		{
 			//文節単位分割
-			case NoteSplitModes.SPLIT_ONLY:
+			case NoteSplitModes.SPLIT_ONLY_OLD:
 			case NoteSplitModes.SPLIT_SILIENTNOTE:
 			case NoteSplitModes.IGNORE_NOSOUND:
 			{
@@ -589,7 +589,7 @@ public static class ProjectWriter{
 							case "pau": //split note
 							{
 								if (splitMode is
-									NoteSplitModes.SPLIT_ONLY or
+									NoteSplitModes.SPLIT_ONLY_OLD or
 									NoteSplitModes.SPLIT_SILIENTNOTE)
 								{
 									noteList.Add(v);

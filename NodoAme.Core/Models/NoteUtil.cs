@@ -58,7 +58,7 @@ public enum NoteSplitModes
 	/// <summary>
 	/// sil, pauは分割に使うが無視しない
 	/// </summary>
-	SPLIT_ONLY,
+	SPLIT_ONLY_OLD,
 
 	/// <summary>
 	/// 音節毎で分割、sil, pauなどを無視

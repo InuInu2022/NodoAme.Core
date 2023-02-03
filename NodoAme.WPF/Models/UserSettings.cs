@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -61,7 +60,7 @@ public class UserSettings
 
 	public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
 
-	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY;
+	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY_OLD;
 
 	public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NO_BREATH;
 
