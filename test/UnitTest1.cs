@@ -52,7 +52,7 @@ public class UnitTest1
 		var (notesList, phNum) = await ProjectWriter.SplitPhonemesToNotesAsync(
 			phs,
 			ExportLyricsMode.PHONEME,
-			NodoAme.Models.NoteSplitModes.SILLABLE_IGNORE_NOSOUND
+			NodoAme.Models.NoteSplitModes.SYLLABLE
 		);
 
 		Assert.True(phNum > 0);
