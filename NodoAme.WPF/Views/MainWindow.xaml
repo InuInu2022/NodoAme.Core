@@ -170,7 +170,7 @@
               />
           <ComboBox x:Name="noteSplitModeByCast"
               Width="Auto"
-              ToolTip="【⚠実験機能】IGNORE_NOSOUND:0.3までの文節単位分割、SILLABLE_IGNORE_NOSOUND:音節単位分割（日本語のみ）"
+              ToolTip="【⚠実験機能】SPLIT_ONLY:0.3までの文節単位分割、SPLIT_SILENTNOTE:修正文節単位分割（デフォルト）, SILLABLE:音節単位分割（日本語のみ）,IGNORE_NOSOUND:未使用"
               Margin="3,10,0,0"
               FontSize="12.5"
               VerticalAlignment="Top"
@@ -680,7 +680,7 @@
                      />
               <ComboBox x:Name="noteSplitMode"
                         Width="Auto"
-                        ToolTip="【⚠実験機能】IGNORE_NOSOUND:0.3までの文節単位分割、SILLABLE_IGNORE_NOSOUND:音節単位分割（日本語のみ）"
+                        ToolTip="【⚠実験機能】SPLIT_ONLY:0.3までの文節単位分割、SPLIT_SILENTNOTE:修正文節単位分割（デフォルト）, SILLABLE:音節単位分割（日本語のみ）,IGNORE_NOSOUND:未使用"
                         Margin="3,10,0,0"
                         FontSize="12.5"
                         VerticalAlignment="Top"
