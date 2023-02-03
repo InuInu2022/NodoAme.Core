@@ -72,7 +72,6 @@ public static class ProjectWriter{
 				}
 
 				//timing elements
-				//TODO: silも計算しないとダメかも
 				var count = (5 * (phCount + pauCount)) - 1;
 				var timingData =
 					new XElement(
@@ -106,7 +105,8 @@ public static class ProjectWriter{
 				}
 
 				//最後の処理
-				if (noteSplitMode is not NoteSplitModes.SPLIT_ONLY && i + 1 == nList.Count)
+				if (noteSplitMode is not NoteSplitModes.SPLIT_ONLY
+					&& i + 1 == nList.Count)
 				{
 					var lastTimingData = new XElement(
 						"Data",
@@ -560,6 +560,7 @@ public static class ProjectWriter{
 		{
 			//文節単位分割
 			case NoteSplitModes.SPLIT_ONLY:
+			case NoteSplitModes.SPLIT_SILIENTNOTE:
 			case NoteSplitModes.IGNORE_NOSOUND:
 			{
 				await Task.Run(() =>
@@ -571,7 +572,7 @@ public static class ProjectWriter{
 						{
 							case "sil": //ignore phoneme
 							{
-								if (splitMode == NoteSplitModes.SPLIT_ONLY)
+								if (splitMode == NoteSplitModes.SPLIT_SILIENTNOTE)
 								{
 									if(noteList.Count>0){
 										//前にノーツがあるなら分割
@@ -587,7 +588,9 @@ public static class ProjectWriter{
 
 							case "pau": //split note
 							{
-								if (splitMode == NoteSplitModes.SPLIT_ONLY)
+								if (splitMode is
+									NoteSplitModes.SPLIT_ONLY or
+									NoteSplitModes.SPLIT_SILIENTNOTE)
 								{
 									noteList.Add(v);
 								}

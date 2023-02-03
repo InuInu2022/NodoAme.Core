@@ -63,4 +63,9 @@ public enum NoteSplitModes
 	/// 音節毎で分割、sil, pauなどを無視
 	/// </summary>
 	SYLLABLE,
+
+	/// <summary>
+	/// sil, pauは分割に使い、一部を無音ノート化
+	/// </summary>
+	SPLIT_SILIENTNOTE
 }
