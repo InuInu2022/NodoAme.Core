@@ -62,5 +62,5 @@ public enum NoteSplitModes
 	/// <summary>
 	/// 音節毎で分割、sil, pauなどを無視
 	/// </summary>
-	SYLLABLE_IGNORE_NOSOUND,
+	SYLLABLE,
 }

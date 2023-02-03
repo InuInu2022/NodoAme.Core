@@ -611,7 +611,7 @@ public static class ProjectWriter{
 			}
 
 			//音節単位分割
-			case NoteSplitModes.SYLLABLE_IGNORE_NOSOUND:
+			case NoteSplitModes.SYLLABLE:
 			{
 				for (int i = 0; i < phs.Count; i++)
 				{
