@@ -22,6 +22,9 @@ public class SongCast{
 	[JsonPropertyName("hasEmotion")]
 	public bool? HasEmotion { get; set; }
 
+	[JsonPropertyName("noteSplitMode")]
+	public NodoAme.Models.NoteSplitModes? NoteSplitMode { get; set; }
+
 	/// <summary>
 	/// voice lib's character name text for VoiSona
 	/// </summary>

@@ -406,7 +406,8 @@
 			"id":"CSNV-JPF-FP5",
 			"name":"IA",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
 		},
 		{
 			"id":"CSNV-ENF-FP5",
@@ -456,6 +457,7 @@
 			"songSoft":"VoiSona",
 			"lyricsMode":"KANA",
 			"exportFile":"TSSPRJ",
+			"noteSplitMode":"SYLLABLE",
 			"charaNameAsAlphabet":"Kirune",
 			"voiceVersion":"1.1.0"
 		},
@@ -492,7 +494,8 @@
 			"id":"CSNV-JPF-THR3",
 			"name":"裏命（RIME）",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
 		},
 		{
 			"id":"CSNV-JPF-GLA1",
@@ -510,7 +513,8 @@
 			"id":"CSNV-JPF-BSR2",
 			"name":"ROSE",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
 		},
 		{
 			"id":"CSNV-JPF-THR4",

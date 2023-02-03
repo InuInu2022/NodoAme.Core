@@ -698,6 +698,7 @@ public class MainWindowViewModel
 
 		var current = ExportSongCastItems[index];
 		SongExportLyricsMode = current.LyricsMode;
+		NoteSplitMode = current.NoteSplitMode ?? NoteSplitModes.SPLIT_SILIENTNOTE;
 		return new ValueTask();
 	}
 
