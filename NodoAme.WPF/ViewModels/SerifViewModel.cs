@@ -40,7 +40,7 @@ namespace NodoAme.ViewModels
 					EnabledPreview = false;
 					EnabledExport = false;
 					PreviewProgress = Visibility.Visible;
-					SerifTime = await ParentVM!.PreviewTalkFromList(this.SourceText);
+					SerifTime = await ParentVM!.PreviewTalkFromListAsync(this.SourceText);
 					EnabledPreview = true;
 					EnabledExport = true;
 					PreviewProgress = Visibility.Collapsed;
@@ -54,7 +54,7 @@ namespace NodoAme.ViewModels
 				ExportProgress = Visibility.Visible;
 				var cast = ParentVM!.ExportSongCastItems[ParentVM.ExportSongCastSelected];
 				const double alpha = 0.0;	//TODO:
-				await ParentVM!.ExportFileFromList(
+				await ParentVM!.ExportFileFromListAsync(
 					this.SourceText,
 					cast.Id,
 					alpha,
@@ -74,7 +74,7 @@ namespace NodoAme.ViewModels
 							EnabledExport = false;
 							//TODO:enable loading indicater
 							await ParentVM!
-								.ExportPreviewWavFromList(this.SourceText);
+								.ExportPreviewWavFromListAsync(this.SourceText);
 							EnabledExport = true;
 						}
 						);
