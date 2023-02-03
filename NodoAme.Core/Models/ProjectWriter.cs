@@ -46,7 +46,6 @@ public static class ProjectWriter{
 				}
 
 				string pText = ph.Phoneme ?? "";
-
 				double start = ph.StartTime ?? 0.0;
 				double end = ph.EndTime ?? 0.0;
 				if (startPhonemeTime > start)
@@ -129,11 +128,21 @@ public static class ProjectWriter{
 			var lyricText = exportMode switch
 			{
 				ExportLyricsMode.KANA
-					=> PhonemeConverter.ConvertToKana(phText.Replace("pau", "").Replace(",", "")),
+					=> PhonemeConverter
+						.ConvertToKana(
+							phText
+								.Replace(PhonemeUtil.PAU, "")
+								//silは無効な文字列に変換
+								.Replace(PhonemeUtil.SIL, "あ")
+								.Replace(",", "")),
 				//ExportLyricsMode.ALPHABET
 				//	=> serifText.Split(ENGLISH_SPLITTER)[notesListCount],
-				_ => phText.Replace(",", ""),
+				_ => phText
+					//silは無効な文字列に変換
+					.Replace(PhonemeUtil.SIL, "_")
+					.Replace(",", ""),
 			};
+
 			notesListCount++;
 			Debug.WriteLine($"lyric: {lyricText}");
 
@@ -561,7 +570,20 @@ public static class ProjectWriter{
 						switch (v.Phoneme)
 						{
 							case "sil": //ignore phoneme
+							{
+								if (splitMode == NoteSplitModes.SPLIT_ONLY)
+								{
+									if(noteList.Count>0){
+										//前にノーツがあるなら分割
+										phNum = Split();
+									}
+									//sil単体のノートを追加
+									noteList.Add(v);
+									phNum = Split();
+								}
+
 								break;
+							}
 
 							case "pau": //split note
 							{

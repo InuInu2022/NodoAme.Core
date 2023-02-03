@@ -864,7 +864,6 @@ public class Wrapper : ITalkWrapper
 		WorldParameters parameters = await EstimateF0Async(serifText);
 
 		//Note elements
-		//TODO: csや他ソフト向けにF0を解析してnoteを割り当て、付与する
 		var scoreNodes = tmplTrack.Descendants("Score");
 		var scoreRoot = scoreNodes.First();
 
@@ -1031,75 +1030,6 @@ public class Wrapper : ITalkWrapper
 		}
 
 		return parameters;
-	}
-
-	private async ValueTask<(List<dynamic> notesList, int phNum)>
-	SplitPhonemesToNotesAsync(
-		List<Label> phs,
-		ExportLyricsMode mode,
-		NoteSplitModes splitMode
-	)
-	{
-		var notesList = new List<dynamic>();
-		var noteList = new List<dynamic>();
-		var phNum = 0;
-
-		switch (splitMode)
-		{
-			//文節単位分割
-			case NoteSplitModes.SPLIT_ONLY:
-			case NoteSplitModes.IGNORE_NOSOUND:
-			{
-				await Task.Run(() =>
-				{
-					for (int i = 0; i < phs.Count; i++)
-					{
-						switch (phs[i].Phoneme)
-						{
-							case "sil": //ignore phoneme
-								break;
-
-							case "pau": //split note
-							{
-								if (splitMode == NoteSplitModes.SPLIT_ONLY)
-								{
-									noteList.Add(phs[i]);
-								}
-
-								notesList.Add(new List<dynamic>(noteList));
-								noteList.Clear();
-								phNum++;
-								break;
-							}
-
-							default:    //append
-							{
-								noteList.Add(phs[i]);
-								phNum++;
-								break;
-							}
-						}
-					}
-				});
-				notesList.Add(new List<dynamic>(noteList));
-
-				break;
-			}
-
-			//音節単位分割
-			case NoteSplitModes.SYLLABLE_IGNORE_NOSOUND:
-			{
-				break;
-			}
-
-			default:
-			{
-				logger.Error($"Export mode {mode} is invalid!");
-				break;
-			}
-		}
-
-		return (notesList, phNum);
 	}
 
 	private static double GetParametersLength(double serifLen)
