@@ -60,7 +60,7 @@ public class UserSettings
 
 	public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
 
-	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY_OLD;
+	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_SILIENTNOTE;
 
 	public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NO_BREATH;
 
