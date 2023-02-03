@@ -48,10 +48,8 @@ public class UserSettings
 	public bool IsUseSeparaterSpace { get; set; } = true;
 	public bool IsConvertToHiragana { get; set; } = false;
 	public bool IsConvertToPhoneme { get; set; } = true;
-
 	public bool IsCheckJapaneseSyllabicNasal { get; set; }
 	public bool IsCheckJananeseNasalGa { get; set; } = false;
-
 	public VowelOptions VowelOption { get; set; } = VowelOptions.DoNothing;
 	public bool IsCheckJapaneseRemoveNonSoundVowel { get; set; } = false;
 	public bool IsCheckJapaneseSmallVowel { get; set; } = false;
@@ -59,13 +57,12 @@ public class UserSettings
 	#endregion display_phonemes_options
 
 	public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
-
 	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_SILIENTNOTE;
-
 	public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NO_BREATH;
 
 	[JsonIgnore]
 	public const string UserSettingsFileName = "usersettings.json";
+
 	[JsonIgnore]
 	public static string UserSettingsPath
 		= $"{Directory.GetCurrentDirectory()}/{UserSettings.UserSettingsFileName}";
@@ -85,7 +82,10 @@ public class UserSettings
 	}
 
 	public async ValueTask SaveAsync(){
-		if(this is null){return;}
+		if(this is null)
+		{
+			return;
+		}
 
 		var s = JsonSerializer.Serialize(this, JsonOption);
 		using var writer = new StreamWriter(UserSettingsPath, false, Encoding.UTF8);
@@ -95,4 +95,6 @@ public class UserSettings
 }
 
 [AttributeUsage(AttributeTargets.Property)]
-public class HideForUserAttribute : Attribute{}
+public class HideForUserAttribute : Attribute
+{
+}
