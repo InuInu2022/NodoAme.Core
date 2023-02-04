@@ -806,7 +806,8 @@ public class Wrapper : ITalkWrapper
 		ExportFileType fileType = ExportFileType.CCS,
 		BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
 		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
-		NoPitchModes noPitch = NoPitchModes.REMOVE
+		NoPitchModes noPitch = NoPitchModes.NONE,
+		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME
 	)
 	{
 		if (this.engine is null)
@@ -914,7 +915,9 @@ public class Wrapper : ITalkWrapper
 			notesList,
 			timingNode,
 			engineType,
-			NOTE_OFFSET);
+			NOTE_OFFSET,
+			noSoundVowelsModes
+		);
 
 		// TMGの線を書き込む
 		ProjectWriter.WriteElementsTiming(tmplTrack, timingNode);

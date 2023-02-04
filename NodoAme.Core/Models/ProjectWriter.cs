@@ -25,7 +25,8 @@ public static class ProjectWriter{
 		List<dynamic>? notesList,
 		XElement timingNode,
 		string engineType,
-		double noteOffset)
+		double noteOffset,
+		NoSoundVowelsModes noSoundVowelMode)
 	{
 		var phCount = 0;
 		var pauCount = 0;
@@ -57,11 +58,12 @@ public static class ProjectWriter{
 
 				if (!PhonemeUtil.IsPau(ph))
 				{
-					var addPhoneme = PhonemeUtil.IsNoSoundVowel(pText) switch
-					{
-						true => pText.ToLower(),    //無声母音は小文字化
-						false => pText
-					};
+					var addPhoneme = pText;
+					if(PhonemeUtil.IsNoSoundVowel(pText)
+						&& noSoundVowelMode == NoSoundVowelsModes.VOLUME){
+						addPhoneme = pText.ToLower();
+					}
+
 					phText += addPhoneme + ",";
 					noteLen += (int)NoteUtil.GetTickDuration(end - start);
 					phCount++;
@@ -351,7 +353,8 @@ public static class ProjectWriter{
 		XElement parameterRoot,
 		double paramLen,
 		int trackParamOffsetIndex,
-		double indexSpanTime
+		double indexSpanTime,
+		NoSoundVowelsModes noSoundVowelsModes
 	)
 	{
 		//Volumeの線を書き込む
@@ -399,7 +402,12 @@ public static class ProjectWriter{
 		};
 
 		var noSoundVowels = phs
-			.Where(l => l.Phoneme is not null && reg.IsMatch(l.Phoneme))
+			.AsParallel()
+			.Where(l =>
+				l.Phoneme is not null &&
+					noSoundVowelsModes is not NoSoundVowelsModes.PHONEME &&
+					reg.IsMatch(l.Phoneme)
+			)
 			;
 		foreach (var ph in noSoundVowels)
 		{

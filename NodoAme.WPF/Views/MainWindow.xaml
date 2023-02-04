@@ -702,6 +702,20 @@
                         ItemsSource="{Binding NoPitchModesList}"
                         SelectedItem="{Binding NoPitchMode}"
                         />
+              <Label Content="無声母音:"
+                     Margin="10,10,5,0"
+                     VerticalAlignment="Center"
+                     />
+              <ComboBox x:Name="noSoundVowelsMode"
+                        Width="Auto"
+                        ToolTip="【⚠実験機能】"
+                        Margin="3,10,0,0"
+                        FontSize="12.5"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding NoSoundVowelModeList}"
+                        SelectedItem="{Binding NoSoundVowelMode}"
+                        />
               <ItemsControl x:Name="songExportFileExtList"
                       Margin="0,0,0,0"
                       MaxHeight="300"

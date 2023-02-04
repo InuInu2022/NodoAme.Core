@@ -55,7 +55,7 @@ public class MainWindowViewModel
 	/// </summary>
 	public ObservableCollection<SongVoiceStyleParam> SongVoiceStyleParams { get; set; }
 	public IConfigurationRoot Config { get; private set; }
-	public Models.UserSettings UserSettings { get; set; }
+	public UserSettings UserSettings { get; set; }
 
 	private readonly Settings setting;
 	private Wrapper talkEngine;
@@ -117,9 +117,15 @@ public class MainWindowViewModel
 
 	public IEnumerable<NoteSplitModes> NoteSplitModeList { get; set; }
 		= Enum.GetValues(typeof(NoteSplitModes)).Cast<NoteSplitModes>();
+
 	public NoPitchModes NoPitchMode { get; set; }
 	public IEnumerable<NoPitchModes> NoPitchModesList { get; set; }
 		= Enum.GetValues(typeof(NoPitchModes)).Cast<NoPitchModes>();
+
+	public NoSoundVowelsModes NoSoundVowelMode { get; set; }
+
+	public IEnumerable<NoSoundVowelsModes> NoSoundVowelModeList { get; set; }
+		= Enum.GetValues(typeof(NoSoundVowelsModes)).Cast<NoSoundVowelsModes>();
 
 	public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
 		= new ObservableCollection<SongSoftTracFileExtSetting>();
@@ -299,6 +305,7 @@ public class MainWindowViewModel
 		ExportFileExtentions = new ObservableCollection<SongSoftTracFileExtSetting>(UserSettings.ExportFileExtentions);
 		BreathSuppress = UserSettings.BreathSuppress;
 		NoPitchMode = UserSettings.NoPitchMode;
+		NoSoundVowelMode = UserSettings.NoSoundVowelMode;
 
 		CheckUserSettingsWhenDebug();   //実装もれのチェック
 
@@ -944,7 +951,8 @@ public class MainWindowViewModel
 			(exportFileType != 0) ? exportFileType : ExportFileType.CCS,
 			BreathSuppress,
 			songVoiceStyles: SongVoiceStyleParams,
-			noPitch: NoPitchMode
+			noPitch: NoPitchMode,
+			noSoundVowelsModes: NoSoundVowelMode
 		);
 
 		if (IsExportSerifText)
