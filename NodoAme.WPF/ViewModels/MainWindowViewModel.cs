@@ -117,6 +117,9 @@ public class MainWindowViewModel
 
 	public IEnumerable<NoteSplitModes> NoteSplitModeList { get; set; }
 		= Enum.GetValues(typeof(NoteSplitModes)).Cast<NoteSplitModes>();
+	public NoPitchModes NoPitchMode { get; set; }
+	public IEnumerable<NoPitchModes> NoPitchModesList { get; set; }
+		= Enum.GetValues(typeof(NoPitchModes)).Cast<NoPitchModes>();
 
 	public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
 		= new ObservableCollection<SongSoftTracFileExtSetting>();
@@ -295,6 +298,7 @@ public class MainWindowViewModel
 		NoteSplitMode = UserSettings.NoteSplitMode;
 		ExportFileExtentions = new ObservableCollection<SongSoftTracFileExtSetting>(UserSettings.ExportFileExtentions);
 		BreathSuppress = UserSettings.BreathSuppress;
+		NoPitchMode = UserSettings.NoPitchMode;
 
 		CheckUserSettingsWhenDebug();   //実装もれのチェック
 
@@ -939,7 +943,8 @@ public class MainWindowViewModel
 			noteSplitMode: NoteSplitMode,
 			(exportFileType != 0) ? exportFileType : ExportFileType.CCS,
 			BreathSuppress,
-			songVoiceStyles: SongVoiceStyleParams
+			songVoiceStyles: SongVoiceStyleParams,
+			noPitch: NoPitchMode
 		);
 
 		if (IsExportSerifText)

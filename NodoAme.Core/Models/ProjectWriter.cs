@@ -263,7 +263,9 @@ public static class ProjectWriter{
 		XElement parameterRoot,
 		double paramLen,
 		string engineType,
-		int trackParamOffsetIndex)
+		int trackParamOffsetIndex,
+		NoPitchModes noPitch
+	)
 	{
 		#region write_logf0
 
@@ -284,13 +286,24 @@ public static class ProjectWriter{
 						=> Math.Log(parameters.f0![i]),
 				_ => 0
 			};
-			if (parameters.f0![i] <= 0) { continue; }
 
-			var node = new XElement(
-				"Data",
-				new XAttribute("Index", (trackParamOffsetIndex + i).ToString()),
-				logF0.ToString()
-			);
+			if (noPitch == NoPitchModes.NONE &&
+				parameters.f0![i] <= 0) {
+				continue;
+			}
+
+			var node = (parameters.f0![i] > 0) ?
+				new XElement(
+					"Data",
+					new XAttribute("Index", (trackParamOffsetIndex + i).ToString()),
+					logF0.ToString()
+				) :
+				//default pitch remove
+				new XElement(
+					"NoData",
+					new XAttribute("Index", (trackParamOffsetIndex + i).ToString())
+				)
+			;
 			logF0Node.Add(node);
 		}
 

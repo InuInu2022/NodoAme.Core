@@ -27,7 +27,9 @@ public interface ITalkWrapper
 		NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND,
 		ExportFileType fileType = ExportFileType.CCS,
 		BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
-		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null);
+		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
+		NoPitchModes noPitch = NoPitchModes.REMOVE
+	);
 
 	ValueTask<bool> ExportSerifTextFileAsync(
 		string serifText,

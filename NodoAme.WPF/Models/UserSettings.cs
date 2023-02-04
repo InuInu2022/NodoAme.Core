@@ -17,7 +17,7 @@ namespace NodoAme.Models;
 public class UserSettings
 {
 	[HideForUser]
-	public string Version { get; } = "0.3.0";
+	public string Version { get; } = "0.4.0";
 
 	public int DefaultSerifLines { get; set; } = 30;    //初期表示セリフ行
 	public string? PathToSaveDirectory { get; set; } = "./out/";
@@ -59,6 +59,7 @@ public class UserSettings
 	public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
 	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_SILIENTNOTE;
 	public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NO_BREATH;
+	public NoPitchModes NoPitchMode { get; set; }
 
 	[JsonIgnore]
 	public const string UserSettingsFileName = "usersettings.json";

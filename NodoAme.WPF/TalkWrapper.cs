@@ -805,7 +805,8 @@ public class Wrapper : ITalkWrapper
 		NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND,
 		ExportFileType fileType = ExportFileType.CCS,
 		BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
-		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null
+		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
+		NoPitchModes noPitch = NoPitchModes.REMOVE
 	)
 	{
 		if (this.engine is null)
@@ -930,12 +931,15 @@ public class Wrapper : ITalkWrapper
 		double paramLen = GetParametersLength(serifLen);
 
 		//F0をピッチ線として書き込む
-		XElement logF0Node = ProjectWriter.WriteElementsLogF0(
-			parameters,
-			parameterRoot,
-			paramLen,
-			engineType,
-			TRACK_PARAM_OFFSET_INDEX);
+		XElement logF0Node = ProjectWriter
+			.WriteElementsLogF0(
+				parameters,
+				parameterRoot,
+				paramLen,
+				engineType,
+				TRACK_PARAM_OFFSET_INDEX,
+				noPitch
+			);
 		sw.Stop();
 		Debug.WriteLine($"TIME[end f0]:{sw.ElapsedMilliseconds}");
 		sw.Restart();
