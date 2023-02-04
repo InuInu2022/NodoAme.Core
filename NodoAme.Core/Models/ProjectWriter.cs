@@ -238,6 +238,7 @@ public static class ProjectWriter{
 		XElement scoreRoot,
 		string engineType
 	){
+		throw new NotImplementedException();
 		/*0.0がデフォルトではないので0を指定すると可笑しくなる
 		scoreRoot.SetAttributeValue("Alpha", 0.0);
 		if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
