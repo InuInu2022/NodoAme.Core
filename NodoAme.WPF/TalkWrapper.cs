@@ -954,7 +954,9 @@ public class Wrapper : ITalkWrapper
 			parameterRoot,
 			paramLen,
 			TRACK_PARAM_OFFSET_INDEX,
-			INDEX_SPAN_TIME);
+			INDEX_SPAN_TIME,
+			noSoundVowelsModes
+		);
 		sw.Stop();
 		Debug.WriteLine($"TIME[end vol]:{sw.ElapsedMilliseconds}");
 		sw.Restart();
