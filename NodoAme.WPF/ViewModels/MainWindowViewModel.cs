@@ -136,6 +136,9 @@ public class MainWindowViewModel
 	{ get; set; }
 		= Enum.GetValues(typeof(ScoreDynamics)).Cast<ScoreDynamics>();
 
+	public double ExportFileTempo { get; set; }
+		= 150;
+
 	#endregion
 
 	#region commands
@@ -944,22 +947,24 @@ public class MainWindowViewModel
 		ExportSongCastItems[ExportSongCastSelected].ExportFile;
 
 		await this.talkEngine.ExportFileAsync(
-			serifText,
-			castId,
-			alpha,
-			isTrack,
-			IsOpenCeVIOWhenExport,
-			PathToSaveDirectory,
-			SongExportLyricsMode,
-			songCast,
-			AdaptingNoteToPitchMode,
-			noteSplitMode: NoteSplitMode,
-			(exportFileType != 0) ? exportFileType : ExportFileType.CCS,
-			BreathSuppress,
-			songVoiceStyles: SongVoiceStyleParams,
-			noPitch: NoPitchMode,
-			noSoundVowelsModes: NoSoundVowelMode,
-			dynamics: ExportScoreDynamics
+			new(serifText, castId)
+			{
+				Alpha = alpha,
+				IsExportAsTrack = isTrack,
+				IsOpenCeVIO = IsOpenCeVIOWhenExport,
+				ExportPath = PathToSaveDirectory,
+				ExportMode = SongExportLyricsMode,
+				Cast = songCast,
+				NoteAdaptMode = AdaptingNoteToPitchMode,
+				NoteSplitMode = NoteSplitMode,
+				FileType = (exportFileType != 0) ? exportFileType : ExportFileType.CCS,
+				BreathSuppress = BreathSuppress,
+				SongVoiceStyles = SongVoiceStyleParams,
+				NoPitch = NoPitchMode,
+				NoSoundVowelsModes = NoSoundVowelMode,
+				Dynamics = ExportScoreDynamics,
+				Tempo = ExportFileTempo,
+			}
 		);
 
 		if (IsExportSerifText)

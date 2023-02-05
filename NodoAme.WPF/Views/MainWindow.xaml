@@ -365,16 +365,26 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
-          <ComboBox x:Name="scoreDynamicsByCast"
-              Width="Auto"
-              ToolTip="Dynamics"
-              Margin="3,10,0,0"
-              FontSize="12.5"
-              VerticalAlignment="Top"
-              HorizontalAlignment="Left"
-              ItemsSource="{Binding ExportScoreDynamicsList}"
-              SelectedItem="{Binding ExportScoreDynamics}"
-              />
+          <StackPanel Orientation="Vertical">
+            <ComboBox x:Name="scoreDynamicsByCast"
+                Width="Auto"
+                ToolTip="Dynamics"
+                FontSize="12.5"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding ExportScoreDynamicsList}"
+                SelectedItem="{Binding ExportScoreDynamics}"
+                />
+            <ui:NumberBox
+                ToolTip="Tempo"
+                Width="Auto"
+                FontSize="12.5"
+                SmallChange="1"
+                SpinButtonPlacementMode="Compact"
+                PlaceholderText="150"
+                ValidationMode="InvalidInputOverwritten"
+                Value="{Binding ExportFileTempo}" />
+          </StackPanel>
         </WrapPanel>
       </ScrollViewer>
     </Expander>

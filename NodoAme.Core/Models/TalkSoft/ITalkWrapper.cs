@@ -30,8 +30,11 @@ public interface ITalkWrapper
 		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
 		NoPitchModes noPitch = NoPitchModes.REMOVE,
 		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME,
-		ScoreDynamics dynamics = ScoreDynamics.N
+		ScoreDynamics dynamics = ScoreDynamics.N,
+		double tempo = 150
 	);
+
+	ValueTask<bool> ExportFileAsync(ExportFileOption option);
 
 	ValueTask<bool> ExportSerifTextFileAsync(
 		string serifText,

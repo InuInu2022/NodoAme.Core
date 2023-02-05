@@ -30,16 +30,16 @@ namespace NodoAme;
 /// </summary>
 public class Wrapper : ITalkWrapper
 {
-	private const double NOTE_OFFSET = 1.6;
+	//private const double NOTE_OFFSET = 1.6;
 	/// <summary>
 	/// 1小節開始目のindex値。LogF0/C0など。
 	/// </summary>
-	private const int TRACK_PARAM_OFFSET_INDEX = 320;
+	//private const int TRACK_PARAM_OFFSET_INDEX = 320;
 	private const double INDEX_SPAN_TIME = 0.005;
 	private const int SEC_RATE = 10000000;
 	private const int SAMPLE_RATE = 48000;
 
-	private readonly char[] ENGLISH_SPLITTER = new char[] { '.', '?' };
+	//private readonly char[] ENGLISH_SPLITTER = new char[] { '.', '?' };
 
 	//private const string TalkEngine.CEVIO = "CeVIO";
 	//private const string TalkEngine.OPENJTALK = "OpenJTalk";
@@ -788,6 +788,226 @@ public class Wrapper : ITalkWrapper
 	/// <summary>
 	/// ファイルにエクスポートする
 	/// </summary>
+	public async ValueTask<bool> ExportFileAsync(ExportFileOption option){
+		if (this.engine is null)
+		{
+			//throw new NullReferenceException();
+			return false;//new ValueTask<bool>(false);
+		}
+
+		var sw = new System.Diagnostics.Stopwatch();
+		sw.Start();
+
+		//出力SongCast
+		this.CastToExport = option.CastId;
+		Debug.WriteLine($"songcast:{option.CastId}");
+
+		//テンプレートファイル読み込み
+		var tmplTrack = option.IsExportAsTrack ?
+			XElement.Load("./template/temp.track.xml") :   //ccst file
+			XElement.Load("./template/temp.track.xml")     //TODO:ccs file（現在はトラックのみ）
+			;
+		var guid = Guid.NewGuid().ToString("D");    //GUIDの生成
+
+		sw.Stop();
+		Debug.WriteLine($"TIME[read xml]:{sw.ElapsedMilliseconds}");
+		sw.Restart();
+
+		//TODO:エンジンごとの解析部分とccst加工部分を分ける
+		if (engineType == TalkEngine.CEVIO)
+		{
+			engine.Cast = TalkVoice!.Name;
+			SetVoiceStyle(false);
+		}
+		else if (engineType == TalkEngine.VOICEVOX)
+		{
+			engine.Style = this.VoiceStyle;
+			SetVoiceStyle(false);
+		}
+
+		SetEngineParam();
+
+		//serifLen = engine.GetTextDuration(serifText);
+		var dandp = await this.GetTextDurationAndPhonemesAsync(option.SerifText);
+		///
+		double serifLen = dandp.duration;
+		var phs = dandp.phs;
+		//var labels = await GetLabelsAsync(serifText);
+
+		Debug.WriteLine($"--TIME[tmg eliminate(text duration)]:{sw.ElapsedMilliseconds}");
+
+		//TODO: .labファイル出力
+		MakeLabFile(phs);
+
+		//Estimate F0
+		WorldParameters parameters = await EstimateF0Async(option.SerifText);
+
+		//Note elements
+		var scoreNodes = tmplTrack.Descendants("Score");
+		var scoreRoot = scoreNodes.First();
+
+		//声質(Alpha)指定
+		ProjectWriter.WriteAttributeAlpha(scoreRoot, engineType);
+
+		//感情(Emotion)設定
+		ProjectWriter.WriteAttributeEmotion(
+			option.Cast,
+			option.SongVoiceStyles,
+			scoreRoot);
+
+		//tmplTrack.Element("Score");
+		//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
+		var duration = NoteUtil
+			.GetTickDuration(
+				serifLen,
+				option.Tempo);
+		Debug.WriteLine($"duration :{duration}");
+
+		//Convert phonemes from En to Ja
+		if (option.ExportMode == ExportLyricsMode.EN_TO_JA)
+		{
+			phs = PhonemeConverter.EnglishToJapanese(phs);
+		}
+
+		//split notes
+		(List<dynamic>? notesList, int phNum)
+			= await ProjectWriter.SplitPhonemesToNotesAsync(phs, option.ExportMode, option.NoteSplitMode);
+		Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
+
+		if (notesList is null)
+		{
+			return false;
+		}
+		///<summary>
+		/// timing node root
+		/// </summary>
+		var timingNode = new XElement(
+			"Timing",
+			new XAttribute("Length", (phNum * 5) + 10)
+		);
+
+		double noteOffset = 60 / option.Tempo * 4;
+
+		//Scoreを計算して書き込む
+		ProjectWriter.CulcScores(
+			option.ExportMode,
+			option.NoteAdaptMode,
+			option.NoteSplitMode,
+			parameters,
+			scoreRoot,
+			notesList,
+			timingNode,
+			engineType,
+			noteOffset, //NOTE_OFFSET,
+			option.NoSoundVowelsModes,
+			option.Tempo
+		);
+
+		//トラック全体のDynamicsを書き込む or 上書き
+		ProjectWriter.WriteElementsDynamics(
+			scoreRoot,
+			option.Dynamics
+		);
+		//トラック全体のTempoを上書き
+		//デフォルトはよくあるBPM=150
+		ProjectWriter.WriteElementsTempo(
+			tmplTrack,
+			option.Tempo
+		);
+
+		// TMGの線を書き込む
+		ProjectWriter.WriteElementsTiming(tmplTrack, timingNode);
+		sw.Stop();
+		Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
+		sw.Restart();
+
+		//LogF0 elements
+
+		//LogF0, Alpha等のルート要素を取得
+		var parameterRoot = tmplTrack
+			.Descendants("Parameter")
+			.First();
+		double paramLen = GetParametersLength(serifLen,option.Tempo);
+
+		//F0をピッチ線として書き込む
+		XElement logF0Node = ProjectWriter
+			.WriteElementsLogF0(
+				parameters,
+				parameterRoot,
+				paramLen,
+				engineType,
+				(int)(noteOffset/INDEX_SPAN_TIME),
+				//TRACK_PARAM_OFFSET_INDEX,
+				option.NoPitch
+			);
+		sw.Stop();
+		Debug.WriteLine($"TIME[end f0]:{sw.ElapsedMilliseconds}");
+		sw.Restart();
+
+		//VOL elements
+		XElement volumeNode = ProjectWriter.WriteElementsC0(
+			option.BreathSuppress,
+			phs,
+			parameterRoot,
+			paramLen,
+			(int)(noteOffset/INDEX_SPAN_TIME),
+			INDEX_SPAN_TIME,
+			option.NoSoundVowelsModes
+		);
+		sw.Stop();
+		Debug.WriteLine($"TIME[end vol]:{sw.ElapsedMilliseconds}");
+		sw.Restart();
+
+		//TODO:エンジンごとの解析部分とccst加工部分を分ける
+		//TODO:ccst加工部分の共通処理化
+
+		//Unit elements
+		ProjectWriter.WriteElementsUnit(tmplTrack, guid, serifLen, CastToExport);
+
+		//Group elements
+		ProjectWriter.WriteElementsGroup(option.SerifText, option.Cast, tmplTrack, guid, CastToExport);
+
+		//tssprj
+		var tssprj = option.FileType == ExportFileType.TSSPRJ
+			? ProjectWriter.WriteTssprj(
+				option.Cast,
+				scoreRoot,
+				timingNode,
+				logF0Node,
+				volumeNode)
+			: Array.Empty<byte>();
+
+		sw.Stop();
+		Debug.WriteLine($"TIME[end genarate xml]:{sw.ElapsedMilliseconds}");
+		sw.Restart();
+
+		//set trac file name
+		dynamic exportData = option.FileType switch
+		{
+			ExportFileType.TSSPRJ => tssprj,
+			ExportFileType.CCS => tmplTrack,
+			_ => tmplTrack
+		};
+		await ExportCoreAsync(
+			option.SerifText,
+			option.ExportPath,
+			exportData,
+			option.IsOpenCeVIO,
+			option.FileType,
+			option.Cast
+		);
+
+		sw.Stop();
+		Debug.WriteLine($"TIME[end export file.]:{sw.ElapsedMilliseconds}");
+		//sw.Restart();
+
+		logger.Info($"Export file sucess!{option.ExportPath}:{option.SerifText}");
+		return true;//new ValueTask<bool>(true);
+	}
+
+	/// <summary>
+	/// ファイルにエクスポートする
+	/// </summary>
 	/// <param name="serifText"></param>
 	/// <param name="isExportAsTrack">trueの場合はccst</param>
 	/// <returns></returns>
@@ -808,211 +1028,17 @@ public class Wrapper : ITalkWrapper
 		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
 		NoPitchModes noPitch = NoPitchModes.NONE,
 		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME,
-		ScoreDynamics dynamics = ScoreDynamics.N
+		ScoreDynamics dynamics = ScoreDynamics.N,
+		double tempo = 150
 	)
 	{
-		if (this.engine is null)
-		{
-			//throw new NullReferenceException();
-			return false;//new ValueTask<bool>(false);
-		}
-
-		var sw = new System.Diagnostics.Stopwatch();
-		sw.Start();
-
-		//出力SongCast
-		this.CastToExport = castId;
-		Debug.WriteLine($"songcast:{castId}");
-
-		//テンプレートファイル読み込み
-		var tmplTrack = isExportAsTrack ?
-			XElement.Load(@"./template/temp.track.xml") :   //ccst file
-			XElement.Load(@"./template/temp.track.xml")     //TODO:ccs file（現在はトラックのみ）
-			;
-		var guid = Guid.NewGuid().ToString("D");    //GUIDの生成
-
-		sw.Stop();
-		Debug.WriteLine($"TIME[read xml]:{sw.ElapsedMilliseconds}");
-		sw.Restart();
-
-		///
-		double serifLen = 0.0;
-
-		//TODO:エンジンごとの解析部分とccst加工部分を分ける
-		if (engineType == TalkEngine.CEVIO)
-		{
-			engine.Cast = TalkVoice!.Name;
-			SetVoiceStyle(false);
-		}
-		else if (engineType == TalkEngine.VOICEVOX)
-		{
-			engine.Style = this.VoiceStyle;
-			SetVoiceStyle(false);
-		}
-
-		SetEngineParam();
-
-		//serifLen = engine.GetTextDuration(serifText);
-		var dandp = await this.GetTextDurationAndPhonemesAsync(serifText);
-		serifLen = dandp.duration;
-		var phs = dandp.phs;
-		//var labels = await GetLabelsAsync(serifText);
-
-		Debug.WriteLine($"--TIME[tmg eliminate(text duration)]:{sw.ElapsedMilliseconds}");
-
-		//TODO: .labファイル出力
-		MakeLabFile(phs);
-
-		//Estimate F0
-		WorldParameters parameters = await EstimateF0Async(serifText);
-
-		//Note elements
-		var scoreNodes = tmplTrack.Descendants("Score");
-		var scoreRoot = scoreNodes.First();
-
-		//声質(Alpha)指定
-		ProjectWriter.WriteAttributeAlpha(scoreRoot, engineType);
-
-		//感情(Emotion)設定
-		ProjectWriter.WriteAttributeEmotion(cast, songVoiceStyles, scoreRoot);
-
-		//tmplTrack.Element("Score");
-		//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
-		var duration = NoteUtil.GetTickDuration(serifLen);
-		Debug.WriteLine($"duration :{duration}");
-
-		//Convert phonemes from En to Ja
-		if (exportMode == ExportLyricsMode.EN_TO_JA)
-		{
-			phs = PhonemeConverter.EnglishToJapanese(phs);
-		}
-
-		//split notes
-		(List<dynamic>? notesList, int phNum)
-			= await ProjectWriter.SplitPhonemesToNotesAsync(phs, exportMode, noteSplitMode);
-
-		Debug.WriteLine($"--TIME[tmg eliminate(split notes)]:{sw.ElapsedMilliseconds}");
-
-		if (notesList is null)
-		{
-			return false;
-		}
-
-		///<summary>
-		/// timing node root
-		/// </summary>
-		var timingNode = new XElement(
-			"Timing",
-			new XAttribute("Length", (phNum * 5) + 10)
+		return await ExportFileAsync(
+			new(serifText, castId)
+			{
+				Alpha = alpha,
+				IsExportAsTrack = isExportAsTrack
+			}
 		);
-
-		//Scoreを計算して書き込む
-		ProjectWriter.CulcScores(
-			exportMode,
-			noteAdaptMode,
-			noteSplitMode,
-			parameters,
-			scoreRoot,
-			notesList,
-			timingNode,
-			engineType,
-			NOTE_OFFSET,
-			noSoundVowelsModes
-		);
-
-		//トラック全体のDynamicsを書き込む or 上書き
-		ProjectWriter.WriteElementsDynamics(
-			scoreRoot,
-			dynamics
-		);
-
-		// TMGの線を書き込む
-		ProjectWriter.WriteElementsTiming(tmplTrack, timingNode);
-		sw.Stop();
-		Debug.WriteLine($"TIME[end tmg eliminate]:{sw.ElapsedMilliseconds}");
-		sw.Restart();
-
-		//LogF0 elements
-
-		//LogF0, Alpha等のルート要素を取得
-		var parameterRoot = tmplTrack
-			.Descendants("Parameter")
-			.First();
-		double paramLen = GetParametersLength(serifLen);
-
-		//F0をピッチ線として書き込む
-		XElement logF0Node = ProjectWriter
-			.WriteElementsLogF0(
-				parameters,
-				parameterRoot,
-				paramLen,
-				engineType,
-				TRACK_PARAM_OFFSET_INDEX,
-				noPitch
-			);
-		sw.Stop();
-		Debug.WriteLine($"TIME[end f0]:{sw.ElapsedMilliseconds}");
-		sw.Restart();
-
-		//VOL elements
-		XElement volumeNode = ProjectWriter.WriteElementsC0(
-			breathSuppress,
-			phs,
-			parameterRoot,
-			paramLen,
-			TRACK_PARAM_OFFSET_INDEX,
-			INDEX_SPAN_TIME,
-			noSoundVowelsModes
-		);
-		sw.Stop();
-		Debug.WriteLine($"TIME[end vol]:{sw.ElapsedMilliseconds}");
-		sw.Restart();
-
-		//TODO:エンジンごとの解析部分とccst加工部分を分ける
-		//TODO:ccst加工部分の共通処理化
-
-		//Unit elements
-		ProjectWriter.WriteElementsUnit(tmplTrack, guid, serifLen, CastToExport);
-
-		//Group elements
-		ProjectWriter.WriteElementsGroup(serifText, cast, tmplTrack, guid, CastToExport);
-
-		//tssprj
-		var tssprj = fileType == ExportFileType.TSSPRJ
-			? ProjectWriter.WriteTssprj(
-				cast,
-				scoreRoot,
-				timingNode,
-				logF0Node,
-				volumeNode)
-			: Array.Empty<byte>();
-
-		sw.Stop();
-		Debug.WriteLine($"TIME[end genarate xml]:{sw.ElapsedMilliseconds}");
-		sw.Restart();
-
-		//set trac file name
-		dynamic exportData = fileType switch
-		{
-			ExportFileType.TSSPRJ => tssprj,
-			ExportFileType.CCS => tmplTrack,
-			_ => tmplTrack
-		};
-		await ExportCoreAsync(
-			serifText,
-			exportPath,
-			exportData,
-			isOpenCeVIO,
-			fileType,
-			cast
-		);
-
-		sw.Stop();
-		Debug.WriteLine($"TIME[end export file.]:{sw.ElapsedMilliseconds}");
-		//sw.Restart();
-
-		logger.Info($"Export file sucess!{exportPath}:{serifText}");
-		return true;//new ValueTask<bool>(true);
 	}
 
 	/// <summary>
@@ -1048,12 +1074,14 @@ public class Wrapper : ITalkWrapper
 		return parameters;
 	}
 
-	private static double GetParametersLength(double serifLen)
+	public static double GetParametersLength(double serifLen, double tempo)
 	{
 		var serifIndexs = Math.Round(serifLen / INDEX_SPAN_TIME);
-		var offsetSerifIndex = serifIndexs + TRACK_PARAM_OFFSET_INDEX;
-		var d = Math.Ceiling(offsetSerifIndex / TRACK_PARAM_OFFSET_INDEX);
-		return (d + 1) * TRACK_PARAM_OFFSET_INDEX;
+		var noteOffset = 60.0 / tempo * 4;
+		var iOffset = (int)(noteOffset / INDEX_SPAN_TIME);
+		var offsetSerifIndex = serifIndexs + iOffset;
+		var d = Math.Ceiling(offsetSerifIndex / iOffset);
+		return (d + 1) * iOffset;
 	}
 
 	/// <summary>

@@ -27,6 +27,20 @@ public static class NoteUtil
 	{
 		return 960 / 0.4 * serifLen;
 	}
+
+	///<inheritdoc cref="GetTickDuration(double)"/>
+    /// <param name="tempo">tempo, BPM</param>
+	public static double GetTickDuration(
+		double serifLen,
+		double tempo)
+	{
+		if(tempo <= 0)
+		{
+			tempo = 150.0;
+		}
+
+		return 960 / (60.0 / tempo) * serifLen;
+	}
 }
 
 public enum NoteAdaptMode

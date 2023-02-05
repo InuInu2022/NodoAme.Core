@@ -26,7 +26,8 @@ public static class ProjectWriter{
 		XElement timingNode,
 		string engineType,
 		double noteOffset,
-		NoSoundVowelsModes noSoundVowelMode)
+		NoSoundVowelsModes noSoundVowelMode,
+		double tempo)
 	{
 		var phCount = 0;
 		var pauCount = 0;
@@ -52,7 +53,7 @@ public static class ProjectWriter{
 				if (startPhonemeTime > start)
 				{
 					//最初の音素の開始時刻を指定
-					startClock = Math.Round(NoteUtil.GetTickDuration(start));
+					startClock = Math.Round(NoteUtil.GetTickDuration(start, tempo));
 					startPhonemeTime = start;
 				}
 
@@ -65,7 +66,7 @@ public static class ProjectWriter{
 					}
 
 					phText += addPhoneme + ",";
-					noteLen += (int)NoteUtil.GetTickDuration(end - start);
+					noteLen += (int)NoteUtil.GetTickDuration(end - start, tempo);
 					phCount++;
 				}
 				else
@@ -166,7 +167,7 @@ public static class ProjectWriter{
 			};
 
 			//note
-			const int offset = 3840;
+			const int offset = 3840;	//960*4
 			var last = scoreRoot.Elements("Note").LastOrDefault();
 			if(last?.HasAttributes == true && last.Attribute("Clock") is not null)
 			{
@@ -352,6 +353,21 @@ public static class ProjectWriter{
 			new XAttribute("Clock", clock),
 			new XAttribute("Value", (int)dynamics)
 		);
+	}
+
+	public static void WriteElementsTempo(
+		XElement tmplTrack,
+		double tempo = 150.0
+	){
+		var songRoot = tmplTrack
+			.Descendants("Song")
+			.First();
+		var nodes = songRoot
+			.Element("Tempo")
+			.Elements("Sound");
+		var first = nodes
+			.First(v => int.Parse(v.Attribute("Clock").Value) == 0);
+		first.SetAttributeValue("Tempo",tempo);
 	}
 
 	/// <summary>
