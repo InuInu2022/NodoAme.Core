@@ -365,6 +365,16 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
+          <ComboBox x:Name="scoreDynamicsByCast"
+              Width="Auto"
+              ToolTip="Dynamics"
+              Margin="3,10,0,0"
+              FontSize="12.5"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Left"
+              ItemsSource="{Binding ExportScoreDynamicsList}"
+              SelectedItem="{Binding ExportScoreDynamics}"
+              />
         </WrapPanel>
       </ScrollViewer>
     </Expander>

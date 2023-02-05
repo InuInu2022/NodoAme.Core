@@ -238,7 +238,7 @@ public static class ProjectWriter{
 		XElement scoreRoot,
 		string engineType
 	){
-		throw new NotImplementedException();
+		//throw new NotImplementedException();
 		/*0.0がデフォルトではないので0を指定すると可笑しくなる
 		scoreRoot.SetAttributeValue("Alpha", 0.0);
 		if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
@@ -314,6 +314,44 @@ public static class ProjectWriter{
 
 		#endregion
 		return logF0Node;
+	}
+
+	public static void WriteElementsDynamics(
+		XElement scoreRoot,
+		ScoreDynamics dynamics,
+		int clock = 0
+	)
+	{
+		var nodes = scoreRoot
+			.Elements("Dynamics");
+		var exists = nodes
+			.Any(v => v.HasAttributes
+				&& v.Attribute("Clock").Value == clock.ToString())
+			;
+
+		if(exists){
+			var target = nodes
+				.First(v => v.Attribute("Clock").Value == clock.ToString());
+			target
+				.Attribute("Value")
+				.SetValue((int)dynamics);
+		}else if( nodes.Any() ){
+			scoreRoot
+				.AddFirst(CreateDynamicsElement(dynamics, clock));
+		}
+		else{
+			var next = nodes
+				.First(v => int.Parse(v.Attribute("Clock").Value) > clock);
+			next.AddBeforeSelf(CreateDynamicsElement(dynamics, clock));
+		}
+	}
+
+	private static XElement CreateDynamicsElement(ScoreDynamics dynamics, int clock){
+		return new XElement(
+			"Dynamics",
+			new XAttribute("Clock", clock),
+			new XAttribute("Value", (int)dynamics)
+		);
 	}
 
 	/// <summary>

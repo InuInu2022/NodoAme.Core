@@ -130,6 +130,12 @@ public class MainWindowViewModel
 	public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
 		= new ObservableCollection<SongSoftTracFileExtSetting>();
 
+	public ScoreDynamics ExportScoreDynamics { get; set; }
+		= ScoreDynamics.N;
+	public IEnumerable<ScoreDynamics> ExportScoreDynamicsList
+	{ get; set; }
+		= Enum.GetValues(typeof(ScoreDynamics)).Cast<ScoreDynamics>();
+
 	#endregion
 
 	#region commands
@@ -952,7 +958,8 @@ public class MainWindowViewModel
 			BreathSuppress,
 			songVoiceStyles: SongVoiceStyleParams,
 			noPitch: NoPitchMode,
-			noSoundVowelsModes: NoSoundVowelMode
+			noSoundVowelsModes: NoSoundVowelMode,
+			dynamics: ExportScoreDynamics
 		);
 
 		if (IsExportSerifText)

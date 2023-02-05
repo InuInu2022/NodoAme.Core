@@ -807,7 +807,8 @@ public class Wrapper : ITalkWrapper
 		BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
 		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
 		NoPitchModes noPitch = NoPitchModes.NONE,
-		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME
+		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME,
+		ScoreDynamics dynamics = ScoreDynamics.N
 	)
 	{
 		if (this.engine is null)
@@ -917,6 +918,12 @@ public class Wrapper : ITalkWrapper
 			engineType,
 			NOTE_OFFSET,
 			noSoundVowelsModes
+		);
+
+		//トラック全体のDynamicsを書き込む or 上書き
+		ProjectWriter.WriteElementsDynamics(
+			scoreRoot,
+			dynamics
 		);
 
 		// TMGの線を書き込む

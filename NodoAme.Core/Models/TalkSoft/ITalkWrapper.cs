@@ -29,7 +29,8 @@ public interface ITalkWrapper
 		BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
 		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
 		NoPitchModes noPitch = NoPitchModes.REMOVE,
-		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME
+		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME,
+		ScoreDynamics dynamics = ScoreDynamics.N
 	);
 
 	ValueTask<bool> ExportSerifTextFileAsync(
