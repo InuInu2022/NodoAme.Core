@@ -1,4 +1,3 @@
-#nullable disable
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,32 +34,32 @@ public class MainWindowViewModel
 	public string ConvertedText { get; set; }
 	public ObservableCollection<SerifViewModel> Serifs { get; private set; }
 	public int SelectedSerifIndex { get; private set; }
-	public ObservableCollection<TalkSoft> TalkSoftItems { get; private set; }
+	public ObservableCollection<TalkSoft>? TalkSoftItems { get; private set; }
 	public int TalkSoftSelected { get; set; } = 0;
-	public ObservableCollection<TalkSoftParam> TalkSoftParams { get; set; }
-	public ObservableCollection<TalkSoftVoice> TalkVoiceItems { get; private set; }
+	public ObservableCollection<TalkSoftParam>? TalkSoftParams { get; set; }
+	public ObservableCollection<TalkSoftVoice>? TalkVoiceItems { get; private set; }
 	public int TalkVoiceSelected { get; set; } = 0;
-	public ObservableCollection<TalkSoftVoiceStylePreset> TalkVoiceStylePresetsItems { get; private set; }
+	public ObservableCollection<TalkSoftVoiceStylePreset>? TalkVoiceStylePresetsItems { get; private set; }
 	public int VoiceStylePresetsSelected { get; set; } = 0;
-	public ObservableCollection<TalkVoiceStyleParam> TalkVoiceStyleParams { get; set; }
-	public ObservableCollection<SongCast> ExportCastItems { get; private set; }
+	public ObservableCollection<TalkVoiceStyleParam>? TalkVoiceStyleParams { get; set; }
+	public ObservableCollection<SongCast>? ExportCastItems { get; private set; }
 	public int ExportCastSelected { get; set; } = 0;
-	public ObservableCollection<string> ExportSongSoftItems { get; private set; }
+	public ObservableCollection<string>? ExportSongSoftItems { get; private set; }
 	public int ExportSongSoftSelected { get; set; } = 0;
-	public ObservableCollection<SongCast> ExportSongCastItems { get; private set; }
+	public ObservableCollection<SongCast>? ExportSongCastItems { get; private set; }
 	public int ExportSongCastSelected { get; set; } = 0;
 
 	/// <summary>
 	/// ソングエクスポート用：声質や感情など
 	/// </summary>
-	public ObservableCollection<SongVoiceStyleParam> SongVoiceStyleParams { get; set; }
-	public IConfigurationRoot Config { get; private set; }
-	public UserSettings UserSettings { get; set; }
+	public ObservableCollection<SongVoiceStyleParam>? SongVoiceStyleParams { get; set; }
+	public IConfigurationRoot? Config { get; private set; }
+	public UserSettings? UserSettings { get; set; }
 
 	private readonly Settings setting;
-	private Wrapper talkEngine;
-	private string currentEngine;
-	private readonly JapaneseRule japaneseRules;
+	private Wrapper? talkEngine;
+	private string? currentEngine;
+	private readonly JapaneseRule? japaneseRules;
 	private readonly ObservableCollection<TalkSoft> _talksofts = new();
 	private ObservableCollection<TalkSoftVoice> _voices = new();
 	private ObservableCollection<TalkSoftVoiceStylePreset> _stylePresets = new();
@@ -75,7 +74,6 @@ public class MainWindowViewModel
 	public bool IsStylePresetsComboEnabled { get; set; } = false;
 	public bool IsConvertToPhoneme { get; set; }
 	public bool IsConvertToHiragana { get; set; }
-	public Command Test { get; set; }
 
 	/// <summary>
 	/// 「ん」を変換するかどうか
@@ -90,7 +88,7 @@ public class MainWindowViewModel
 	public bool IsCheckJapaneseRemoveNonSoundVowel { get; set; } = false;
 	public bool IsCheckJapaneseSmallVowel { get; set; } = false;
 	public int DefaultSerifLines { get; set; }
-	public string PathToSaveDirectory { get; set; }
+	public string PathToSaveDirectory { get; set; } = "";
 	public ExportLyricsMode SongExportLyricsMode { get; set; }
 
 	public IEnumerable<ExportLyricsMode> ExportLyricsModeList { get; set; }
@@ -99,8 +97,8 @@ public class MainWindowViewModel
 	public bool IsOpenCeVIOWhenExport { get; set; } = true;
 	public bool IsExportAsTrac { get; set; } = true;
 	public bool IsExportSerifText { get; set; }
-	public string PathToExportSerifTextDir { get; set; }
-	public string DefaultExportSerifTextFileName { get; set; }
+	public string? PathToExportSerifTextDir { get; set; }
+	public string? DefaultExportSerifTextFileName { get; set; }
 	public Pile<System.Windows.Controls.TextBox> SerifTextFileNamePile { get; set; }
 	public int TextPointOfInsertMetatextToFileName { get; set; }
 	public NoteAdaptMode AdaptingNoteToPitchMode { get; set; }
@@ -119,6 +117,7 @@ public class MainWindowViewModel
 		= Enum.GetValues(typeof(NoteSplitModes)).Cast<NoteSplitModes>();
 
 	public NoPitchModes NoPitchMode { get; set; }
+
 	public IEnumerable<NoPitchModes> NoPitchModesList { get; set; }
 		= Enum.GetValues(typeof(NoPitchModes)).Cast<NoPitchModes>();
 
@@ -132,6 +131,7 @@ public class MainWindowViewModel
 
 	public ScoreDynamics ExportScoreDynamics { get; set; }
 		= ScoreDynamics.N;
+
 	public IEnumerable<ScoreDynamics> ExportScoreDynamicsList
 	{ get; set; }
 		= Enum.GetValues(typeof(ScoreDynamics)).Cast<ScoreDynamics>();
@@ -146,18 +146,18 @@ public class MainWindowViewModel
 	//---------------------------------------------------
 	public Command Ready { get; private set; }
 	public Command Close { get; private set; }
-	public Command PreviewTalk { get; private set; }
+	//public Command PreviewTalk { get; private set; }
 	/// <summary>
 	/// 変換ボタン
 	/// </summary>
-	public Command ConvertToPhonemes { get; private set; }
-	public Command ExportTrackFile { get; private set; }
-	public Command ExportPreviewWav { get; private set; }
-	public Command CopyRow { get; private set; }
-	public Command PasteRow { get; private set; }
-	public Command AddRow { get; private set; }
-	public Command DeleteRow { get; set; }
-	public Command CheckEnterAndAddRow { get; set; }
+	//public Command ConvertToPhonemes { get; private set; }
+	//public Command ExportTrackFile { get; private set; }
+	//public Command ExportPreviewWav { get; private set; }
+	public Command? CopyRow { get; private set; }
+	public Command? PasteRow { get; private set; }
+	public Command? AddRow { get; private set; }
+	public Command? DeleteRow { get; set; }
+	public Command? CheckEnterAndAddRow { get; set; }
 	public Command OpenLicenses { get; set; }
 	public Command OpenWebsite { get; set; }
 	public Command SelectExportDirectory { get; set; }
@@ -216,15 +216,15 @@ public class MainWindowViewModel
 		EnableSerifButtons(TalkSoftSelected);
 
 		// A handler for window loaded
-		this.Ready = Command.Factory.CreateSync((Action<RoutedEventArgs>)(
+		Ready = Command.Factory.CreateSync((Action<RoutedEventArgs>)(
 			_ => Debug.WriteLine("ready...!")));
 
 		Close = CommandFactory.Create<RoutedEventArgs>(
-			async (_) => await this.UserSettings.SaveAsync()
+			async (_) => await this.UserSettings!.SaveAsync()
 		);
 
 		//open license folder
-		this.OpenLicenses = CommandFactory.Create<RoutedEventArgs>(_ =>
+		OpenLicenses = CommandFactory.Create<RoutedEventArgs>(_ =>
 		{
 			var lpath = Path.GetFullPath(
 				Path.Combine(
@@ -248,7 +248,7 @@ public class MainWindowViewModel
 			return new ValueTask();
 		});
 
-		this.SelectExportDirectory = CommandFactory
+		SelectExportDirectory = CommandFactory
 			.Create<RoutedEventArgs>(OpenSelectExportDirDialog());
 
 		SelectExportSerifTextDir = CommandFactory
@@ -259,7 +259,7 @@ public class MainWindowViewModel
 
 		SerifTextFileNamePile = PileFactory.Create<System.Windows.Controls.TextBox>();
 
-		this.ExportSusuru = CommandFactory.Create<RoutedEventArgs>(ExportSusuruTrack());
+		ExportSusuru = CommandFactory.Create<RoutedEventArgs>(ExportSusuruTrack());
 	}
 
 	private void LoadUserSettings()
@@ -290,6 +290,11 @@ public class MainWindowViewModel
 				message: $"保存した設定の読み込みに失敗しました。{ex.Message}"
 			);
 			logger.Error($"usersetting.json loading failed:{ex.Message}");
+		}
+
+		if(UserSettings is null)
+		{
+			return;
 		}
 
 		//assign
@@ -324,7 +329,7 @@ public class MainWindowViewModel
 	[ConditionalAttribute("DEBUG")]
 	private void CheckUserSettingsWhenDebug()
 	{
-		var props = UserSettings.GetType().GetProperties();
+		var props = UserSettings!.GetType().GetProperties();
 		foreach (var prop in props)
 		{
 			var ignore = prop.GetCustomAttribute<System.Text.Json.Serialization.JsonIgnoreAttribute>();
@@ -357,7 +362,7 @@ public class MainWindowViewModel
 				return;
 			}
 
-			UserSettings.PathToSaveDirectory = cofd.FileName;
+			UserSettings!.PathToSaveDirectory = cofd.FileName;
 			PathToSaveDirectory = cofd.FileName;
 			var __ = UserSettings.SaveAsync();
 
@@ -379,7 +384,7 @@ public class MainWindowViewModel
 			return;// new ValueTask();
 		}
 
-		UserSettings.PathToExportSerifTextDir = cofd.FileName;
+		UserSettings!.PathToExportSerifTextDir = cofd.FileName;
 		PathToExportSerifTextDir = cofd.FileName;
 
 		await UserSettings.SaveAsync();
@@ -407,8 +412,9 @@ public class MainWindowViewModel
 		var index = await SerifTextFileNamePile.RentAsync(async box => await Task.Run(() => box.SelectionStart));
 
 		DefaultExportSerifTextFileName =
-			DefaultExportSerifTextFileName
-				.Insert(index, meta);
+			DefaultExportSerifTextFileName?.Insert(index, meta)
+				?? UserSettings.SERIF_FILE_NAME.Insert(index, meta)
+			;
 	}
 
 	private string GetWindowTitle()
@@ -451,6 +457,11 @@ public class MainWindowViewModel
 		var allLine = sr.ReadToEnd();
 		sr.Close();
 
+		if(allLine is null){
+			await ShowJsonErrorAsync($"json file ({pathToJson}) is null.");
+			return default!;
+		}
+
 		try
 		{
 			var opt = new JsonSerializerOptions
@@ -460,34 +471,38 @@ public class MainWindowViewModel
 			};
 			opt.Converters.Add(new JsonStringEnumConverter());
 
-			T settings = JsonSerializer
+			T? settings = JsonSerializer
 				.Deserialize<T>(
-					allLine,
+					allLine!,
 					opt
 				);
-			return settings;
+			return settings!;
 		}
 		catch (JsonException e)
 		{
-			Debug.WriteLine(e.Message);
+			await ShowJsonErrorAsync(e.Message);
+			return default!;
+		}
+
+		async ValueTask ShowJsonErrorAsync(string msg){
+			Debug.WriteLine(msg);
 			await ShowErrorMessageBoxAsync(
 				title: "Json読み取りエラー",
-				message: e.Message
+				message: msg
 			);
-			MainWindow.Logger.Error($"Json読み取りエラー: {e.Message}");
-			return default;
+			MainWindow.Logger.Error($"Json読み取りエラー: {msg}");
 		}
 	}
 
 	public async ValueTask ShowErrorMessageBoxAsync(
-		string title,
-		string message,
-		Exception e = null
+		string? title,
+		string? message,
+		Exception? e = null
 	)
 	{
 		await Task.Run(() =>
 		{
-			MainWindow.Logger.Warn($"error dialog open. {e.Message}");
+			MainWindow.Logger.Warn($"error dialog open. {e?.Message}");
 			MessageBox.Show(
 				message ?? $"エラーが発生しました。\\n{e}",
 				title ?? "ERROR",
@@ -499,7 +514,7 @@ public class MainWindowViewModel
 
 	private void InitTalkSofts()
 	{
-		if (setting is null)
+		if (setting is null || setting.TalkSofts is null)
 		{
 			return;
 		}
@@ -521,7 +536,8 @@ public class MainWindowViewModel
 
 		//export song cast combo
 		ExportCastItems ??= new();
-		foreach (var cast in this.setting.ExportSongCasts)
+		setting.ExportSongCasts ??= new List<SongCast>();
+		foreach (var cast in setting.ExportSongCasts)
 		{
 			ExportCastItems.Add(cast);
 		}
@@ -534,7 +550,7 @@ public class MainWindowViewModel
 				.GroupBy(x => x.SongSoft)
 				.Select(x => x.FirstOrDefault().SongSoft)
 				.ToList()
-				.ForEach(x => ExportSongSoftItems.Add(x))
+				.ForEach(x => ExportSongSoftItems.Add(x!))
 				;
 			ExportSongSoftSelected = 0;
 		}
@@ -547,7 +563,7 @@ public class MainWindowViewModel
 	private async ValueTask TalkSoftChangedAsync(int index)
 	{
 		if (!IsTalkSoftComboEnabled
-			|| TalkSoftItems[index]?.TalkSoftParams is null)
+			|| TalkSoftItems?[index]?.TalkSoftParams is null)
 		{
 			return;
 		}
@@ -637,7 +653,7 @@ public class MainWindowViewModel
 			{
 				case TalkEngine.CEVIO:
 					{
-						this.talkEngine.VoiceStyle = _stylePresets.ElementAt(index);
+						this.talkEngine!.VoiceStyle = _stylePresets.ElementAt(index);
 						this.talkEngine.SetVoiceStyle(true);
 						//変化させたプリセットを感情合成値に反映
 						this._voiceStyles = this.talkEngine.GetVoiceStyles();
@@ -647,7 +663,7 @@ public class MainWindowViewModel
 
 				case TalkEngine.VOICEVOX:
 					{
-						this.talkEngine.VoiceStyle = _stylePresets.ElementAt(index);
+						this.talkEngine!.VoiceStyle = _stylePresets.ElementAt(index);
 						break;
 					}
 
@@ -664,6 +680,7 @@ public class MainWindowViewModel
 						break;
 					}
 
+				case TalkEngine.SOUNDFILE:
 				default:
 					break;
 			}
@@ -776,7 +793,7 @@ public class MainWindowViewModel
 					_talksofts.ElementAt(TalkSoftSelected)
 				);
 
-				_voices = talkEngine.GetAvailableCasts();
+				_voices = talkEngine?.GetAvailableCasts() ?? new();
 
 				IsPreviewComboEnabled = true;
 				TalkVoiceItems = _voices;
@@ -785,7 +802,7 @@ public class MainWindowViewModel
 				IsPreviewButtonEnabled = true;
 				EnableSerifButtons(
 					TalkSoftSelected,
-					!this.talkEngine.IsActive
+					!(talkEngine?.IsActive ?? false)
 				);
 			}
 
@@ -803,7 +820,7 @@ public class MainWindowViewModel
 				);
 				//});
 
-				_voices = talkEngine.GetAvailableCasts();
+				_voices = talkEngine?.GetAvailableCasts() ?? new();
 				//await InitVoiceStylesAsync();
 
 				IsPreviewComboEnabled = true;
@@ -813,7 +830,7 @@ public class MainWindowViewModel
 				IsPreviewButtonEnabled = true;
 				EnableSerifButtons(
 					TalkSoftSelected,
-					!this.talkEngine.IsActive
+					!(talkEngine?.IsActive ?? false)
 				);
 			}
 		}
@@ -838,7 +855,7 @@ public class MainWindowViewModel
 				if (TalkVoiceSelected < 0) return;
 				if (_voices.Count == 0) return;
 
-				this.talkEngine.TalkVoice = _voices
+				this.talkEngine!.TalkVoice = _voices
 					.ElementAt(TalkVoiceSelected);
 				var stylePresets = await Task.Run(
 					() => this.talkEngine.GetStylePresets()
@@ -865,7 +882,7 @@ public class MainWindowViewModel
 				if (TalkVoiceSelected < 0) return;
 				if (_voices.Count == 0) return;
 
-				this.talkEngine.TalkVoice = _voices
+				this.talkEngine!.TalkVoice = _voices
 					.ElementAt(TalkVoiceSelected);
 
 				var styles = await Task.Run(
@@ -892,7 +909,7 @@ public class MainWindowViewModel
 			if (TalkVoiceSelected < 0) return;
 
 			var styles = new ObservableCollection<TalkSoftVoiceStylePreset>();
-			foreach (var s in ts.TalkSoftVoices[TalkVoiceSelected].Styles)
+			foreach (var s in ts.TalkSoftVoices[TalkVoiceSelected].Styles!)
 			{
 				styles.Add(s);
 			}
@@ -914,12 +931,17 @@ public class MainWindowViewModel
 
 	public async ValueTask<string> PreviewTalkFromListAsync(string serifText)
 	{
+		if(currentEngine is null)
+		{
+			return string.Empty;
+		}
+
 		this.talkEngine = await GenerateWrapperAsync(
 			this.currentEngine,
 			_talksofts.ElementAt(TalkSoftSelected),
 			_voices.ElementAt(TalkVoiceSelected),
 			_stylePresets.ElementAt(VoiceStylePresetsSelected),
-			TalkVoiceStyleParams
+			TalkVoiceStyleParams ?? new()
 		);
 
 		talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
@@ -931,20 +953,21 @@ public class MainWindowViewModel
 		string castId,
 		double alpha,
 		bool isTrack = false,
-		SongCast songCast = null
+		SongCast? songCast = null,
+		string? engineName = null
 	)
 	{
 		this.talkEngine = await GenerateWrapperAsync(
-			this.currentEngine,
+			engineName ?? this.currentEngine!,
 			_talksofts.ElementAt(TalkSoftSelected),
 			_voices.ElementAt(TalkVoiceSelected),
 			_stylePresets.ElementAt(VoiceStylePresetsSelected),
-			TalkVoiceStyleParams
+			TalkVoiceStyleParams ?? new()
 		);
 
 		Debug.WriteLine("Export!");
 		var exportFileType = //ExportCastItems.ElementAt(ExportCastSelected).ExportFile;
-		ExportSongCastItems[ExportSongCastSelected].ExportFile;
+		ExportSongCastItems![ExportSongCastSelected].ExportFile;
 
 		await this.talkEngine.ExportFileAsync(
 			new(serifText, castId)
@@ -971,9 +994,9 @@ public class MainWindowViewModel
 		{
 			await talkEngine.ExportSerifTextFileAsync(
 				serifText,
-				PathToExportSerifTextDir,
-				DefaultExportSerifTextFileName,
-				songCast.Name
+				PathToExportSerifTextDir!,
+				DefaultExportSerifTextFileName!,
+				songCast?.Name ?? "ANYONE"
 			);
 		}
 
@@ -983,12 +1006,17 @@ public class MainWindowViewModel
 
 	public async ValueTask ExportPreviewWavFromListAsync(string serifText)
 	{
+		if(this.currentEngine is null)
+		{
+			return;
+		}
+
 		this.talkEngine = await GenerateWrapperAsync(
 			this.currentEngine,
 			_talksofts.ElementAt(TalkSoftSelected),
 			_voices.ElementAt(TalkVoiceSelected),
 			_stylePresets.ElementAt(VoiceStylePresetsSelected),
-			TalkVoiceStyleParams
+			TalkVoiceStyleParams ?? new()
 		);
 
 		talkEngine.VoiceStyle = _stylePresets.ElementAt(VoiceStylePresetsSelected);
@@ -1000,12 +1028,16 @@ public class MainWindowViewModel
 	{
 		return async _ =>
 		{
+			if(currentEngine is null || ExportCastItems is null){
+				return;
+			}
+
 			this.talkEngine = await GenerateWrapperAsync(
 				this.currentEngine,
 				_talksofts.ElementAt(TalkSoftSelected),
 				_voices.ElementAt(TalkVoiceSelected),
 				_stylePresets.ElementAt(VoiceStylePresetsSelected),
-				TalkVoiceStyleParams
+				TalkVoiceStyleParams ?? new()
 			);
 			await talkEngine.ExportSpecialFileAsync(
 				ExportCastItems[ExportCastSelected],
@@ -1023,9 +1055,9 @@ public class MainWindowViewModel
 	private async ValueTask<Wrapper> GenerateWrapperAsync(
 		string engine,
 		TalkSoft soft,
-		TalkSoftVoice voice = null,
-		TalkSoftVoiceStylePreset style = null,
-		IList<TalkVoiceStyleParam> styleParams = null
+		TalkSoftVoice? voice = null,
+		TalkSoftVoiceStylePreset? style = null,
+		IList<TalkVoiceStyleParam>? styleParams = null
 	)
 	{
 		var isNotGenerated = false;
@@ -1047,15 +1079,19 @@ public class MainWindowViewModel
 		}
 		else
 		{
-			if (voice != null) this.talkEngine.TalkVoice = voice;
-			if (style != null) this.talkEngine.VoiceStyle = style;
-			if (styleParams != null) this.talkEngine.VoiceStyleParams = styleParams;
-			return this.talkEngine;
+			if (voice != null) this.talkEngine!.TalkVoice = voice;
+			if (style != null) this.talkEngine!.VoiceStyle = style;
+			if (styleParams != null) this.talkEngine!.VoiceStyleParams = styleParams;
+			return this.talkEngine!;
 		}
 	}
 
 	public async ValueTask<string> ConvertFromListAsync(string sourceText)
 	{
+		if(currentEngine is null){
+			return "";
+		}
+
 		try
 		{
 			this.talkEngine = await GenerateWrapperAsync(
@@ -1317,7 +1353,7 @@ public class MainWindowViewModel
 	[SuppressMessage("Usage","IDE0051")]
 	private async ValueTask NoteSpliteModeChangedAsync(NoteSplitModes value)
 	{
-		UserSettings.NoteSplitMode = value;
+		UserSettings!.NoteSplitMode = value;
 		await UserSettings.SaveAsync();
 	}
 }

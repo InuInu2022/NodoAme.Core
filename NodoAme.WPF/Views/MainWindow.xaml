@@ -410,6 +410,7 @@
                 SelectionUnit="CellOrRowHeader"
                 VirtualizingPanel.ScrollUnit="Pixel"
                 VerticalScrollBarVisibility="Auto"
+                AllowDrop="True"
                 SelectedIndex="{Binding SelectedSerifIndex, Mode=OneWay}">
         <!-- 右クリックによるコンテキストメニューの表示 -->
         <!-- DataGrid.ContextMenu>
@@ -426,9 +427,102 @@
           </ContextMenu>
         </DataGrid.ContextMenu -->
         <DataGrid.Columns>
+          <DataGridTemplateColumn Header="セリフ"
+                              Width="*"
+                              >
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <StackPanel VerticalAlignment="Stretch">
+                    <epoxy:EventBinder.Events>
+                        <epoxy:Event EventName="PreviewDrop" Command="{Binding Drop}" />
+                      </epoxy:EventBinder.Events>
+                    <TextBlock
+                      Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
+                      TextWrapping="Wrap"
+                      ToolTip="ここに変換したいセリフや歌詞などの文字列を入れてください。"
+                      Padding="5"
+                      AllowDrop="True"
+                      Visibility="{Binding SourceTextVisible}"
+                      >
+                    </TextBlock>
+
+                    <WrapPanel Visibility="{Binding DropFileNameView}">
+                      <fa:FontAwesome Icon="Solid_FileAudio"
+                        FontSize="14"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        />
+                      <TextBlock
+                        x:Name="fileNameView"
+                        Text="{Binding DropFileName}"
+                        FontSize="14"
+                        Padding="5"
+                        HorizontalAlignment="Stretch"
+                        Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
+                        >
+                      </TextBlock>
+                      <Button Content="&#xE711;"
+                        FontSize="14"
+                        FontFamily="Segoe MDL2 Assets"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding ResetDropFile}"
+                        Style="{StaticResource ButtonRoundRevealStyle}">
+                      </Button>
+                    </WrapPanel>
+                  </StackPanel>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+              <DataGridTemplateColumn.CellEditingTemplate>
+                <DataTemplate>
+                  <StackPanel VerticalAlignment="Stretch">
+                    <TextBox
+                      Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
+                      TextWrapping="Wrap"
+                      AcceptsReturn="False"
+                      Padding="5"
+                      VerticalAlignment="Stretch"
+                      Style="{StaticResource TextBoxRevealStyle}"
+                      Visibility="{Binding SourceTextVisible}"
+                      >
+                    </TextBox>
+
+                    <WrapPanel Visibility="{Binding DropFileNameView}">
+                      <fa:FontAwesome Icon="Solid_FileAudio"
+                        FontSize="14"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        />
+                      <TextBlock
+                        x:Name="fileNameView"
+                        Text="{Binding DropFileName}"
+                        FontSize="14"
+                        Padding="5"
+                        HorizontalAlignment="Left"
+                        Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
+                        >
+                      </TextBlock>
+                      <Button Content="&#xE711;"
+                        FontSize="14"
+                        FontFamily="Segoe MDL2 Assets"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding ResetDropFile}"
+                        Style="{StaticResource ButtonRoundRevealStyle}">
+                      </Button>
+                    </WrapPanel>
+                  </StackPanel>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellEditingTemplate>
+          </DataGridTemplateColumn>
+          <!--
           <DataGridTextColumn Header="セリフ"
                               Width="*"
-                              Binding="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}">
+                              Binding="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
+                              >
+
             <DataGridTextColumn.ElementStyle>
               <Style TargetType="TextBlock">
                 <Setter Property="TextWrapping"
@@ -437,6 +531,8 @@
                         Value="ここに変換したいセリフや歌詞などの文字列を入れてください。" />
                 <Setter Property="Padding"
                         Value="5" />
+                <Setter Property="AllowDrop"
+                        Value="True" />
               </Style>
             </DataGridTextColumn.ElementStyle>
             <DataGridTextColumn.EditingElementStyle>
@@ -447,11 +543,11 @@
                         Value="False" />
                 <Setter Property="Padding"
                         Value="5" />
-                <!-- Setter Property="IsEnabled"
-                        Value="{Binding EnabledInputSerif}" / -->
               </Style>
             </DataGridTextColumn.EditingElementStyle>
+
           </DataGridTextColumn>
+          -->
           <DataGridTemplateColumn Header="試聴"
                                   Width="SizeToCells">
             <DataGridTemplateColumn.CellTemplate>
