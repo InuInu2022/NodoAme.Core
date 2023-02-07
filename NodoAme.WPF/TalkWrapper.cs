@@ -21,8 +21,6 @@ using NodoAme.Models;
 
 using SharpOpenJTalk;
 
-using Tssproj;
-
 namespace NodoAme;
 
 /// <summary>
@@ -43,8 +41,9 @@ public class Wrapper : ITalkWrapper
 
 	//private const string TalkEngine.CEVIO = "CeVIO";
 	//private const string TalkEngine.OPENJTALK = "OpenJTalk";
-	private string CastToExport = "CSNV-JPF-THR1";
-	private string engineType;
+	private string castToExport = "CSNV-JPF-THR1";
+	private readonly string engineType;
+
 	public TalkSoftVoice? TalkVoice { get; set; }
 	public TalkSoftVoiceStylePreset? VoiceStyle { get; set; }
 	public IList<TalkVoiceStyleParam>? VoiceStyleParams { get; set; }
@@ -64,7 +63,7 @@ public class Wrapper : ITalkWrapper
 
 	private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-	internal Wrapper(
+	private Wrapper(
 		string type,
 		TalkSoft soft,
 		TalkSoftVoice? voice = null,
@@ -79,7 +78,7 @@ public class Wrapper : ITalkWrapper
 		VoiceStyleParams = styleParams;
 	}
 
-	public static async ValueTask<Wrapper> Factory(
+	public static async ValueTask<Wrapper> FactoryAsync(
 		string type,
 		TalkSoft soft,
 		TalkSoftVoice? voice = null,
@@ -88,12 +87,11 @@ public class Wrapper : ITalkWrapper
 	)
 	{
 		var wrapper = new Wrapper(type, soft, voice, style, styleParams);
-		await wrapper.Init();
+		await wrapper.InitAsync();
 		return wrapper;
 	}
 
-
-	private async ValueTask Init()
+	private async ValueTask InitAsync()
 	{
 		var soft = TalkSoft;
 		var voice = TalkVoice;
@@ -117,7 +115,7 @@ public class Wrapper : ITalkWrapper
 					Debug.WriteLine($"cevioPath:{cevioPath}");
 					if (!File.Exists(cevioPath))
 					{
-						logger.Warn($"error dialog opend:");
+						logger.Warn("error dialog opend:");
 						MessageBox.Show(
 							$"{engineType}が見つかりませんでした。",
 							$"{engineType}の呼び出しに失敗",
@@ -147,10 +145,11 @@ public class Wrapper : ITalkWrapper
 							.Fatal($"{e?.Message}");
 						return;
 					}
+
 					Type? t = assembly.GetType(soft.Interface.Service);
 					if (t is null)
 					{
-						logger.Warn($"error dialog opend: ");
+						logger.Warn("error dialog opend: ");
 						MessageBox.Show(
 							$"{engineType}を呼び出せませんでした。",
 							$"{engineType}の呼び出しに失敗",
@@ -169,7 +168,7 @@ public class Wrapper : ITalkWrapper
 
 						if ((int)result > 1)
 						{
-							logger.Warn($"error dialog opend: ");
+							logger.Warn("error dialog opend: ");
 							MessageBox.Show(
 								$"{engineType}を起動できませんでした。理由code:{result}",
 								$"{engineType}の起動に失敗",
@@ -208,7 +207,7 @@ public class Wrapper : ITalkWrapper
 					}
 
 					//CeVIOはインストールされているが、トークがない場合
-					if (names is null || names.Length == 0)
+					if (names.Length == 0)
 					{
 						var noCast = $"{engineType}のトークボイスが見つかりません。{engineType}のボイスをしゃべりの参考に使用するにはトークエディタとトークボイスが必要です。";
 						MessageBox.Show(
@@ -249,8 +248,9 @@ public class Wrapper : ITalkWrapper
 
 			case TalkEngine.VOICEVOX:
 				{
-					this.engine = await Models.Voicevox.FactoryAsync(engineType, soft, voice, style);
-					var vv = this.engine as Voicevox;
+					engine = await Voicevox
+						.FactoryAsync(engineType, soft, voice, style);
+					var vv = engine as Voicevox;
 					if (vv!.IsActive)
 					{
 						//GetAvailableCasts
@@ -260,6 +260,7 @@ public class Wrapper : ITalkWrapper
 								.Add(new TalkSoftVoice { Id = $"Cast_{n}", Name = $"{n}" });
 						}
 					}
+
 					IsActive = vv.IsActive;
 					break;
 				}
@@ -283,7 +284,7 @@ public class Wrapper : ITalkWrapper
 					if (!isInitialized)
 					{
 						var msg = $"{engineType} Initialize Failed";
-						logger.Warn($"error dialog opend: ");
+						logger.Warn("error dialog opend: ");
 						MessageBox.Show(
 							msg,
 							msg,
@@ -295,6 +296,7 @@ public class Wrapper : ITalkWrapper
 						this.engine?.Dispose();
 						throw new Exception(msg);
 					}
+
 					break;
 				}
 		}
@@ -312,13 +314,13 @@ public class Wrapper : ITalkWrapper
 		{
 			this.engine.Dispose();
 		}
-
 	}
+
 	public ObservableCollection<TalkSoftVoice>? GetAvailableCasts()
 	{
 		if (voices is null || voices.Count == 0)
 		{
-			logger.Warn($"error dialog opend: ");
+			logger.Warn("error dialog opend: ");
 			MessageBox.Show(
 				"現在、利用できるボイスがありません！",
 				"利用できるボイスがありません",
@@ -327,7 +329,7 @@ public class Wrapper : ITalkWrapper
 			);
 			logger
 				.Error("現在、利用できるボイスがありません！");
-			return voices;
+			return new();
 		}
 
 		return this.voices;
@@ -341,6 +343,7 @@ public class Wrapper : ITalkWrapper
 			logger.Error("GetLabelsAsync(): this.engine is null");
 			throw new NullReferenceException();
 		}
+
 		switch (engineType)
 		{
 			case TalkEngine.CEVIO:
@@ -431,9 +434,9 @@ public class Wrapper : ITalkWrapper
 	/// </summary>
 	/// <param name="phs">CeVIOの音素データ</param>
 	/// <returns>フルコンテクストラベル形式</returns>
-	private dynamic? MakePsudoLabels(/*ICeVIOPhonemeDataArray*/dynamic phs)
+	private List<string>? MakePsudoLabels(/*ICeVIOPhonemeDataArray*/dynamic phs)
 	{
-		dynamic list = new List<string>();
+		var list = new List<string>();
 		for (int i = 0; i < phs.Length; i++)
 		{
 			var ph = phs[i];
@@ -567,6 +570,7 @@ public class Wrapper : ITalkWrapper
 	/// TTSに発話させる
 	/// </summary>
 	/// <param name="text">発話させるテキスト</param>
+	/// <param name="withSave"></param>
 	/// <returns>秒数</returns>
 	public async ValueTask<string> SpeakAsync(
 		string text,
@@ -610,9 +614,9 @@ public class Wrapper : ITalkWrapper
 			case TalkEngine.OPENJTALK:
 				{
 					//var engine = new OpenJTalkAPI();
-					if (!(engine is OpenJTalkAPI jtalk))
+					if (engine is not OpenJTalkAPI jtalk)
 					{
-						logger.Warn($"error dialog opend");
+						logger.Warn("error dialog opend");
 						MessageBox.Show(
 							"現在、利用できるボイスがありません！",
 							"利用できるボイスがありません",
@@ -623,6 +627,7 @@ public class Wrapper : ITalkWrapper
 						logger.Error(msg);
 						throw new Exception(msg);
 					}
+
 					jtalk.FramePeriod = 240;
 					jtalk.SamplingFrequency = SAMPLE_RATE;
 					jtalk.Volume = 0.9;
@@ -650,6 +655,7 @@ public class Wrapper : ITalkWrapper
 						{
 							Thread.Sleep(500);
 						}
+
 						wo.Dispose();
 					});
 					break;
@@ -799,7 +805,7 @@ public class Wrapper : ITalkWrapper
 		sw.Start();
 
 		//出力SongCast
-		this.CastToExport = option.CastId;
+		this.castToExport = option.CastId;
 		Debug.WriteLine($"songcast:{option.CastId}");
 
 		//テンプレートファイル読み込み
@@ -962,10 +968,10 @@ public class Wrapper : ITalkWrapper
 		//TODO:ccst加工部分の共通処理化
 
 		//Unit elements
-		ProjectWriter.WriteElementsUnit(tmplTrack, guid, serifLen, CastToExport);
+		ProjectWriter.WriteElementsUnit(tmplTrack, guid, serifLen, castToExport);
 
 		//Group elements
-		ProjectWriter.WriteElementsGroup(option.SerifText, option.Cast, tmplTrack, guid, CastToExport);
+		ProjectWriter.WriteElementsGroup(option.SerifText, option.Cast, tmplTrack, guid, castToExport);
 
 		//tssprj
 		var tssprj = option.FileType == ExportFileType.TSSPRJ
@@ -1368,7 +1374,7 @@ public class Wrapper : ITalkWrapper
 		const string TRACK_FILE_NAME = "SUSURU";
 
 		//出力SongCast
-		this.CastToExport = cast.Id!;
+		this.castToExport = cast.Id!;
 		Debug.WriteLine($"songcast:{cast.Id}");
 
 		//テンプレートxml読み込み
@@ -1380,12 +1386,12 @@ public class Wrapper : ITalkWrapper
 
 		var unitNode = tmplTrack.Descendants("Unit").First();
 		unitNode.SetAttributeValue("Group", guid);
-		unitNode.SetAttributeValue("CastId", CastToExport);
+		unitNode.SetAttributeValue("CastId", castToExport);
 
 		var groupNode = tmplTrack.Descendants("Group").First();
 		groupNode.SetAttributeValue("Name", TRACK_FILE_NAME);
 		groupNode.SetAttributeValue("Id", guid);
-		groupNode.SetAttributeValue("CastId", CastToExport);
+		groupNode.SetAttributeValue("CastId", castToExport);
 
 		var noteNode = tmplTrack.Descendants("Note").First();
 		string lyricZu = exportMode switch

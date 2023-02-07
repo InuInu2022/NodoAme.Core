@@ -670,7 +670,7 @@ public class MainWindowViewModel
 				case TalkEngine.OPENJTALK:
 					{
 						this.talkEngine = await Wrapper
-							.Factory(
+							.FactoryAsync(
 								this.currentEngine,
 								_talksofts.ElementAt(TalkSoftSelected),
 								_voices.ElementAt(TalkVoiceSelected),
@@ -788,7 +788,7 @@ public class MainWindowViewModel
 				//CeVIO Talk API interface
 				this.currentEngine = TalkEngine.CEVIO;
 
-				this.talkEngine = await Wrapper.Factory(
+				this.talkEngine = await Wrapper.FactoryAsync(
 					this.currentEngine,
 					_talksofts.ElementAt(TalkSoftSelected)
 				);
@@ -814,7 +814,7 @@ public class MainWindowViewModel
 
 				//await Task.Run(() =>
 				//{
-				this.talkEngine = await Wrapper.Factory(
+				this.talkEngine = await Wrapper.FactoryAsync(
 					this.currentEngine,
 					_talksofts.ElementAt(TalkSoftSelected)
 				);
@@ -1075,7 +1075,7 @@ public class MainWindowViewModel
 
 		if (isNotGenerated)
 		{
-			return await Wrapper.Factory(engine, soft, voice, style, styleParams);
+			return await Wrapper.FactoryAsync(engine, soft, voice, style, styleParams);
 		}
 		else
 		{
