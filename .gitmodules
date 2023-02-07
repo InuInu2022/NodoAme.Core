@@ -1,0 +1,3 @@
+[submodule "LibSasara"]
+	path = LibSasara
+	url = https://github.com/InuInu2022/LibSasara.git
