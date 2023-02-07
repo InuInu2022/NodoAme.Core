@@ -283,11 +283,13 @@ public static class ProjectWriter{
 			var logF0 = engineType switch
 			{
 				TalkEngine.CEVIO
-						=> Math.Log(parameters.f0![i]),
+					=> Math.Log(parameters.f0![i]),
 				TalkEngine.OPENJTALK
-						=> parameters.f0![i],
+					=> parameters.f0![i],
 				TalkEngine.VOICEVOX
-						=> Math.Log(parameters.f0![i]),
+					=> Math.Log(parameters.f0![i]),
+				TalkEngine.SOUNDFILE
+					=> Math.Log(parameters.f0![i]),
 				_ => 0
 			};
 
