@@ -20,7 +20,7 @@ public class UserSettings
 	public string Version { get; } = "0.4.0";
 
 	public int DefaultSerifLines { get; set; } = 30;    //初期表示セリフ行
-	public string? PathToSaveDirectory { get; set; } = "./out/";
+	public string PathToSaveDirectory { get; set; } = "./out/";
 	public ExportLyricsMode SongExportLyricsMode { get; set; } = ExportLyricsMode.PHONEME;
 
 	#region export_serif_text_options
