@@ -442,6 +442,7 @@
                       ToolTip="ここに変換したいセリフや歌詞などの文字列を入れてください。"
                       Padding="5"
                       AllowDrop="True"
+                      VerticalAlignment="Stretch"
                       Visibility="{Binding SourceTextVisible}"
                       >
                     </TextBlock>
@@ -476,18 +477,7 @@
               </DataGridTemplateColumn.CellTemplate>
               <DataGridTemplateColumn.CellEditingTemplate>
                 <DataTemplate>
-                  <StackPanel VerticalAlignment="Stretch">
-                    <TextBox
-                      Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
-                      TextWrapping="Wrap"
-                      AcceptsReturn="False"
-                      Padding="5"
-                      VerticalAlignment="Stretch"
-                      Style="{StaticResource TextBoxRevealStyle}"
-                      Visibility="{Binding SourceTextVisible}"
-                      >
-                    </TextBox>
-
+                  <DockPanel LastChildFill="True">
                     <WrapPanel Visibility="{Binding DropFileNameView}">
                       <fa:FontAwesome Icon="Solid_FileAudio"
                         FontSize="14"
@@ -513,7 +503,20 @@
                         Style="{StaticResource ButtonRoundRevealStyle}">
                       </Button>
                     </WrapPanel>
-                  </StackPanel>
+
+                    <TextBox
+                      DockPanel.Dock="Top"
+                      Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
+                      TextWrapping="Wrap"
+                      AcceptsReturn="False"
+                      Padding="5"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      Style="{StaticResource TextBoxRevealStyle}"
+                      Visibility="{Binding SourceTextVisible}"
+                      >
+                    </TextBox>
+                  </DockPanel>
                 </DataTemplate>
               </DataGridTemplateColumn.CellEditingTemplate>
           </DataGridTemplateColumn>
