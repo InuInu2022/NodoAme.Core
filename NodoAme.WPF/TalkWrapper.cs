@@ -116,11 +116,11 @@ public class Wrapper : ITalkWrapper
 					if (!File.Exists(cevioPath))
 					{
 						logger.Warn("error dialog opend:");
-						MessageBox.Show(
+						MessageDialog.Show(
 							$"{engineType}が見つかりませんでした。",
 							$"{engineType}の呼び出しに失敗",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						logger
 							.Error($"CeVIO Dll not found:{engineType}の呼び出しに失敗");
@@ -135,11 +135,11 @@ public class Wrapper : ITalkWrapper
 					catch (Exception e)
 					{
 						logger.Warn($"error dialog opend: {e?.Message}");
-						MessageBox.Show(
+						MessageDialog.Show(
 							$"{engineType}を呼び出せませんでした。{e?.Message}",
 							$"{engineType}の呼び出しに失敗",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						logger
 							.Fatal($"{e?.Message}");
@@ -150,11 +150,11 @@ public class Wrapper : ITalkWrapper
 					if (t is null)
 					{
 						logger.Warn("error dialog opend: ");
-						MessageBox.Show(
+						MessageDialog.Show(
 							$"{engineType}を呼び出せませんでした。",
 							$"{engineType}の呼び出しに失敗",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						logger
 							.Error($"CeVIO Dll cannot call:{engineType}の呼び出しに失敗");
@@ -169,11 +169,11 @@ public class Wrapper : ITalkWrapper
 						if ((int)result > 1)
 						{
 							logger.Warn("error dialog opend: ");
-							MessageBox.Show(
+							MessageDialog.Show(
 								$"{engineType}を起動できませんでした。理由code:{result}",
 								$"{engineType}の起動に失敗",
-								MessageBoxButton.OK,
-								MessageBoxImage.Error
+
+								MessageDialogType.Error
 							);
 							logger
 								.Error($"{engineType}を起動できませんでした。理由code:{result}");
@@ -183,11 +183,11 @@ public class Wrapper : ITalkWrapper
 					catch (System.Exception e)
 					{
 						var msg = $"{engineType}を起動できませんでした。理由:{e.Message}";
-						MessageBox.Show(
+						MessageDialog.Show(
 							msg,
 							$"{engineType}の起動に失敗",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 							);
 						logger
 							.Error(msg);
@@ -210,11 +210,11 @@ public class Wrapper : ITalkWrapper
 					if (names.Length == 0)
 					{
 						var noCast = $"{engineType}のトークボイスが見つかりません。{engineType}のボイスをしゃべりの参考に使用するにはトークエディタとトークボイスが必要です。";
-						MessageBox.Show(
+						MessageDialog.Show(
 							noCast,
 							$"{engineType}のトークボイスが見つかりません",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						logger
 							.Error(noCast);
@@ -229,11 +229,11 @@ public class Wrapper : ITalkWrapper
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(
+						MessageDialog.Show(
 							ex.Message,
 							$"{engineType}の起動に失敗",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 							);
 						logger
 							.Error($"can't awake cevio talker. {ex.Message}");
@@ -285,11 +285,11 @@ public class Wrapper : ITalkWrapper
 					{
 						var msg = $"{engineType} Initialize Failed";
 						logger.Warn("error dialog opend: ");
-						MessageBox.Show(
+						MessageDialog.Show(
 							msg,
 							msg,
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						logger
 							.Error(msg);
@@ -321,11 +321,11 @@ public class Wrapper : ITalkWrapper
 		if (voices is null || voices.Count == 0)
 		{
 			logger.Warn("error dialog opend: ");
-			MessageBox.Show(
+			MessageDialog.Show(
 				"現在、利用できるボイスがありません！",
 				"利用できるボイスがありません",
-				MessageBoxButton.OK,
-				MessageBoxImage.Error
+
+				MessageDialogType.Error
 			);
 			logger
 				.Error("現在、利用できるボイスがありません！");
@@ -504,7 +504,7 @@ public class Wrapper : ITalkWrapper
 						.Styles;
 					foreach (var s in temp!)
 					{
-						styles.Add(new TalkSoftVoiceStylePreset
+						styles.Add(new ()
 							{
 								Name = s.Name,
 								Id = s.Id.ToString()
@@ -539,7 +539,7 @@ public class Wrapper : ITalkWrapper
 					foreach (var c in comps)
 					{
 						//Debug.WriteLine($"c:{c}");
-						styles.Add(new TalkVoiceStyleParam
+						styles.Add(new ()
 							{
 								Id = c.Id,
 								Name = c.Name,
@@ -617,11 +617,11 @@ public class Wrapper : ITalkWrapper
 					if (engine is not OpenJTalkAPI jtalk)
 					{
 						logger.Warn("error dialog opend");
-						MessageBox.Show(
+						MessageDialog.Show(
 							"現在、利用できるボイスがありません！",
 							"利用できるボイスがありません",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						const string msg = "OpenJTalk.Speak(): this.engine is null";
 						logger.Error(msg);
@@ -794,7 +794,8 @@ public class Wrapper : ITalkWrapper
 	/// <summary>
 	/// ファイルにエクスポートする
 	/// </summary>
-	public async ValueTask<bool> ExportFileAsync(ExportFileOption option){
+	public async ValueTask<bool> ExportFileAsync(ExportFileOption option)
+	{
 		if (this.engine is null)
 		{
 			//throw new NullReferenceException();
@@ -933,7 +934,7 @@ public class Wrapper : ITalkWrapper
 		var parameterRoot = tmplTrack
 			.Descendants("Parameter")
 			.First();
-		double paramLen = GetParametersLength(serifLen,option.Tempo);
+		double paramLen = GetParametersLength(serifLen, option.Tempo);
 
 		//F0をピッチ線として書き込む
 		XElement logF0Node = ProjectWriter
@@ -942,7 +943,7 @@ public class Wrapper : ITalkWrapper
 				parameterRoot,
 				paramLen,
 				engineType,
-				(int)(noteOffset/INDEX_SPAN_TIME),
+				(int)(noteOffset / INDEX_SPAN_TIME),
 				//TRACK_PARAM_OFFSET_INDEX,
 				option.NoPitch
 			);
@@ -956,7 +957,7 @@ public class Wrapper : ITalkWrapper
 			phs,
 			parameterRoot,
 			paramLen,
-			(int)(noteOffset/INDEX_SPAN_TIME),
+			(int)(noteOffset / INDEX_SPAN_TIME),
 			INDEX_SPAN_TIME,
 			option.NoSoundVowelsModes
 		);
@@ -1160,11 +1161,11 @@ public class Wrapper : ITalkWrapper
 					{
 						logger.Error(
 							$"OpenJTalk Error: {e?.Message}");
-						MessageBox.Show(
+						MessageDialog.Show(
 							$"申し訳ありません。内蔵ボイスでエラーが発生しました。\n詳細：{e?.Message}",
 							"内蔵ボイスエラー",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						break;
 					}
@@ -1179,11 +1180,11 @@ public class Wrapper : ITalkWrapper
 						const string error = "can't get labels";
 						logger.Error(
 							$"OpenJTalk Error: {error}");
-						MessageBox.Show(
+						MessageDialog.Show(
 							$"申し訳ありません。内蔵ボイスでエラーが発生しました。\n詳細：{error}",
 							"内蔵ボイスエラー",
-							MessageBoxButton.OK,
-							MessageBoxImage.Error
+
+							MessageDialogType.Error
 						);
 						break;
 					}
@@ -1254,11 +1255,11 @@ public class Wrapper : ITalkWrapper
 			catch (System.Exception e)
 			{
 				logger.Warn($"error dialog opend: {e?.Message}");
-				MessageBox.Show(
+				MessageDialog.Show(
 					$"「{outDirPath}」に新しくフォルダを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e?.Message}",
 					"フォルダの作成に失敗！",
-					MessageBoxButton.OK,
-					MessageBoxImage.Error
+
+					MessageDialogType.Error
 				);
 				logger.Error($"failed to create a export directory:{outDirPath}");
 				logger.Error($"{e?.Message}");
@@ -1275,11 +1276,11 @@ public class Wrapper : ITalkWrapper
 		}
 		catch (Exception e)
 		{
-			MessageBox.Show(
+			MessageDialog.Show(
 				$"ファイルの書き出し先（{outDirPath}, {outFile}）を上手く作れませんでした。\n詳細：{e.Message}",
 				"ファイルの書き出し先作成に失敗！",
-				MessageBoxButton.OK,
-				MessageBoxImage.Error
+
+				MessageDialogType.Error
 			);
 			logger.Error($"failed to create a output path:{outDirPath}, {outFile}");
 			logger.Error($"{e.Message}");
@@ -1300,11 +1301,11 @@ public class Wrapper : ITalkWrapper
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show(
+					MessageDialog.Show(
 						$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
 						"ファイルの作成に失敗！",
-						MessageBoxButton.OK,
-						MessageBoxImage.Error
+
+						MessageDialogType.Error
 				   );
 					logger.Error($"failed to create a file:{outPath}");
 					logger.Error($"{e.Message}");
@@ -1324,11 +1325,11 @@ public class Wrapper : ITalkWrapper
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show(
+				MessageDialog.Show(
 					$"「{outPath}」にファイルを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
 					"ファイルの作成に失敗！",
-					MessageBoxButton.OK,
-					MessageBoxImage.Error
+
+					MessageDialogType.Error
 			   );
 				logger.Error($"failed to create a file:{outPath}");
 				logger.Error($"{e.Message}");
@@ -1343,7 +1344,7 @@ public class Wrapper : ITalkWrapper
 			var psi = new ProcessStartInfo()
 			{
 				FileName = Path.GetFullPath(outPath)//,
-				//UseShellExecute = true
+													//UseShellExecute = true
 			};
 			await Task.Run(() => Process.Start(psi));
 		}
@@ -1446,11 +1447,11 @@ public class Wrapper : ITalkWrapper
 			}
 			catch (System.Exception e)
 			{
-				MessageBox.Show(
+				MessageDialog.Show(
 					$"「{outDirPath}」に新しくフォルダを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e.Message}",
 					"フォルダの作成に失敗！",
-					MessageBoxButton.OK,
-					MessageBoxImage.Error
+
+					MessageDialogType.Error
 				);
 				logger.Error($"failed to create a export directory:{outDirPath}");
 				logger.Error($"{e.Message}");
@@ -1471,11 +1472,11 @@ public class Wrapper : ITalkWrapper
 		}
 		catch (System.Exception e)
 		{
-			MessageBox.Show(
+			MessageDialog.Show(
 				$"セリフファイルの保存に失敗しました。ファイル「{outFile}」を「{outDirPath}」に保存できませんでした。\n詳細：{e.Message}",
 				"セリフファイルの保存に失敗！",
-				MessageBoxButton.OK,
-				MessageBoxImage.Error
+
+				MessageDialogType.Error
 			);
 			logger.Error($"failed to save a serif file:{outPath}");
 			logger.Error($"{e.Message}");
