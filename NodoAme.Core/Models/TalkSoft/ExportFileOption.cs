@@ -43,4 +43,6 @@ public record ExportFileOption
 	public ScoreDynamics Dynamics { get; set; }
 		= ScoreDynamics.N;
 	public double Tempo { get; set; } = 150;
+	public string SoundFilePath { get; set; } = "";
+	public string LabelFilePath { get; set; } = "";
 }

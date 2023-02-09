@@ -241,26 +241,21 @@ public class Voicevox
 
 
 		var sRes = await SynthesisAsync(serif);
-
-		double time = 0.0;
 		Debug.WriteLine($"SAMPLE RATE:{talkSoft.SampleRate}");
-		await Task.Run(() =>
+
+		using var ms = new MemoryStream(sRes.RawBytes);
+		var rs = new RawSourceWaveStream(
+			ms,
+			new WaveFormat(talkSoft.SampleRate, 16, 1)
+		);
+		double time = rs.TotalTime.TotalSeconds;
+		using var wo = new WaveOutEvent();
+		wo.Init(rs);
+		wo.Play();
+		while (wo.PlaybackState == PlaybackState.Playing)
 		{
-			using var ms = new MemoryStream(sRes.RawBytes);
-			var rs = new RawSourceWaveStream(
-				ms,
-				new WaveFormat(talkSoft.SampleRate, 16, 1)
-			);
-			time = rs.TotalTime.TotalSeconds;
-			var wo = new WaveOutEvent();
-			wo.Init(rs);
-			wo.Play();
-			while (wo.PlaybackState == PlaybackState.Playing)
-			{
-				Thread.Sleep(500);
-			}
-			wo.Dispose();
-		});
+			await Task.Delay(500);
+		}
 
 		return time;
 	}

@@ -37,19 +37,54 @@ public static class PhonemeConverter{
 		bool isConvertToHiragana = false
 	)
 	{
-		if (Regex.IsMatch(sourceText, @"^\s+")) {
+		if (Regex.IsMatch(sourceText, @"^\s+"))
+		{
 			return "";
 		}
 
-		var pList = new List<string>();
-
-		var debugLabels = "";
 		var labels = await talkEngine.GetLabelsAsync(sourceText);
+		return ConvertCore(
+			isUseSeparaterSpace,
+			isCheckJapaneseSyllabicNasal,
+			isCheckJapaneseNasalSonantGa,
+			vowelOption,
+			isConvertToHiragana,
+			labels);
+	}
+
+	public static async ValueTask<string> ConvertAsync(
+		IList<string> labels,
+		bool isUseSeparaterSpace = true,
+		bool isCheckJapaneseSyllabicNasal = false,
+		bool isCheckJapaneseNasalSonantGa = false,
+		Models.VowelOptions vowelOption = Models.VowelOptions.DoNothing,
+		bool isConvertToHiragana = false
+	){
+		return await Task.Run(()
+			=> ConvertCore(
+				isUseSeparaterSpace,
+				isCheckJapaneseSyllabicNasal,
+				isCheckJapaneseNasalSonantGa,
+				vowelOption,
+				isConvertToHiragana,
+				labels));
+	}
+
+	private static string ConvertCore(
+		bool isUseSeparaterSpace,
+		bool isCheckJapaneseSyllabicNasal,
+		bool isCheckJapaneseNasalSonantGa,
+		VowelOptions vowelOption,
+		bool isConvertToHiragana,
+		IList<string> labels)
+	{
+		var pList = new List<string>();
 		foreach (var label in labels)
 		{
 			//phonome only
 			var phenoms = GetPhonemeFromContextLabel(label);
-			if(phenoms.Length-1 < CURRENT_PHENOME_IDY){
+			if (phenoms.Length - 1 < CURRENT_PHENOME_IDY)
+			{
 				continue;
 			}
 
@@ -125,12 +160,6 @@ public static class PhonemeConverter{
 						break;
 					}
 			}
-
-			//full label
-			if (isDebugOutput)
-			{
-				debugLabels += $"{label}\r\n";
-			}
 		}
 
 		CurrentPhonemes = pList;
@@ -146,10 +175,10 @@ public static class PhonemeConverter{
 	}
 
 	/// <summary>
-    /// かなに変換
-    /// </summary>
-    /// <param name="phonemes">音素文字列</param>
-    /// <returns>かな文字列</returns>
+	/// かなに変換
+	/// </summary>
+	/// <param name="phonemes">音素文字列</param>
+	/// <returns>かな文字列</returns>
 	public static string ConvertToKana(string phonemes)
 	{
 		var kanaOption = new WanaKanaOptions

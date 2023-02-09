@@ -1052,7 +1052,7 @@ public class MainWindowViewModel
 		};
 	}
 
-	private async ValueTask<Wrapper> GenerateWrapperAsync(
+	public async ValueTask<Wrapper> GenerateWrapperAsync(
 		string engine,
 		TalkSoft soft,
 		TalkSoftVoice? voice = null,

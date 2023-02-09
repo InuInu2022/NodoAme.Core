@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Xml.Linq;
 
 using Microsoft.Win32;
@@ -16,9 +15,7 @@ using Microsoft.Win32;
 using NAudio.Wave;
 
 using NLog;
-
 using NodoAme.Models;
-
 using SharpOpenJTalk;
 
 namespace NodoAme;
@@ -265,6 +262,14 @@ public class Wrapper : ITalkWrapper
 					break;
 				}
 
+			case TalkEngine.SOUNDFILE:
+				{
+					engine = await SpeakFileTalker
+						.FactoryAsync();
+
+					break;
+				}
+
 			case TalkEngine.OPENJTALK:
 			default:
 				{
@@ -397,8 +402,20 @@ public class Wrapper : ITalkWrapper
 					Debug.WriteLine(vps);
 					return MakePsudoLabels((dynamic)vps);
 				}
-			//TalkVoice.Id
-			//break;
+
+			case TalkEngine.SOUNDFILE:
+				{
+					//use LibSasara.Lab
+					var sft = engine as SpeakFileTalker;
+					var ps = await sft!.GetPhonemesAsync(sourceText);
+					Debug.WriteLine(
+						ps
+							.Select(v => v.Phoneme)
+							.ToArray()
+					);
+					return MakePsudoLabels(ps)!;
+				}
+
 			case TalkEngine.OPENJTALK:
 			default:
 				return await Task.Run(
@@ -514,6 +531,7 @@ public class Wrapper : ITalkWrapper
 					break;
 				}
 
+			case TalkEngine.SOUNDFILE:
 			default:
 				//return styles;
 				break;
@@ -556,6 +574,7 @@ public class Wrapper : ITalkWrapper
 					break;
 				}
 
+			case TalkEngine.SOUNDFILE:
 			case TalkEngine.OPENJTALK:
 			case TalkEngine.VOICEVOX:
 			default:
@@ -672,6 +691,14 @@ public class Wrapper : ITalkWrapper
 					break;
 				}
 
+			case TalkEngine.SOUNDFILE:
+				{
+					var sft = this.engine as SpeakFileTalker;
+					var path = text;
+					time = await sft!.SpeakAsync(path);
+					break;
+				}
+
 			default:
 
 				break;
@@ -739,6 +766,7 @@ public class Wrapper : ITalkWrapper
 					break;
 				}
 
+			case TalkEngine.SOUNDFILE:
 			default:
 				//なにもしない
 				break;
@@ -748,6 +776,7 @@ public class Wrapper : ITalkWrapper
 	private void SetEngineParam(bool isInit = false)
 	{
 		var tp = this.TalkSoft.TalkSoftParams;
+		if (tp is null) { return; }
 
 		//値を割当
 		foreach (var p in tp!)
@@ -782,6 +811,7 @@ public class Wrapper : ITalkWrapper
 						break;
 					}
 
+				case TalkEngine.SOUNDFILE:
 				default:
 					break;
 			}
@@ -835,7 +865,9 @@ public class Wrapper : ITalkWrapper
 		SetEngineParam();
 
 		//serifLen = engine.GetTextDuration(serifText);
-		var dandp = await this.GetTextDurationAndPhonemesAsync(option.SerifText);
+		var dandp = (engineType is TalkEngine.SOUNDFILE) ?
+			await GetTextDurationAndPhonemesFromFileAsync(option.LabelFilePath)	 :
+			await GetTextDurationAndPhonemesAsync(option.SerifText);
 		///
 		double serifLen = dandp.duration;
 		var phs = dandp.phs;
@@ -847,7 +879,9 @@ public class Wrapper : ITalkWrapper
 		MakeLabFile(phs);
 
 		//Estimate F0
-		WorldParameters parameters = await EstimateF0Async(option.SerifText);
+		var parameters = (engineType is TalkEngine.SOUNDFILE) ?
+			await EstimateFileAsync(option.SoundFilePath) :
+			await EstimateF0Async(option.SerifText);
 
 		//Note elements
 		var scoreNodes = tmplTrack.Descendants("Score");
@@ -1010,42 +1044,6 @@ public class Wrapper : ITalkWrapper
 
 		logger.Info($"Export file sucess!{option.ExportPath}:{option.SerifText}");
 		return true;//new ValueTask<bool>(true);
-	}
-
-	/// <summary>
-	/// ファイルにエクスポートする
-	/// </summary>
-	/// <param name="serifText"></param>
-	/// <param name="isExportAsTrack">trueの場合はccst</param>
-	/// <returns></returns>
-	/// <exception cref="NullReferenceException"></exception>
-	public async ValueTask<bool> ExportFileAsync(
-		string serifText,
-		string castId,
-		double alpha,
-		bool isExportAsTrack = true,
-		bool isOpenCeVIO = false,
-		string exportPath = "",
-		ExportLyricsMode exportMode = ExportLyricsMode.KANA,
-		SongCast? cast = null,
-		NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED,
-		NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND,
-		ExportFileType fileType = ExportFileType.CCS,
-		BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
-		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
-		NoPitchModes noPitch = NoPitchModes.NONE,
-		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME,
-		ScoreDynamics dynamics = ScoreDynamics.N,
-		double tempo = 150
-	)
-	{
-		return await ExportFileAsync(
-			new(serifText, castId)
-			{
-				Alpha = alpha,
-				IsExportAsTrack = isExportAsTrack
-			}
-		);
 	}
 
 	/// <summary>
@@ -1226,6 +1224,12 @@ public class Wrapper : ITalkWrapper
 		{
 			phs.Add(new("sil", 0, 0));
 		}
+	}
+
+	private async ValueTask<(double duration, List<Models.Label> phs)> GetTextDurationAndPhonemesFromFileAsync(string path){
+		var sft = engine as SpeakFileTalker;
+		(var phonemes, var len) = await sft!.GetPhonemesAndLengthAsync(path);
+		return (len, phs: (phonemes as Label[]).ToList());
 	}
 
 	private async ValueTask ExportCoreAsync(
@@ -1565,7 +1569,19 @@ public class Wrapper : ITalkWrapper
 			logger.Error(msg);
 			throw new Exception(msg);
 		}
-		var (fs, nbit, len, x) = await Task.Run(() => WorldUtil.ReadWav(tempName));
+
+		var param = await EstimateFileAsync(tempName);
+
+		if (tempName != null && File.Exists(tempName))
+		{
+			await Task.Run(() => File.Delete(tempName));  //remove temp file
+		}
+
+		return param;
+	}
+
+	private async ValueTask<WorldParameters> EstimateFileAsync(string path){
+		var (fs, nbit, len, x) = await Task.Run(() => WorldUtil.ReadWav(path));
 		var parameters = new WorldParameters(fs);
 		//ピッチ推定
 		await Task.Run(() => WorldUtil.EstimateF0(
@@ -1580,10 +1596,6 @@ public class Wrapper : ITalkWrapper
 			len,
 			parameters
 		));
-		if (tempName != null && File.Exists(tempName))
-		{
-			await Task.Run(() => File.Delete(tempName));  //remove temp file
-		}
 
 		return parameters;
 	}

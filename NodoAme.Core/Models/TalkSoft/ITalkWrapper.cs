@@ -14,26 +14,6 @@ public interface ITalkWrapper
 	TalkSoft TalkSoft { get; set; }
 	bool IsActive { get; set; }
 
-	ValueTask<bool> ExportFileAsync(
-		string serifText,
-		string castId,
-		double alpha,
-		bool isExportAsTrack = true,
-		bool isOpenCeVIO = false,
-		string exportPath = "",
-		ExportLyricsMode exportMode = ExportLyricsMode.KANA,
-		SongCast? cast = null,
-		NoteAdaptMode noteAdaptMode = NoteAdaptMode.FIXED,
-		NoteSplitModes noteSplitMode = NoteSplitModes.IGNORE_NOSOUND,
-		ExportFileType fileType = ExportFileType.CCS,
-		BreathSuppressMode breathSuppress = BreathSuppressMode.NONE,
-		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles = null,
-		NoPitchModes noPitch = NoPitchModes.REMOVE,
-		NoSoundVowelsModes noSoundVowelsModes = NoSoundVowelsModes.VOLUME,
-		ScoreDynamics dynamics = ScoreDynamics.N,
-		double tempo = 150
-	);
-
 	ValueTask<bool> ExportFileAsync(ExportFileOption option);
 
 	ValueTask<bool> ExportSerifTextFileAsync(
