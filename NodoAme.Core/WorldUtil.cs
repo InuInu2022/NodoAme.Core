@@ -62,11 +62,11 @@ public static class WorldUtil
 		}
 
 		var opt = new HarvestOption();
-		Core.InitializeHarvestOption(opt);
+		DotnetWorld.API.Core.InitializeHarvestOption(opt);
 		opt.frame_period = wParam.frame_period;
 		opt.f0_floor = 90.0;    //声の周波数の下のライン
 
-		wParam.f0_length = Core.GetSamplesForDIO(
+		wParam.f0_length = DotnetWorld.API.Core.GetSamplesForDIO(
 			wParam.fs,
 			audioLength,
 			wParam.frame_period
@@ -77,7 +77,7 @@ public static class WorldUtil
 		System.Diagnostics.Debug.WriteLine("Analysis");
 		try
 		{
-			Core.Harvest(
+			DotnetWorld.API.Core.Harvest(
 				x.ToArray(),
 				audioLength,
 				wParam.fs,
@@ -110,14 +110,14 @@ public static class WorldUtil
 	{
 		var opt = new CheapTrickOption();
 
-		Core.InitializeCheapTrickOption(wParam.fs, opt);
+		DotnetWorld.API.Core.InitializeCheapTrickOption(wParam.fs, opt);
 
 		opt.q1 = -0.15;
 		opt.f0_floor = 71.0;
 
-		wParam.fft_size = Core.GetFFTSizeForCheapTrick(wParam.fs, opt);
+		wParam.fft_size = DotnetWorld.API.Core.GetFFTSizeForCheapTrick(wParam.fs, opt);
 		wParam.spectrogram = new double[wParam.f0_length, (wParam.fft_size / 2) + 1];
-		Core.CheapTrick(
+		DotnetWorld.API.Core.CheapTrick(
 			x,
 			audioLength,
 			wParam.fs,
