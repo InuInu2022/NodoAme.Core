@@ -627,10 +627,16 @@ public class MainWindowViewModel
 			var isNoSerif =
 				string.IsNullOrEmpty(item.SourceText)
 					|| string.IsNullOrWhiteSpace(item.SourceText);
+			var hasSoundFile =
+				item.CurrentEngineType is TalkEngine.SOUNDFILE &&
+					item.HasSoundFile;
+			var hasLabelFile =
+				item.CurrentEngineType is TalkEngine.SOUNDFILE &&
+					item.HasLabelFile;
 			item.EnabledPreview =
-				!isForceDisable && !isNoSerif && canPreview;
+				!isForceDisable && (!isNoSerif || hasSoundFile) && canPreview;
 			item.EnabledExport =
-				!isForceDisable && !isNoSerif && canExport;
+				!isForceDisable && (!isNoSerif || hasLabelFile) && canExport;
 			item.EnabledSerifInput = !isForceDisable;
 		}
 	}

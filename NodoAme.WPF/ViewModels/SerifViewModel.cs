@@ -41,6 +41,18 @@ public class SerifViewModel
 	private string? LastSourceText { get; set; }
 	private SongCast? LastCast { get; set; }
 
+	public bool HasSoundFile {
+		get =>
+			!string.IsNullOrEmpty(SoundFilePath) &&
+				File.Exists(SoundFilePath);
+	}
+
+	public bool HasLabelFile {
+		get =>
+			!string.IsNullOrEmpty(LabelFilePath) &&
+				File.Exists(LabelFilePath);
+	}
+
 	private string SoundFilePath { get; set; } = "";
 	private string LabelFilePath { get; set; } = "";
 
