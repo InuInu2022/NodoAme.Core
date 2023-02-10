@@ -1590,7 +1590,6 @@ public class Wrapper : ITalkWrapper
 
 		//TODO: フォーマット変換
 		var format = new WaveFormat(48000, 16, 1);
-		MediaFoundationApi.Startup();
 
 		using var reader = new AudioFileReader(path);
 
