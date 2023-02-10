@@ -59,7 +59,7 @@ public class SpeakFileTalker: IDisposable,ITalkManager
 			return -1;
 		}
 
-		//TODO: play wav file
+		//play wav/mp3 file
 		using var audioFile = new AudioFileReader(path);
 		using var wo = new WaveOutEvent();
 		wo.Init(audioFile);

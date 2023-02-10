@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using Microsoft.Win32;
-
+using NAudio.MediaFoundation;
 using NAudio.Wave;
-
+using NAudio.Wave.SampleProviders;
 using NLog;
 using NodoAme.Models;
 using SharpOpenJTalk;
@@ -1570,7 +1570,7 @@ public class Wrapper : ITalkWrapper
 			throw new Exception(msg);
 		}
 
-		var param = await EstimateFileAsync(tempName);
+		var param = await EstimateFileCoreAsync(tempName);
 
 		if (tempName != null && File.Exists(tempName))
 		{
@@ -1580,7 +1580,58 @@ public class Wrapper : ITalkWrapper
 		return param;
 	}
 
+	/// <summary>
+    /// いろいろな種類の音声ファイルを16bit/48khzに変換して解析してから解析する
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
 	private async ValueTask<WorldParameters> EstimateFileAsync(string path){
+		var tempName = Path.GetTempFileName();
+
+		//TODO: フォーマット変換
+		var format = new WaveFormat(48000, 16, 1);
+		MediaFoundationApi.Startup();
+
+		using var reader = new AudioFileReader(path);
+
+		var resampler = new WdlResamplingSampleProvider(reader, format.SampleRate);
+
+		ISampleProvider sp = resampler
+			.ToMono()
+			.ToWaveProvider16()
+			.ToSampleProvider();
+
+		//AudioFileReader always 32bit float
+		using var checker = new WaveFileReader(path);
+		var wf = checker.WaveFormat;
+		Debug.WriteLine($"sample:{wf.SampleRate}, bit:{wf.BitsPerSample}");
+
+		//WaveFormat.CreateIeeeFloatWaveFormat(48000, 1);
+
+		//TODO: no convert if 16bit/48k wav
+
+		await Task.Run(() => WaveFileWriter.CreateWaveFile16(tempName, sp));
+
+		using var reader2 = new WaveFileReader(tempName);
+		var wf2 = reader2.WaveFormat;
+		Debug.WriteLine($"sample:{wf2.SampleRate}, bit:{wf2.BitsPerSample}, ch:{wf2.Channels}");
+		reader2.Dispose();
+
+		//TODO: use in-memory buffer
+		//byte[] buffer = new byte[stream.Length];
+		//stream.Read(buffer, 0, buffer.Length);
+
+		var param = await EstimateFileCoreAsync(tempName);
+
+		if (tempName != null && File.Exists(tempName))
+		{
+			await Task.Run(() => File.Delete(tempName));  //remove temp file
+		}
+
+		return param;
+	}
+
+	private async ValueTask<WorldParameters> EstimateFileCoreAsync(string path){
 		var (fs, nbit, len, x) = await Task.Run(() => WorldUtil.ReadWav(path));
 		var parameters = new WorldParameters(fs);
 		//ピッチ推定

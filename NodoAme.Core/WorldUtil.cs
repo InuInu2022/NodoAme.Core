@@ -147,6 +147,7 @@ public static class WorldUtil
 		var audioLength = Tools.GetAudioLength(filename);
 		if(audioLength<0){
 			using var rd = new NAudio.Wave.WaveFileReader(filename);
+			rd.Position = 0;
 			try
 			{
 				audioLength = Convert.ToInt32(rd.Length);
@@ -156,6 +157,26 @@ public static class WorldUtil
 				logger
 					.Warn($"A wav file '{filename}' length is too long.:{ex.Message}");
 			}
+
+			byte[] buffer = new byte[audioLength];
+			rd.Position = 0;
+    		var readed = rd.Read(buffer, 0, buffer.Length);
+
+			double[] samples = new double[audioLength / rd.BlockAlign];
+			rd.Position = 0;
+			for (int i = 0; i < samples.Length; i++)
+			{
+				var f = rd.ReadNextSampleFrame();
+				samples[i] = f[0];
+				//samples[i] = BitConverter.ToInt16(buffer, i * rd.BlockAlign) / 32768f;
+			}
+
+			return (
+				fs: rd.WaveFormat.SampleRate,
+				nbit: rd.WaveFormat.BitsPerSample,
+				samples.Length,
+				x: samples
+			);
 		}
 
 		var x = new double[audioLength];
