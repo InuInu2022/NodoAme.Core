@@ -443,6 +443,15 @@
 			"voiceVersion":"1.3.0"
 		},
 		{
+			"id":"nitech-jp_en_US_f008_svss.tsnvoice",
+			"name":"⚠Chis-A (ENG)",
+			"songSoft":"VoiSona",
+			"lyricsMode":"PHONEME",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Chis-A",
+			"voiceVersion":"1.0.0"
+		},
+		{
 			"id":"techno-sp_ja_JP_f801_svss.tsnvoice",
 			"name":"さとうささら",
 			"songSoft":"VoiSona",
