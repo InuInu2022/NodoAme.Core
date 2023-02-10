@@ -447,23 +447,27 @@
                       >
                     </TextBlock>
 
-                    <WrapPanel Visibility="{Binding DropFileNameView}">
-                      <fa:FontAwesome Icon="Solid_FileAudio"
-                        FontSize="14"
+                    <DockPanel
+                      LastChildFill="True"
+                      Visibility="{Binding DropFileNameView}">
+                      <TextBlock
+                          x:Name="SerifFileTextView"
+                          DockPanel.Dock="Top"
+                          Text="{Binding DropFileSerif}"
+                          Padding="5"
+                          TextWrapping="Wrap"
+                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
+                          >
+                      </TextBlock>
+                      <fa:FontAwesome
+                        DockPanel.Dock="Left"
+                        Icon="Solid_FileAudio"
                         Margin="5"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         />
-                      <TextBlock
-                        x:Name="fileNameView"
-                        Text="{Binding DropFileName}"
-                        FontSize="14"
-                        Padding="5"
-                        HorizontalAlignment="Stretch"
-                        Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
-                        >
-                      </TextBlock>
                       <Button Content="&#xE711;"
+                        DockPanel.Dock="Right"
                         FontSize="14"
                         FontFamily="Segoe MDL2 Assets"
                         HorizontalAlignment="Right"
@@ -471,30 +475,47 @@
                         Command="{Binding ResetDropFile}"
                         Style="{StaticResource ButtonRoundRevealStyle}">
                       </Button>
-                    </WrapPanel>
+                      <TextBlock
+                          x:Name="fileNameView"
+                          DockPanel.Dock="Bottom"
+                          Text="{Binding DropFileName}"
+                          FontSize="11"
+                          Padding="5"
+                          VerticalAlignment="Center"
+                          TextWrapping="Wrap"
+                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
+                          >
+                      </TextBlock>
+                    </DockPanel>
+
                   </StackPanel>
                 </DataTemplate>
               </DataGridTemplateColumn.CellTemplate>
               <DataGridTemplateColumn.CellEditingTemplate>
                 <DataTemplate>
                   <DockPanel LastChildFill="True">
-                    <WrapPanel Visibility="{Binding DropFileNameView}">
-                      <fa:FontAwesome Icon="Solid_FileAudio"
-                        FontSize="14"
+
+                    <DockPanel
+                      LastChildFill="True"
+                      Visibility="{Binding DropFileNameView}">
+                      <TextBlock
+                          x:Name="SerifFileTextView"
+                          DockPanel.Dock="Top"
+                          Text="{Binding DropFileSerif}"
+                          Padding="5"
+                          TextWrapping="Wrap"
+                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
+                          >
+                      </TextBlock>
+                      <fa:FontAwesome
+                        DockPanel.Dock="Left"
+                        Icon="Solid_FileAudio"
                         Margin="5"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         />
-                      <TextBlock
-                        x:Name="fileNameView"
-                        Text="{Binding DropFileName}"
-                        FontSize="14"
-                        Padding="5"
-                        HorizontalAlignment="Left"
-                        Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
-                        >
-                      </TextBlock>
                       <Button Content="&#xE711;"
+                        DockPanel.Dock="Right"
                         FontSize="14"
                         FontFamily="Segoe MDL2 Assets"
                         HorizontalAlignment="Right"
@@ -502,7 +523,18 @@
                         Command="{Binding ResetDropFile}"
                         Style="{StaticResource ButtonRoundRevealStyle}">
                       </Button>
-                    </WrapPanel>
+                      <TextBlock
+                          x:Name="fileNameView"
+                          DockPanel.Dock="Bottom"
+                          Text="{Binding DropFileName}"
+                          FontSize="11"
+                          Padding="5"
+                          VerticalAlignment="Center"
+                          TextWrapping="Wrap"
+                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
+                          >
+                      </TextBlock>
+                    </DockPanel>
 
                     <TextBox
                       DockPanel.Dock="Top"

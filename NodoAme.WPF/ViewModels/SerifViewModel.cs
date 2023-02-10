@@ -16,6 +16,7 @@ public class SerifViewModel
 	public string? ConvertedText { get; set; }
 	public string? SerifTime { get; set; }
 	public string DropFileName { get; set; } = "";
+	public string DropFileSerif { get; set; } = "";
 	public MainWindowViewModel? ParentVM { get; set; }
 	public bool EnabledSerifInput { get; set; }
 	public bool EnabledPreview { get; set; }
@@ -55,6 +56,8 @@ public class SerifViewModel
 
 	private string SoundFilePath { get; set; } = "";
 	private string LabelFilePath { get; set; } = "";
+
+	private string SerifFilePath { get; set; } = "";
 
 	public SerifViewModel()
 	{
@@ -100,7 +103,8 @@ public class SerifViewModel
 					cast.Id!,
 					alpha,
 					isTrack: true,
-					songCast: cast
+					songCast: cast,
+					serifText: DropFileSerif
 				);
 			}else{
 				//TODO: use `this.ExportFileAsync()`
@@ -125,7 +129,8 @@ public class SerifViewModel
 			Command.Factory.CreateSync(
 				() =>
 				{
-					DropFileName = "";
+					DropFileName = string.Empty;
+					DropFileSerif = string.Empty;
 					SourceTextVisible = Visibility.Visible;
 					DropFileNameView = Visibility.Collapsed;
 					EnabledExport = true;
@@ -179,6 +184,8 @@ public class SerifViewModel
 			await Task.Run(() =>
 				Debug.WriteLine($"dropfile:{paths[0]}"));
 
+			#region sound file
+
 			var target = paths[0];
 			DropFileName = Path.GetFileName(target);
 
@@ -195,6 +202,10 @@ public class SerifViewModel
 				EnabledPreview = false;
 				SoundFilePath = string.Empty;
 			}
+
+			#endregion
+
+			#region lab file
 
 			var lab = Path.ChangeExtension(target, "lab");
 			if (File.Exists(lab))
@@ -218,6 +229,19 @@ public class SerifViewModel
 				ConvertedText = $"lab file {lab} is NOT FOUND!";
 				LabelFilePath = string.Empty;
 			}
+
+			#endregion
+
+			#region serif file
+
+			var serif = Path.ChangeExtension(target, ".txt");
+			if(File.Exists(serif)){
+				DropFileSerif = File.ReadAllText(serif);
+			}else{
+				DropFileSerif = string.Empty;
+			}
+
+			#endregion
 		};
 	}
 
@@ -271,7 +295,8 @@ public class SerifViewModel
 		double alpha,
 		bool isTrack = false,
 		SongCast? songCast = null,
-		string? engineName = null
+		string? engineName = null,
+		string? serifText = null
 	)
 	{
 		CurrentEngine = await ParentVM!.GenerateWrapperAsync(
@@ -285,10 +310,23 @@ public class SerifViewModel
 
 		var engine = CurrentEngine as ITalkWrapper;
 
-		var serif = CurrentEngineType is TalkEngine.SOUNDFILE ?
-			Path.GetFileNameWithoutExtension(sourcePath) :
-			//TODO:support seriftext
-			"";
+		string serif;
+		if (CurrentEngineType is TalkEngine.SOUNDFILE)
+		{
+			if (!string.IsNullOrEmpty(serifText))
+			{
+				serif = serifText!;
+			}
+			else
+			{
+				serif = Path.GetFileNameWithoutExtension(sourcePath);
+			}
+		}
+		else
+		{
+			serif = "";
+		}
+
 		await engine!.ExportFileAsync(
 			new(serif, castId)
 			{
