@@ -1046,7 +1046,7 @@ public class MainWindowViewModel
 				TalkVoiceStyleParams ?? new()
 			);
 			await talkEngine.ExportSpecialFileAsync(
-				ExportCastItems[ExportCastSelected],
+				ExportSongCastItems![ExportSongCastSelected]!,
 				IsExportAsTrac,
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory,
