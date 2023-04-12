@@ -100,7 +100,7 @@
       <ComboBox x:Name="PreviewVoiceComboBox"
                 Text="Voice"
                 ToolTip="{Tr 'ToolTips.PreviewVoiceComboBox'}"
-                Width="130"
+                Width="180"
                 Margin="3,10,0,0"
                 FontSize="16.0"
                 VerticalAlignment="Center"
