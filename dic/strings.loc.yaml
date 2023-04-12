@@ -208,13 +208,37 @@ Talk:
             &style_voicevox_zundamon
         # SHAREVOX voices
         小春音アミ:
-            &style_voicevox_zundamon
+            ノーマル:
+                en: Normal
+            喜び:
+                en: Happy
+            怒り:
+                en: Angry
+            悲しみ:
+                en: Sad
+            ノーマルv2:
+                en: Normal v2
+            喜びv2:
+                en: Happy v2
+            怒りv2:
+                en: Angry v2
+            悲しみv2:
+                en: Sad v2
         つくよみちゃん:
-            &style_voicevox_zundamon
+            おしとやか:
+                en: Graceful
+            おしとやかv2:
+                en: Graceful v2
         白痴ー:
-            &style_voicevox_zundamon
+            虚偽:
+                en: Lying
+            虚偽v2:
+                en: Lying v2
         Yくん/開発者:
-            &style_voicevox_zundamon
+            ノーマル:
+                en: Normal
+            ノーマルv2:
+                en: Normal v2
     Param:
         標準トーク:
             大きさ:
