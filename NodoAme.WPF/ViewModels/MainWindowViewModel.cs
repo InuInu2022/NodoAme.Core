@@ -123,6 +123,7 @@ public class MainWindowViewModel
 		= Enum.GetValues(typeof(NoPitchModes)).Cast<NoPitchModes>();
 
 	public NoSoundVowelsModes NoSoundVowelMode { get; set; }
+	public string? DisplayLanguage { get; set; }
 
 	public IEnumerable<NoSoundVowelsModes> NoSoundVowelModeList { get; set; }
 		= Enum.GetValues(typeof(NoSoundVowelsModes)).Cast<NoSoundVowelsModes>();
@@ -309,7 +310,7 @@ public class MainWindowViewModel
 		BreathSuppress = UserSettings.BreathSuppress;
 		NoPitchMode = UserSettings.NoPitchMode;
 		NoSoundVowelMode = UserSettings.NoSoundVowelMode;
-
+		DisplayLanguage = UserSettings.DisplayLanguage;
 		CheckUserSettingsWhenDebug();   //実装もれのチェック
 
 		logger.Info("UserSettings load finished.");
@@ -1429,6 +1430,18 @@ public class MainWindowViewModel
 	private async ValueTask NoteSpliteModeChangedAsync(NoteSplitModes value)
 	{
 		UserSettings!.NoteSplitMode = value;
+		await UserSettings.SaveAsync();
+	}
+
+	[PropertyChanged(nameof(DisplayLanguage))]
+	[SuppressMessage("Usage","IDE0051")]
+	private async ValueTask DisplayLanguageChangedAsync(string value){
+		if(UserSettings?.DisplayLanguage is null){
+			return;
+		}
+
+		Loc.Instance.CurrentLanguage = value;
+		UserSettings.DisplayLanguage = value;
 		await UserSettings.SaveAsync();
 	}
 }

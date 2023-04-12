@@ -61,6 +61,8 @@ public class UserSettings
 	public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NO_BREATH;
 	public NoPitchModes NoPitchMode { get; set; }
 	public NoSoundVowelsModes NoSoundVowelMode { get; set; }
+	public string DisplayLanguage { get; set; }
+		= System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
 	[JsonIgnore]
 	public const string UserSettingsFileName = "usersettings.json";

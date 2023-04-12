@@ -1099,7 +1099,7 @@
                   <Label Content="{Tr 'UI.Options.OtherOptions.Language'}" Margin="5" />
                   <ComboBox
                     ItemsSource="{Binding AvailableLanguages, Source={x:Static loc:Loc.Instance}}"
-                    SelectedItem="{Binding CurrentLanguage, Source={x:Static loc:Loc.Instance}}"/>
+                    SelectedItem="{Binding DisplayLanguage}"/>
               </WrapPanel>
             </WrapPanel>
           </Expander>
