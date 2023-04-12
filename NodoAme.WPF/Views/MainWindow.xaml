@@ -10,6 +10,7 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:fa="http://schemas.fontawesome.com/icons/fonts"
+        xmlns:loc="clr-namespace:CodingSeb.Localization;assembly=CodingSeb.Localization"
         ui:WindowHelper.UseModernWindowStyle="True"
         fw:AcrylicWindow.Enabled="True"
         fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
@@ -56,15 +57,16 @@
              Text="{Binding SourceText}" / -->
     <WrapPanel Grid.Row="0">
       <fa:FontAwesome Icon="Solid_CommentDots"
-                ToolTip="TALK VOICE: 演技指導するトークボイスを選択してください"
+                ToolTip="{Tr 'ToolTips.TalkVoiceIcon'}"
                 FontSize="20"
                 Margin="10,5,0,0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 />
+      <!--
       <ComboBox x:Name="TalkSoftComboBox"
                 Text="Engine"
-                ToolTip="しゃべらせるお手本になるトークソフトを選びます。&#xA;最初は NodoAme 標準エンジンです。&#xA;「⚠」のつくトークソフトは制限があります。"
+                ToolTip="{Tr 'ToolTips.TalkSoftComboBox'}"
                 ToolTipService.ShowDuration="10000000"
                 Width="130"
                 Margin="10,10,0,0"
@@ -76,9 +78,28 @@
                 ItemsSource="{Binding TalkSoftItems}"
                 IsEnabled="{Binding IsTalkSoftComboEnabled}"
                 SelectedIndex="{Binding TalkSoftSelected}" />
+      -->
+      <ComboBox x:Name="TalkSoftComboBox"
+                Text="Engine"
+                ToolTip="{Tr 'ToolTips.TalkSoftComboBox'}"
+                ToolTipService.ShowDuration="10000000"
+                Width="130"
+                Margin="10,10,0,0"
+                FontSize="16.0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding TalkSoftItems}"
+                IsEnabled="{Binding IsTalkSoftComboEnabled}"
+                SelectedIndex="{Binding TalkSoftSelected}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+              <TextBlock Text="{Tr {Binding Name}, TextIdStringFormat='Talk.Engine.{0}'}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
       <ComboBox x:Name="PreviewVoiceComboBox"
                 Text="Voice"
-                ToolTip="しゃべらせるお手本になる、トークのボイスを選びます。&#xA;最初は NodoAme 標準ボイスです。"
+                ToolTip="{Tr 'ToolTips.PreviewVoiceComboBox'}"
                 Width="130"
                 Margin="3,10,0,0"
                 FontSize="16.0"
@@ -91,7 +112,7 @@
                 SelectedIndex="{Binding TalkVoiceSelected}" />
       <ComboBox x:Name="StylePresetComboBox"
                 Text="VoiceStyle"
-                ToolTip="ボイスの感情・スタイル・声質プリセットを選びます"
+                ToolTip="{Tr 'ToolTips.StylePresetComboBox'}"
                 Width="100"
                 Margin="3,10,0,0"
                 FontSize="16.0"
@@ -110,7 +131,7 @@
                 />
       <WrapPanel
                 Orientation="Vertical"
-                ToolTip="SONG VOICE: しゃべらせたい”ソング”ボイスを選択してください">
+                ToolTip="{Tr 'ToolTips.SongVoiceTip'}">
         <WrapPanel Orientation="Horizontal">
           <fa:FontAwesome Icon="Solid_Music"
                     FontSize="20"
@@ -119,7 +140,7 @@
                     HorizontalAlignment="Center"
                     />
           <ComboBox x:Name="ExportSongSoftComboBox"
-                    ToolTip="Song soft: ソングソフトを選びます。"
+                    ToolTip="{Tr 'ToolTips.ExportSongSoftComboBox'}"
                     Width="Auto"
                     Margin="0,10,0,0"
                     FontSize="12.5"
@@ -130,7 +151,7 @@
                     SelectedIndex="{Binding ExportSongSoftSelected}"
                     />
           <ComboBox x:Name="ExportSongCastComboBox"
-                    ToolTip="Song cast: 喋らせるソングキャストを選びます&#xA;「⚠」のついたキャストはまだ上手くしゃべれません。"
+                    ToolTip="{Tr 'ToolTips.ExportSongCastComboBox'}"
                     Width="Auto"
                     Margin="0,10,0,0"
                     FontSize="16.0"
@@ -159,7 +180,7 @@
         <WrapPanel Orientation="Horizontal">
           <ComboBox x:Name="exportLyricesMode"
               Width="Auto"
-              ToolTip="歌詞の出力方法を選びます。&#xA;CeVIO AIは「PHONEME」（音素）、CeVIO CSは「KANA」（ひらがな）がベストです。"
+              ToolTip="{Tr 'ToolTips.ExportLyricesMode'}"
               ToolTipService.ShowDuration="10000000"
               Margin="3,10,0,0"
               FontSize="12.5"
@@ -170,7 +191,7 @@
               />
           <ComboBox x:Name="noteSplitModeByCast"
               Width="Auto"
-              ToolTip="【⚠実験機能】SPLIT_ONLY:0.3までの文節単位分割、SPLIT_SILENTNOTE:修正文節単位分割（デフォルト）, SILLABLE:音節単位分割（日本語のみ）,IGNORE_NOSOUND:未使用"
+              ToolTip="{Tr 'ToolTips.NoteSplitModeByCast'}"
               Margin="3,10,0,0"
               FontSize="12.5"
               VerticalAlignment="Top"
@@ -218,7 +239,7 @@
       <Expander.Header>
         <WrapPanel>
           <fa:FontAwesome Icon="Solid_Sliders" FontSize="14" Margin="2" />
-          <TextBlock Text="パラメータ" />
+          <TextBlock Text="{Tr 'UI.ParameterHeader'}" />
         </WrapPanel>
       </Expander.Header>
       <ScrollViewer Margin="0"
@@ -368,7 +389,7 @@
           <StackPanel Orientation="Vertical">
             <ComboBox x:Name="scoreDynamicsByCast"
                 Width="Auto"
-                ToolTip="Dynamics"
+                ToolTip="{Tr 'ToolTips.ScoreDynamicsByCast'}"
                 FontSize="12.5"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -376,7 +397,7 @@
                 SelectedItem="{Binding ExportScoreDynamics}"
                 />
             <ui:NumberBox
-                ToolTip="Tempo"
+                ToolTip="{Tr 'ToolTips.ScoreTempoByCast'}"
                 Width="Auto"
                 FontSize="12.5"
                 SmallChange="1"
@@ -427,7 +448,7 @@
           </ContextMenu>
         </DataGrid.ContextMenu -->
         <DataGrid.Columns>
-          <DataGridTemplateColumn Header="セリフ"
+          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Words'}"
                               Width="*"
                               >
               <DataGridTemplateColumn.CellTemplate>
@@ -439,7 +460,7 @@
                     <TextBlock
                       Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
                       TextWrapping="Wrap"
-                      ToolTip="ここに変換したいセリフや歌詞などの文字列を入れてください。"
+                      ToolTip="{Tr 'ToolTips.InputTextboxOfSpeechWord'}"
                       Padding="5"
                       AllowDrop="True"
                       VerticalAlignment="Stretch"
@@ -583,14 +604,14 @@
 
           </DataGridTextColumn>
           -->
-          <DataGridTemplateColumn Header="試聴"
+          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Listen'}"
                                   Width="SizeToCells">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
                 <StackPanel VerticalAlignment="Center">
                   <Button x:Name="PreviewButton"
                           Content=""
-                          ToolTip="文字列を現在のボイスでプレビュー試聴します。&#xA;⚠音素の差し替えオプションは反映されません。"
+                          ToolTip="{Tr 'ToolTips.PreviewButton'}"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Left"
                           Width="50"
@@ -606,7 +627,7 @@
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
-          <DataGridTemplateColumn Header="出力"
+          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Export'}"
                                   Width="SizeToCells">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
@@ -617,7 +638,7 @@
                         FontFamily="Segoe MDL2 Assets"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        ToolTip="ソング向けのCeVIOのファイルを出力します。&#xA;⚠音素の差し替えオプションは反映されません。"
+                        ToolTip="{Tr 'ToolTips.ExportButton'}"
                         Style="{StaticResource ButtonRoundRevealStyle}"
                         IsEnabled="{Binding EnabledExport}"
                         Command="{Binding ExportTrackFile}">
@@ -630,7 +651,7 @@
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
-          <DataGridTextColumn Header="秒"
+          <DataGridTextColumn Header="{Tr 'UI.SpeechWordsHeader.Seconds'}"
                               Width="SizeToHeader"
                               MinWidth="50"
                               Binding="{Binding SerifTime}"
@@ -638,7 +659,7 @@
             <DataGridTextColumn.ElementStyle>
               <Style TargetType="TextBlock">
                 <Setter Property="ToolTip"
-                        Value="セリフの時間を表示します。&#xA;⚠試聴ボタンを押すことで更新。" />
+                        Value="{Tr 'ToolTips.ShowSecondsColumn'}" />
                 <Setter Property="VerticalAlignment"
                         Value="Center" />
                 <Setter Property="HorizontalAlignment"
@@ -668,7 +689,7 @@
               </Style>
             </DataGridTextColumn.EditingElementStyle>
           </DataGridTextColumn>
-          <DataGridTemplateColumn Header="音素"
+          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Phoneme'}"
                                   Width="*">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
@@ -678,7 +699,7 @@
                            AcceptsReturn="False"
                            FontFamily="Georgia"
                            FontSize="16.5"
-                           ToolTip="音素の文字列を表示します。&#xA;オプションで音素の差し替えに対応します。"
+                           ToolTip="{Tr 'ToolTips.PhonemeTextboxCell'}"
                            IsReadOnly="True"
                            Style="{StaticResource TextBoxRevealStyle}"
                            Text="{Binding ConvertedText}" />
@@ -699,7 +720,7 @@
       <Expander.Header>
         <WrapPanel>
           <fa:FontAwesome Icon="Solid_EllipsisVertical" FontSize="14" Margin="5,2" />
-          <TextBlock Text="オプション" />
+          <TextBlock Text="{Tr 'UI.OptionHeader'}" />
         </WrapPanel>
       </Expander.Header>
       <ScrollViewer Margin="10,10,10,0"
@@ -712,21 +733,21 @@
                              MaxColumns="2"
                              Margin="10,0">
               <RadioButton x:Name="RadioOptionShowPhoneme"
-                           Content="音素"
-                           ToolTip="「音素」の表示に変換します。&#xA;CeVIOやVOICEVOXの音素表記形式です。"
+                           Content="{Tr 'UI.Options.ShowOptions.Phoneme'}"
+                           ToolTip="{Tr 'ToolTips.Options.ShowPhoneme'}"
                            IsChecked="{Binding IsConvertToPhoneme}" />
               <RadioButton x:Name="RadioOptionShowHiragana"
-                           Content="ひらがな"
-                           ToolTip="実際の発音の「ひらがな」に変換します。&#xA;例：「こんにちは」→「こんにちわ」"
+                           Content="{Tr 'UI.Options.ShowOptions.Kana'}"
+                           ToolTip="{Tr 'ToolTips.Options.ShowHiragana'}"
                            IsEnabled="true"
                            IsChecked="{Binding IsConvertToHiragana}" />
             </ui:RadioButtons>
             <CheckBox x:Name="Spacing"
-                      Content="スペース区切り"
+                      Content="{Tr 'UI.Options.ShowOptions.Spacing'}"
                       Margin="10,0,10,0"
                       IsChecked="{Binding IsUseSeparaterSpace}" />
             <StackPanel Orientation="Horizontal">
-              <Label Content="表示行数" Margin="10,5,5,0" />
+              <Label Content="{Tr 'UI.Options.ShowOptions.DisplayLines'}" Margin="10,5,5,0" />
               <ui:NumberBox Width="100"
                           FontSize="11"
                           Minimum="2"
@@ -737,14 +758,14 @@
                           Value="{Binding DefaultSerifLines}" />
               <Label Content="⚠"
                       Margin="5,5,5,0"
-                      ToolTip="反映には再起動が必要です。"/>
+                      ToolTip="{Tr 'ToolTips.Options.NeedRestart'}"/>
             </StackPanel>
           </WrapPanel>
 
           <!-- ///////////////////////////note option////////////////////////// -->
           <Expander x:Name="phonemeOptions"
-                    Header="音素"
-                    ToolTip="音素に関係するオプションです。"
+                    Header="{Tr 'UI.Options.PhonemeOptions.Header'}"
+                    ToolTip="{Tr 'ToolTips.Options.PhonemeOptions'}"
                     ExpandDirection="Down"
                     IsExpanded="True"
                     VerticalAlignment="Top"
@@ -752,36 +773,37 @@
                     Margin="10,0,0,0">
             <WrapPanel fw:PointerTracker.Enabled="True">
               <CheckBox x:Name="ConvertNasal"
-                        Content="「ん」を変換する(N,n,m,ng)"
-                        ToolTip="「ん」の発音を4パターンに変換します。"
+                        Content="{Tr 'UI.Options.PhonemeOptions.ConvertNasal'}"
+                        ToolTip="{Tr 'ToolTips.Options.ConvertNasal'}"
                         IsChecked="{Binding IsCheckJapaneseSyllabicNasal}"
                         Margin="10,0"
                         IsEnabled="{Binding IsConvertToPhoneme}" />
               <CheckBox x:Name="ConvertGa"
-                        Content="「が行」を変換する(g,ng)"
-                        ToolTip="語頭のガ行は「g」,語中の鼻濁音ガ行は「n,g」に変換します。&#xA;※本当はもっと複雑ですが、シンプルな変換ルールです"
+                        Content="{Tr 'UI.Options.PhonemeOptions.ConvertGa'}"
+                        ToolTip="{Tr 'ToolTips.Options.ConvertGa'}"
                         IsChecked="{Binding IsCheckJananeseNasalGa}"
                         Margin="10,0"
                         IsEnabled="{Binding IsConvertToPhoneme}" />
               <ui:RadioButtons x:Name="RemoveNonSoundVowel"
                                MaxColumns="3"
                                Margin="10,0"
+                               Header="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelHeader'}"
                                IsEnabled="{Binding IsConvertToPhoneme}">
                 <RadioButton x:Name="RadioOptionNonSoundVowelDoNothing"
                              GroupName="NonSoundVowel"
                              IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=DoNothing}"
-                             Content="無声母音そのまま"
-                             ToolTip="無声母音「U」「I」をそのまま何もしません。" />
+                             Content="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelDoNothing'}"
+                             ToolTip="{Tr 'ToolTips.Options.NonSoundVowelDoNothing'}" />
                 <RadioButton x:Name="RadioOptionNonSoundVowelSmall"
                              GroupName="NonSoundVowel"
                              IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=Small}"
-                             Content="無声母音を小文字化"
-                             ToolTip="無声母音「U」「I」を小文字音素「u」「i」に変換します。母音が無声母音でないときと同じになります。" />
+                             Content="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelSmall'}"
+                             ToolTip="{Tr 'ToolTips.Options.NonSoundVowelSmall'}" />
                 <RadioButton x:Name="RadioOptionNonSoundVowelRemoving"
                              GroupName="NonSoundVowel"
                              IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=Remove}"
-                             Content="無声母音を削除"
-                             ToolTip="無声母音「U」「I」を削除（脱落）します。" />
+                             Content="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelRemoving'}"
+                             ToolTip="{Tr 'ToolTips.Options.NonSoundVowelRemoving'}" />
               </ui:RadioButtons>
 
 
@@ -789,21 +811,21 @@
           </Expander>
           <!-- ///////////////////////////note option////////////////////////// -->
           <Expander x:Name="noteOptions"
-                    Header="楽譜"
-                    ToolTip="出力する楽譜情報に関係するオプションです。"
+                    Header="{Tr 'UI.Options.NoteOptions.Header'}"
+                    ToolTip="{Tr 'ToolTips.Options.NoteOptions'}"
                     ExpandDirection="Down"
                     IsExpanded="false"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Stretch"
                     Margin="10,0,0,0">
             <WrapPanel fw:PointerTracker.Enabled="True">
-              <Label Content="Note pitch:"
+              <Label Content="{Tr 'UI.Options.NoteOptions.AdaptingPitchMode'}"
                      Margin="10,10,5,0"
                      VerticalAlignment="Center"
                      />
               <ComboBox x:Name="noteAdaptingPitchMode"
                         Width="Auto"
-                        ToolTip="出力するノートの音程への合わせ方を選択します。&#xA;「FIXED」は固定(G4)、「AVERAGE」は平均、「MEDIAN」は中央値の音程のノートが出力されます。"
+                        ToolTip="{Tr 'ToolTips.Options.NoteAdaptingPitchMode'}"
                         Margin="3,10,0,0"
                         FontSize="12.5"
                         VerticalAlignment="Top"
@@ -811,13 +833,13 @@
                         ItemsSource="{Binding NoteAdaptModeList}"
                         SelectedItem="{Binding AdaptingNoteToPitchMode}"
                         />
-              <Label Content="息継ぎブレス抑制:"
+              <Label Content="{Tr 'UI.Options.NoteOptions.SuppressBreathMode'}"
                      Margin="10,10,5,0"
                      VerticalAlignment="Center"
                      />
               <ComboBox x:Name="breathSuppressMode"
                         Width="Auto"
-                        ToolTip="【⚠実験機能】息継ぎのブレス音を抑えます。NONE:なにもしない。NO_BREATH:ブレス音なし。"
+                        ToolTip="{Tr 'ToolTips.Options.BreathSuppressMode'}"
                         Margin="3,10,0,0"
                         FontSize="12.5"
                         VerticalAlignment="Top"
@@ -825,13 +847,13 @@
                         ItemsSource="{Binding BreathSuppressModeList}"
                         SelectedItem="{Binding BreathSuppress}"
                         />
-              <Label Content="ノート分割:"
+              <Label Content="{Tr 'UI.Options.NoteOptions.NoteSplitMode'}"
                      Margin="10,10,5,0"
                      VerticalAlignment="Center"
                      />
               <ComboBox x:Name="noteSplitMode"
                         Width="Auto"
-                        ToolTip="【⚠実験機能】SPLIT_ONLY:0.3までの文節単位分割、SPLIT_SILENTNOTE:修正文節単位分割（デフォルト）, SILLABLE:音節単位分割（日本語のみ）,IGNORE_NOSOUND:未使用"
+                        ToolTip="{Tr 'ToolTips.Options.NoteSplitMode'}"
                         Margin="3,10,0,0"
                         FontSize="12.5"
                         VerticalAlignment="Top"
@@ -839,13 +861,13 @@
                         ItemsSource="{Binding NoteSplitModeList}"
                         SelectedItem="{Binding NoteSplitMode}"
                         />
-              <Label Content="ピッチ削除:"
+              <Label Content="{Tr 'UI.Options.NoteOptions.NoPitchMode'}"
                      Margin="10,10,5,0"
                      VerticalAlignment="Center"
                      />
               <ComboBox x:Name="noPitchMode"
                         Width="Auto"
-                        ToolTip="【⚠実験機能】"
+                        ToolTip="{Tr 'ToolTips.Options.NoPitchMode'}"
                         Margin="3,10,0,0"
                         FontSize="12.5"
                         VerticalAlignment="Top"
@@ -853,13 +875,13 @@
                         ItemsSource="{Binding NoPitchModesList}"
                         SelectedItem="{Binding NoPitchMode}"
                         />
-              <Label Content="無声母音:"
+              <Label Content="{Tr 'UI.Options.NoteOptions.NoSoundVowelMode'}"
                      Margin="10,10,5,0"
                      VerticalAlignment="Center"
                      />
               <ComboBox x:Name="noSoundVowelsMode"
                         Width="Auto"
-                        ToolTip="【⚠実験機能】"
+                        ToolTip="{Tr 'ToolTips.Options.NoSoundVowelsMode'}"
                         Margin="3,10,0,0"
                         FontSize="12.5"
                         VerticalAlignment="Top"
@@ -902,7 +924,7 @@
           </Expander>
           <!-- ///////////////////////////save option////////////////////////// -->
           <Expander x:Name="saveOptions"
-                    Header="保存"
+                    Header="{Tr 'UI.Options.SaveOptions.Header'}"
                     ExpandDirection="Down"
                     IsExpanded="False"
                     VerticalAlignment="Top"
@@ -921,7 +943,7 @@
                 CornerRadius="5" >
                 <WrapPanel Orientation="Horizontal">
                   <Button x:Name="selectSavePath"
-                          Content="保存先選択"
+                          Content="{Tr 'UI.Options.SaveOptions.SelectSavePath'}"
                           Margin="10"
                           Padding="5"
                           Style="{StaticResource ButtonRevealStyle}"
@@ -931,7 +953,7 @@
                           VerticalAlignment="Center"
                           IsReadOnly="true"
                           Margin="5" />
-                  <CheckBox Content="保存時自動でCeVIOを開く"
+                  <CheckBox Content="{Tr 'UI.Options.SaveOptions.IsOpenCeVIOWhenExport'}"
                         IsChecked="{Binding IsOpenCeVIOWhenExport}"
                         Margin="10,0,10,0" />
                 </WrapPanel>
@@ -945,12 +967,12 @@
                 HorizontalAlignment="Stretch"
                 CornerRadius="5" >
                 <WrapPanel Orientation="Horizontal">
-                  <CheckBox Content="セリフをテキストファイルに保存"
+                  <CheckBox Content="{Tr 'UI.Options.SaveOptions.IsExportWordsAsText'}"
                           IsChecked="{Binding IsExportSerifText}"
                           IsEnabled="true"
                           Margin="10,0,10,0" />
                   <Button x:Name="selectExportSerifTextPath"
-                          Content="セリフ保存先選択"
+                          Content="{Tr 'UI.Options.SaveOptions.SelectExportTextPath'}"
                           Margin="10"
                           Padding="5"
                           IsEnabled="{Binding IsExportSerifText}"
@@ -964,7 +986,7 @@
                           HorizontalContentAlignment="Right"
                           Margin="5" />
                   <Expander x:Name="exportSerifTextOptions"
-                      Header="セリフ保存オプション"
+                      Header="{Tr 'UI.Options.TextSaveOptions.Header'}"
                       ExpandDirection="Down"
                       IsExpanded="False"
                       IsEnabled="{Binding IsExportSerifText}"
@@ -973,13 +995,13 @@
                       Margin="10,0,0,0">
                     <WrapPanel>
                       <TextBlock x:Name="serifFileNameTextBox"
-                                Text="ファイル名:"
+                                Text="{Tr 'UI.Options.TextSaveOptions.FileName'}"
                                 Margin="5,0,5,0"
                                 FontSize="12.5"
                                 VerticalAlignment="Center" />
                       <TextBox x:Name="exportSerifTextFileName"
                                 Text="{Binding DefaultExportSerifTextFileName}"
-                                ToolTip="ファイル名を変更できます。&#xA;「$キャスト名$」「$日付$」「$セリフ$」「$トラック名$」の文字列の置き換えに対応してます。"
+                                ToolTip="{Tr 'ToolTips.Options.DefaultExportSerifTextFileName'}"
                                 Width="300"
                                 VerticalAlignment="Center"
                                 IsEnabled="{Binding IsExportSerifText}"
@@ -988,7 +1010,7 @@
                                 Margin="5"
                                 />
                       <Button x:Name="insertCastName"
-                                Content="キャスト名"
+                                Content="{Tr 'UI.Options.TextSaveOptions.CastName'}"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
@@ -996,7 +1018,7 @@
                                 CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
                                 />
                       <Button x:Name="insertDate"
-                                Content="日付"
+                                Content="{Tr 'UI.Options.TextSaveOptions.Date'}"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
@@ -1004,7 +1026,7 @@
                                 CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
                                 />
                       <Button x:Name="insertSerif"
-                                Content="セリフ"
+                                Content="{Tr 'UI.Options.TextSaveOptions.Words'}"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
@@ -1012,7 +1034,7 @@
                                 CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
                                 />
                       <Button x:Name="insertTracName"
-                                Content="トラック名"
+                                Content="{Tr 'UI.Options.TextSaveOptions.TrackName'}"
                                 Margin="5,10"
                                 Padding="5"
                                 Style="{StaticResource ButtonRevealStyle}"
@@ -1021,7 +1043,7 @@
                                 />
                       <Button x:Name="insertReset"
                                 Content=""
-                                ToolTip="リセット"
+                                ToolTip="{Tr 'ToolTips.Options.Reset'}"
                                 Margin="5,10"
                                 Padding="5"
                                 FontFamily="Segoe MDL2 Assets"
@@ -1036,16 +1058,16 @@
 
               <!-- ///////////////// Other save options ///////////////// -->
 
-              <CheckBox Content="Export with .lab file."
+              <CheckBox Content="{Tr 'UI.Options.OtherSaveOptions.ExportLabFile'}"
                         IsChecked="false"
                         IsEnabled="false"
                         Margin="10,0,10,0" />
-              <CheckBox Content="Save preview voice"
+              <CheckBox Content="{Tr 'UI.Options.OtherSaveOptions.SavePreviewVoice'}"
                         IsChecked="false"
                         IsEnabled="false"
                         Margin="10,0,10,0" />
               <Button x:Name="exportSusuruTrack"
-                        Content="カレーうどんをすする"
+                        Content="{Tr 'UI.Options.OtherSaveOptions.ExportSusuru'}"
                         Margin="10"
                         Padding="5"
                         Style="{StaticResource ButtonRevealStyle}"
@@ -1054,27 +1076,31 @@
             </WrapPanel>
           </Expander>
           <Expander x:Name="otherOptions"
-                    Header="そのほか"
+                    Header="{Tr 'UI.Options.OtherOptions.Header'}"
                     ExpandDirection="Down"
                     IsExpanded="False"
                     VerticalAlignment="Top"
                     Margin="10,0,0,0">
             <WrapPanel fw:PointerTracker.Enabled="True">
               <Button x:Name="openLicense"
-                      Content="ライセンス"
+                      Content="{Tr 'UI.Options.OtherOptions.OpenLicense'}"
                       Margin="10"
                       Padding="5"
                       Style="{StaticResource ButtonRevealStyle}"
                       Command="{Binding OpenLicenses}" />
               <Button x:Name="openWebsite"
-                      Content="公式サイト"
+                      Content="{Tr 'UI.Options.OtherOptions.OpenWebsite'}"
                       Margin="10"
                       Padding="5"
                       Style="{StaticResource ButtonRevealStyle}"
                       Command="{Binding OpenWebsite}" />
-              <CheckBox Content="Debug"
-                        IsEnabled="false"
-                        Margin="10,10,10,0" />
+              <WrapPanel
+                  VerticalAlignment="Center">
+                  <Label Content="{Tr 'UI.Options.OtherOptions.Language'}" Margin="5" />
+                  <ComboBox
+                    ItemsSource="{Binding AvailableLanguages, Source={x:Static loc:Loc.Instance}}"
+                    SelectedItem="{Binding CurrentLanguage, Source={x:Static loc:Loc.Instance}}"/>
+              </WrapPanel>
             </WrapPanel>
           </Expander>
         </StackPanel>

@@ -21,6 +21,7 @@ using NLog;
 
 using NodoAme.Models;
 using System.Diagnostics.CodeAnalysis;
+using CodingSeb.Localization;
 
 namespace NodoAme.ViewModels;
 
@@ -52,7 +53,7 @@ public class MainWindowViewModel
 	/// <summary>
 	/// ソングエクスポート用：声質や感情など
 	/// </summary>
-	public ObservableCollection<SongVoiceStyleParam>? SongVoiceStyleParams { get; set; }
+	public ObservableCollection<SongVoiceStyleParam>? SongVoiceStyleParams { get; set; } = new();
 	public IConfigurationRoot? Config { get; private set; }
 	public UserSettings? UserSettings { get; set; }
 
@@ -185,18 +186,6 @@ public class MainWindowViewModel
 		this.japaneseRules = LoadJapanaseRuleAsync().Result;
 		InitTalkSofts();
 
-		//TODO:暫定感情対応
-		SongVoiceStyleParams = new ObservableCollection<SongVoiceStyleParam>
-		{
-			new SongVoiceStyleParam(){
-				Id="Emotion",
-				Name="♫感情",
-				Min=0.00,
-				Max=1.00,
-				DefaultValue=0.00,
-				SmallChange=0.01
-			}
-		};
 
 		this.Serifs
 			.Add(new SerifViewModel { ParentVM = this, SourceText = "サンプル：僕らの気持ちが、明日へ向かいます。チンプンカンプンな本に大変！" });
@@ -568,15 +557,20 @@ public class MainWindowViewModel
 			return;
 		}
 
-		TalkSoftParams = new ObservableCollection<TalkSoftParam>();
 		if (TalkSoftItems is null) { return; }
+		TalkSoftParams = new ObservableCollection<TalkSoftParam>();
 
 		var list = TalkSoftItems[index]?.TalkSoftParams;
 		if (list is null) { return; }
 
 		foreach (var item in list)
 		{
-			TalkSoftParams.Add(item);
+			item.Value ??= item.DefaultValue;
+			var copied = CopyUtil.DeepCopy(item);
+			if(copied is null){continue;}
+
+			copied.Name = Loc.Tr($"Talk.Param.{_talksofts[TalkSoftSelected]?.Name}.{item.Name}", item.Name);
+			TalkSoftParams.Add(copied);
 		}
 
 		await InitVoicesAsync();
@@ -603,7 +597,14 @@ public class MainWindowViewModel
 				.ToList()
 				;
 		});
-		list.ForEach(x => ExportSongCastItems.Add(x));
+		list.ForEach(x =>
+		{
+			var c = CopyUtil.DeepCopy(x);
+			if(c is null){return;}
+
+			c.Name = Loc.Tr($"Song.Voice.{x.Id}", x.Name);
+			ExportSongCastItems.Add(c);
+		});
 
 		var a = ExportSongCastItems;
 		ExportSongCastSelected = 0;
@@ -652,6 +653,11 @@ public class MainWindowViewModel
 	[SuppressMessage("Usage","IDE0051")]
 	private async ValueTask VoiceStyleChangedAsync(int index)
 	{
+		if (index < 0)
+		{
+			return;
+		}
+
 		if (IsStylePresetsComboEnabled)
 		{
 			//change current style preset
@@ -742,6 +748,23 @@ public class MainWindowViewModel
 		var current = ExportSongCastItems[index];
 		SongExportLyricsMode = current.LyricsMode;
 		NoteSplitMode = current.NoteSplitMode ?? NoteSplitModes.SPLIT_SILIENTNOTE;
+
+		SongVoiceStyleParams = new();	//reset
+		if(current.HasEmotion ?? false)
+		{
+			SongVoiceStyleParams = new ObservableCollection<SongVoiceStyleParam>
+			{
+				new SongVoiceStyleParam(){
+					Id="Emotion",
+					Name=Loc.Tr("Song.Param.Emotion"),
+					Min=0.00,
+					Max=1.00,
+					DefaultValue=0.00,
+					SmallChange=0.01
+				}
+			};
+		}
+
 		return new ValueTask();
 	}
 
@@ -763,7 +786,19 @@ public class MainWindowViewModel
 		{
 			Debug.WriteLine("open j talk awaking");
 			IsPreviewComboEnabled = true;
-			TalkVoiceItems = new ObservableCollection<TalkSoftVoice>(ts.TalkSoftVoices);
+			TalkVoiceItems = new(ts
+				.TalkSoftVoices
+				.Select(v => {
+					return new TalkSoftVoice()
+					{
+						Id = v.Id,
+						Name = Loc.Tr($"Talk.Voice.{v.Name}", v.Name),
+						Path = v.Path,
+						Styles = v.Styles,
+						CurrentStyleParams = v.CurrentStyleParams
+					};
+				})
+			);
 			TalkVoiceSelected = 0;
 
 			_voices.Clear();
@@ -802,8 +837,8 @@ public class MainWindowViewModel
 				_voices = talkEngine?.GetAvailableCasts() ?? new();
 
 				IsPreviewComboEnabled = true;
-				TalkVoiceItems = _voices;
-				TalkVoiceSelected = 0;
+				//TalkVoiceItems = _voices;
+				//TalkVoiceSelected = 0;
 
 				IsPreviewButtonEnabled = true;
 				EnableSerifButtons(
@@ -830,8 +865,7 @@ public class MainWindowViewModel
 				//await InitVoiceStylesAsync();
 
 				IsPreviewComboEnabled = true;
-				TalkVoiceItems = _voices;
-				TalkVoiceSelected = 0;
+				//TalkVoiceItems = _voices;
 
 				IsPreviewButtonEnabled = true;
 				EnableSerifButtons(
@@ -839,6 +873,21 @@ public class MainWindowViewModel
 					!(talkEngine?.IsActive ?? false)
 				);
 			}
+
+			//translate
+			TalkVoiceItems = new(
+				_voices.Select(v => {
+					return new TalkSoftVoice()
+					{
+						Id = v.Id,
+						Name = Loc.Tr($"Talk.Voice.{v.Name}", v.Name),
+						Path = v.Path,
+						Styles = v.Styles,
+						CurrentStyleParams = v.CurrentStyleParams
+					};
+				})
+			);
+			TalkVoiceSelected = 0;
 		}
 		else
 		{
@@ -878,15 +927,15 @@ public class MainWindowViewModel
 				_voiceStyles = voiceStyles;
 
 				IsStylePresetsComboEnabled = true;
-				TalkVoiceStylePresetsItems = _stylePresets;
+				//TalkVoiceStylePresetsItems = _stylePresets;
 				TalkVoiceStyleParams = _voiceStyles;
-				VoiceStylePresetsSelected = 0;
+				//VoiceStylePresetsSelected = 0;
 			}
 			else if (ts.Interface.Type == "REST"
 				&& ts.Interface.Engine == TalkEngine.VOICEVOX)
 			{
-				if (TalkVoiceSelected < 0) return;
-				if (_voices.Count == 0) return;
+				if (TalkVoiceSelected < 0){ return;}
+				if (_voices.Count == 0){ return;}
 
 				this.talkEngine!.TalkVoice = _voices
 					.ElementAt(TalkVoiceSelected);
@@ -901,13 +950,25 @@ public class MainWindowViewModel
 				this._voiceStyles.Clear();
 
 				IsStylePresetsComboEnabled = true;
-				TalkVoiceStylePresetsItems = _stylePresets;
-				VoiceStylePresetsSelected = 0;
+				//TalkVoiceStylePresetsItems = _stylePresets;
+				//VoiceStylePresetsSelected = 0;
 			}
 			else
 			{
 				IsStylePresetsComboEnabled = false;
 			}
+
+			//translate
+			TalkVoiceStylePresetsItems = new(_stylePresets
+				.Select(v => new TalkSoftVoiceStylePreset()
+					{
+						Id = v.Id,
+						Name = Loc.Tr($"Talk.Style.{this.talkEngine!.TalkVoice?.Name}.{v.Name}", v.Name),
+						Value = v.Value,
+						Path = v.Path
+					})
+			);
+			VoiceStylePresetsSelected = 0;
 		}
 		else if (ts.TalkSoftVoices != null)
 		{
@@ -928,7 +989,15 @@ public class MainWindowViewModel
 			this._voiceStyles.Clear();
 
 			IsStylePresetsComboEnabled = true;
-			TalkVoiceStylePresetsItems = _stylePresets;
+			TalkVoiceStylePresetsItems = new(_stylePresets
+				.Select(v => new TalkSoftVoiceStylePreset()
+					{
+						Id = v.Id,
+						Name = Loc.Tr($"Talk.Style.{ts.TalkSoftVoices[TalkVoiceSelected].Name}.{v.Name}", v.Name),
+						Value = v.Value,
+						Path = v.Path
+					})
+			);
 			VoiceStylePresetsSelected = 0;
 		}
 
