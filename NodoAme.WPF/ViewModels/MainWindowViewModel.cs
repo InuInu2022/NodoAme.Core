@@ -1443,5 +1443,9 @@ public class MainWindowViewModel
 		Loc.Instance.CurrentLanguage = value;
 		UserSettings.DisplayLanguage = value;
 		await UserSettings.SaveAsync();
+
+		//reload ui comboboxes
+		await TalkSoftChangedAsync(TalkSoftSelected);
+		await ExportSongSoftSelectedChangedAsync(ExportSongSoftSelected);
 	}
 }
