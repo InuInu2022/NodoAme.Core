@@ -143,11 +143,13 @@ Talk:
             ぬいぐるみver.:
                 en: Doll voice
         四国めたん: *style_voicevox_zundamon
-        春日部つむぎ: &style_voicevox_zundamon
-        雨晴はう: &style_voicevox_zundamon
-        波音リツ: &style_voicevox_zundamon
-        玄野武宏: &style_voicevox_zundamon
+        春日部つむぎ: *style_voicevox_zundamon
+        雨晴はう: *style_voicevox_zundamon
+        波音リツ: *style_voicevox_zundamon
+        玄野武宏: *style_voicevox_zundamon
         白上虎太郎:
+            ノーマル:
+                en: Normal
             ふつう:
                 en: Normal
             わーい:
@@ -159,23 +161,23 @@ Talk:
             ぴえーん:
                 en: Boohoo
         青山龍星:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         冥鳴ひまり:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         九州そら:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         もち子さん:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         剣崎雌雄:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         WhiteCUL:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         後鬼:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         No.7:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         ちび式じい:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         櫻歌ミコ:
             ノーマル:
                 en: Normal
@@ -184,7 +186,7 @@ Talk:
             ロリ:
                 en: Very young
         小夜/SAYO:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         ナースロボ＿タイプＴ:
             ノーマル:
                 en: Normal
@@ -195,17 +197,17 @@ Talk:
             内緒話:
                 en: Whisper
         †聖騎士 紅桜†:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         雀松朱司:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         麒ヶ島宗麟:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         春歌ナナ:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         猫使アル:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         猫使ビィ:
-            &style_voicevox_zundamon
+            *style_voicevox_zundamon
         # SHAREVOX voices
         小春音アミ:
             ノーマル:
