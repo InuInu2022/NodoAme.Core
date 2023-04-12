@@ -26,8 +26,8 @@ Talk:
         標準男声:
             ja: 標準男声
             en: Std male (ja)
-        四国メタン:
-            ja: 四国メタン
+        四国めたん:
+            ja: 四国めたん
             en: Shikoku Metan
         ずんだもん:
             ja: ずんだもん
@@ -66,7 +66,7 @@ Talk:
             ささやき: &style_voicevox_whisper
                 ja: ささやき
                 en: Whisper
-        四国メタン: *style_voicevox_zundamon
+        四国めたん: *style_voicevox_zundamon
     Param:
         標準トーク:
             大きさ:
