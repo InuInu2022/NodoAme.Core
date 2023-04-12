@@ -26,12 +26,68 @@ Talk:
         標準男声:
             ja: 標準男声
             en: Std male (ja)
+        # VOICEVOX voices
         四国めたん:
             ja: 四国めたん
             en: Shikoku Metan
         ずんだもん:
             ja: ずんだもん
             en: Zundamon
+        春日部つむぎ:
+            en: Kasukabe Tsumugi
+        雨晴はう:
+            en: Amehare Hau
+        波音リツ:
+            en: Namine Ritsu
+        玄野武宏:
+            en: Kurono Takehiro
+        白上虎太郎:
+            en: Shiragami Kotaro
+        青山龍星:
+            en: Aoyama Ryusei
+        冥鳴ひまり:
+            en: Meimei Himari
+        九州そら:
+            en: Kyushu Sora
+        もち子さん:
+            en: Mochiko-san
+        剣崎雌雄:
+            en: Kenzaki Mesuo
+        WhiteCUL:
+            en: White CUL
+        後鬼:
+            en: Goki
+        No.7:
+            en: No.7
+        ちび式じい:
+            en: Chibi Shiki-ji
+        櫻歌ミコ:
+            en: Ohka Miko
+        小夜/SAYO:
+            en: SAYO
+        ナースロボ＿タイプＴ:
+            en: Nurse robot Type T
+        †聖騎士 紅桜†:
+            en: †Holy knight Benizakura†
+        雀松朱司:
+            en: Wakamatsu Akashi
+        麒ヶ島宗麟:
+            en: Kigashima Sohrin
+        春歌ナナ:
+            en: Haruka Nana
+        猫使アル:
+            en: Nekotsuka Aru
+        猫使ビィ:
+            en: Nekotsuka Bii
+        # SHAREVOX voices
+        小春音アミ:
+            en: Koharune Ami
+        つくよみちゃん:
+            en: Tsukuyomi-chan
+        白痴ー:
+            en: Hakuti
+        Yくん/開発者:
+            en: Y-kun (developer)
     Style:
         標準女声:
             普通:
@@ -66,7 +122,99 @@ Talk:
             ささやき: &style_voicevox_whisper
                 ja: ささやき
                 en: Whisper
+            ヒソヒソ:
+                en: Lowered
+            喜び:
+                en: Happy
+            ツンギレ:
+                en: Angry
+            悲しみ:
+                en: Sad
+            たのしい:
+                en: Happy
+            かなしい:
+                en: Sad
+            アナウンス:
+                en: For announce
+            読み聞かせ:
+                en: For reading
+            人間ver.:
+                en: Human voice
+            ぬいぐるみver.:
+                en: Doll voice
         四国めたん: *style_voicevox_zundamon
+        春日部つむぎ: &style_voicevox_zundamon
+        雨晴はう: &style_voicevox_zundamon
+        波音リツ: &style_voicevox_zundamon
+        玄野武宏: &style_voicevox_zundamon
+        白上虎太郎:
+            ふつう:
+                en: Normal
+            わーい:
+                en: Happy
+            おこ:
+                en: Angry
+            びくびく:
+                en: Scary
+            ぴえーん:
+                en: Boohoo
+        青山龍星:
+            &style_voicevox_zundamon
+        冥鳴ひまり:
+            &style_voicevox_zundamon
+        九州そら:
+            &style_voicevox_zundamon
+        もち子さん:
+            &style_voicevox_zundamon
+        剣崎雌雄:
+            &style_voicevox_zundamon
+        WhiteCUL:
+            &style_voicevox_zundamon
+        後鬼:
+            &style_voicevox_zundamon
+        No.7:
+            &style_voicevox_zundamon
+        ちび式じい:
+            &style_voicevox_zundamon
+        櫻歌ミコ:
+            ノーマル:
+                en: Normal
+            第二形態:
+                en: 2nd form
+            ロリ:
+                en: Very young
+        小夜/SAYO:
+            &style_voicevox_zundamon
+        ナースロボ＿タイプＴ:
+            ノーマル:
+                en: Normal
+            楽々:
+                en: Relax
+            恐怖:
+                en: Scary
+            内緒話:
+                en: Whisper
+        †聖騎士 紅桜†:
+            &style_voicevox_zundamon
+        雀松朱司:
+            &style_voicevox_zundamon
+        麒ヶ島宗麟:
+            &style_voicevox_zundamon
+        春歌ナナ:
+            &style_voicevox_zundamon
+        猫使アル:
+            &style_voicevox_zundamon
+        猫使ビィ:
+            &style_voicevox_zundamon
+        # SHAREVOX voices
+        小春音アミ:
+            &style_voicevox_zundamon
+        つくよみちゃん:
+            &style_voicevox_zundamon
+        白痴ー:
+            &style_voicevox_zundamon
+        Yくん/開発者:
+            &style_voicevox_zundamon
     Param:
         標準トーク:
             大きさ:
