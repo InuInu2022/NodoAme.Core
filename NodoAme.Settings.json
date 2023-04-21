@@ -502,6 +502,15 @@
 			"lyricsMode":"PHONEME"
 		},
 		{
+			"id":"techno-sp_ja_JP_f824_svss.tsnvoice",
+			"name":"#kzn(キズナ)",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"#kzn",
+			"voiceVersion":"1.0.0 ported from CeVIO AI"
+		},
+		{
 			"id":"CSNV-JPF-THR3",
 			"name":"裏命（RIME）",
 			"songSoft":"CeVIO AI",
@@ -512,7 +521,8 @@
 			"id":"CSNV-JPF-GLA1",
 			"name":"双葉湊音",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
 		},
 		{
 			"id":"CSNV-JPF-BSR1",
@@ -547,10 +557,11 @@
 			"lyricsMode":"PHONEME"
 		},
 		{
-			"id":"CSNV-JPF-CCA1",
-			"name":"⚠奏兎める",
+			"id":"CSNV-JPF-TRF1",
+			"name":"奏兎める",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
 		},
 		{
 			"id":"A",

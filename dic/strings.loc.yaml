@@ -342,13 +342,15 @@ Song:
         techno-sp_ja_JP_f834_svss.tsnvoice:
             ja: AiSuu
             en: AiSuu
+        techno-sp_ja_JP_f824_svss.tsnvoice:
+            *song_kzn
         CSNV-JPF-THR2:
             ja: 星界（SEKAI）
             en: SEKAI
         CSNV-JPF-B: &song_suzukitsudumi
             ja: すずきつづみ
             en: Suzuki Tsudumi
-        CSNV-JPF-KZA1:
+        CSNV-JPF-KZA1: &song_kzn
             ja: "#kzn(キズナ)"
             en: "#kzn"
         CSNV-JPF-THR3:
@@ -372,9 +374,9 @@ Song:
         CSNV-JPF-THR5:
             ja: ⚠羽累（HARU）
             en: ⚠ HARU
-        CSNV-JPF-CCA1:
-            ja: ⚠奏兎める
-            en: ⚠ Kanato Mell
+        CSNV-JPF-TRF1:
+            ja: 奏兎める
+            en: Kanato Mell
         A: *song_satosasara
         ONE: *song_one
         CSV-ENF-FP3-N:
