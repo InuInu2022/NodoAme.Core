@@ -57,7 +57,7 @@ public class UserSettings
 	#endregion display_phonemes_options
 
 	public NoteAdaptMode AdaptingNoteToPitchMode { get; set; } = NoteAdaptMode.MEDIAN;
-	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_SILIENTNOTE;
+	public NoteSplitModes NoteSplitMode { get; set; } = NoteSplitModes.SPLIT_ONLY_OLD;
 	public BreathSuppressMode BreathSuppress { get; set; } = BreathSuppressMode.NO_BREATH;
 	public NoPitchModes NoPitchMode { get; set; }
 	public NoSoundVowelsModes NoSoundVowelMode { get; set; }
