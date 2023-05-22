@@ -394,7 +394,8 @@
 			"id":"CSNV-JPF-VCLMK1",
 			"name":"結月ゆかり麗",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
 		},
 		{
 			"id":"CSNV-JPF-AHS1",
