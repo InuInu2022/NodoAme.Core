@@ -748,7 +748,7 @@ public class MainWindowViewModel
 
 		var current = ExportSongCastItems[index];
 		SongExportLyricsMode = current.LyricsMode;
-		NoteSplitMode = current.NoteSplitMode ?? NoteSplitModes.SPLIT_SILIENTNOTE;
+		NoteSplitMode = current.NoteSplitMode ?? NoteSplitModes.SPLIT_ONLY_OLD;	//初期値
 
 		SongVoiceStyleParams = new();	//reset
 		if(current.HasEmotion ?? false)
