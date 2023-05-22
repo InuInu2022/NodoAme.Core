@@ -388,12 +388,41 @@
 		{
 			"id":1,
 			"name":"VoiSona",
-			"voiceParam":[]
+			"voiceParam":[
+				{
+					"id":"Alpha",
+					"name":"♫ALP",
+					"min":0.5,
+					"max":0.6,
+					"defaultValue":0.55,
+					"smallChange":0.01,
+					"version": "1.07"
+				},
+				{
+					"id":"Husky",
+					"name":"♫HUS",
+					"min":-10.00,
+					"max":10.00,
+					"defaultValue": 0.00,
+					"smallChange":0.01,
+					"version": "1.07"
+				}
+			]
 		},
 		{
 			"id":2,
 			"name":"CeVIO CS",
-			"voiceParam":[]
+			"voiceParam":[
+				{
+					"id":"Alpha",
+					"name":"♫声質",
+					"min":0.5,
+					"max":0.6,
+					"defaultValue":0.55,
+					"smallChange":0.01,
+					"version": "1.07"
+				}
+			]
 		}
 	],
 	"exportSongCasts":[
