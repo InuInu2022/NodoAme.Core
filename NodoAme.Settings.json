@@ -482,6 +482,16 @@
 			"voiceVersion":"1.0.2"
 		},
 		{
+			"id":"techno-sp_ja_JP_f811_svss.tsnvoice",
+			"name":"結月ゆかり麗",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SYLLABLE",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Yuzuki Yukari Rei",
+			"voiceVersion":"1.1.0 ported from CeVIO AI"
+		},
+		{
 			"id":"CSNV-JPF-THR2",
 			"name":"星界（SEKAI）",
 			"songSoft":"CeVIO AI",

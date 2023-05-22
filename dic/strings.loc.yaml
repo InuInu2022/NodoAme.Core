@@ -307,7 +307,7 @@ Song:
         CSNV-JPF-A: &song_satosasara
             ja: さとうささら
             en: Sato Sasara
-        CSNV-JPF-VCLMK1:
+        CSNV-JPF-VCLMK1: &song_yukari
             ja: 結月ゆかり麗
             en: Yuzuki Yukari Rei
         CSNV-JPF-AHS1:
@@ -344,6 +344,8 @@ Song:
             en: AiSuu
         techno-sp_ja_JP_f824_svss.tsnvoice:
             *song_kzn
+        techno-sp_ja_JP_f811_svss.tsnvoice:
+            *song_yukari
         CSNV-JPF-THR2:
             ja: 星界（SEKAI）
             en: SEKAI
