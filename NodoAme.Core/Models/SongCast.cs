@@ -67,5 +67,8 @@ public record SongVoiceStyleParam{
 	[JsonPropertyName("smallChange")]
 	public double? SmallChange { get; set; }
 
+	[JsonPropertyName("version")]
+	public Version? Version { get; set; }
+
 	public double Value { get; set; }
 }

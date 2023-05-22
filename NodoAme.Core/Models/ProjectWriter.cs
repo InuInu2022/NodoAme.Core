@@ -233,26 +233,31 @@ public static class ProjectWriter{
     /// 声質(Alpha)指定
     /// </summary>
     /// <param name="scoreRoot"></param>
-    /// <param name="engineType"></param>
-    /// TODO:implement
 	public static void WriteAttributeAlpha(
-		XElement scoreRoot,
-		string engineType
+		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles,
+		XElement scoreRoot
 	){
-		//throw new NotImplementedException();
-		/*0.0がデフォルトではないので0を指定すると可笑しくなる
-		scoreRoot.SetAttributeValue("Alpha", 0.0);
-		if (engineType == TalkEngine.CEVIO || engineType == TalkEngine.OPENJTALK)
-		{
-			var alphaParam = TalkSoft
-			.TalkSoftParams
-			.First(a => a.Id == "Alpha");
-			var newAlpha = (alphaParam.Value / 100 * 2) - 1.0;
-			if (engineType == TalkEngine.OPENJTALK) newAlpha = 0;   //TODO:暫定対応
+		scoreRoot
+			.SetAttributeValue(
+				"Alpha",
+				songVoiceStyles.First(v => v.Id == "Alpha").Value
+			);
+	}
 
-			scoreRoot.SetAttributeValue("Alpha", newAlpha.ToString());
-		}
-		*/
+	/// <summary>
+    /// ハスキー設定
+    /// </summary>
+    /// <param name="songVoiceStyles"></param>
+    /// <param name="scoreRoot"></param>
+	public static void WriteAttributeHusky(
+		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles,
+		XElement scoreRoot
+	){
+		scoreRoot
+			.SetAttributeValue(
+				"Husky",
+				songVoiceStyles.First(v => v.Id == "Husky").Value
+			);
 	}
 
 	/// <summary>
