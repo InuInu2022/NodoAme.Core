@@ -750,20 +750,24 @@ public class MainWindowViewModel
 		SongExportLyricsMode = current.LyricsMode;
 		NoteSplitMode = current.NoteSplitMode ?? NoteSplitModes.SPLIT_ONLY_OLD;	//初期値
 
-		SongVoiceStyleParams = new();	//reset
+		SongVoiceStyleParams = new();   //reset
+
+		var songSoft = setting
+			.SongSofts
+			.First(n => n.Name == current.SongSoft);
 		if(current.HasEmotion ?? false)
 		{
-			SongVoiceStyleParams = new ObservableCollection<SongVoiceStyleParam>
-			{
-				new SongVoiceStyleParam(){
-					Id="Emotion",
-					Name=Loc.Tr("Song.Param.Emotion"),
-					Min=0.00,
-					Max=1.00,
-					DefaultValue=0.00,
-					SmallChange=0.01
-				}
-			};
+			var emotion = songSoft
+				.VoiceParam
+				.First(v => v.Id == "Emotion");
+			SongVoiceStyleParams.Add(new(){
+				Id="Emotion",
+				Name=Loc.Tr("Song.Param.Emotion"),
+				Min= emotion.Min,
+				Max= emotion.Max,
+				DefaultValue= emotion.DefaultValue,
+				SmallChange= emotion.SmallChange
+			});
 		}
 
 		return new ValueTask();
