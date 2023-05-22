@@ -578,67 +578,78 @@
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"ONE",
 			"name":"OИE",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"CSV-ENF-FP3-N",
 			"name":"⚠IA (En) Natural",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"ALPHABET"
+			"lyricsMode":"ALPHABET",
+			"noteSplitMode":"SPLIT_ONLY_OLD"
 		},
 		{
 			"id":"CSV-ENF-FP3-P",
 			"name":"⚠IA (En) Powerful",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"ALPHABET"
+			"lyricsMode":"ALPHABET",
+			"noteSplitMode":"SPLIT_ONLY_OLD"
 		},
 		{
 			"id":"XSV-JPM-HRM-P",
 			"name":"ハルオロイド",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"XSV-JPM-P",
 			"name":"赤咲 湊",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"XSV-JPF-W",
 			"name":"緑咲 香澄",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"XSV-JPM-E",
 			"name":"銀咲 大和",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"XSV-JPF-E",
 			"name":"金咲 小春",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"XSV-JPM-W",
 			"name":"白咲 優大",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		},
 		{
 			"id":"XSV-JPF-P",
 			"name":"黄咲 愛里",
 			"songSoft":"CeVIO CS",
-			"lyricsMode":"KANA"
+			"lyricsMode":"KANA",
+			"noteSplitMode":"SPLIT_SILIENTNOTE"
 		}
 	]
 }
