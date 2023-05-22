@@ -754,20 +754,26 @@ public class MainWindowViewModel
 
 		var songSoft = setting
 			.SongSofts
-			.First(n => n.Name == current.SongSoft);
-		if(current.HasEmotion ?? false)
+			.FirstOrDefault(n => n.Name == current.SongSoft);
+
+		if(songSoft is null || songSoft.VoiceParam is null){
+			return new ValueTask();
+		}
+
+		foreach (var item in songSoft.VoiceParam)
 		{
-			var emotion = songSoft
-				.VoiceParam
-				.First(v => v.Id == "Emotion");
-			SongVoiceStyleParams.Add(new(){
-				Id="Emotion",
-				Name=Loc.Tr("Song.Param.Emotion"),
-				Min= emotion.Min,
-				Max= emotion.Max,
-				DefaultValue= emotion.DefaultValue,
-				SmallChange= emotion.SmallChange
-			});
+			if(item.Id == "Emotion" &&
+				(!current.HasEmotion ?? true)){
+				continue;
+			}
+
+			var p = item with
+			{
+				Name = Loc.Tr($"Song.Param.{item.Id}", $"{item.Name}"),
+				Value = item.DefaultValue
+			};
+
+			SongVoiceStyleParams.Add(p);
 		}
 
 		return new ValueTask();

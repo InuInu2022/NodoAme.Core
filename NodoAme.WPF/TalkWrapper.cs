@@ -888,13 +888,35 @@ public class Wrapper : ITalkWrapper
 		var scoreRoot = scoreNodes.First();
 
 		//声質(Alpha)指定
-		ProjectWriter.WriteAttributeAlpha(scoreRoot, engineType);
+		ProjectWriter.WriteAttributeAlpha(
+			option.SongVoiceStyles, scoreRoot);
 
 		//感情(Emotion)設定
 		ProjectWriter.WriteAttributeEmotion(
 			option.Cast,
 			option.SongVoiceStyles,
 			scoreRoot);
+
+		//SongVer判定
+		var isAfter1_8 = option
+			.SongVoiceStyles
+			.Where(v => v.Version >= new Version(1,8))
+			.Any(v => v.Value != v.DefaultValue)
+			;
+
+		if(isAfter1_8){
+			//set Song ver.
+			tmplTrack
+				.Descendants("Song")
+				.First()
+				.SetAttributeValue("Version", "1.08");
+			//ハスキー(Husky)設定
+			ProjectWriter
+				.WriteAttributeHusky(
+					option.SongVoiceStyles,
+					scoreRoot
+				);
+		}
 
 		//tmplTrack.Element("Score");
 		//<Note Clock="3840" PitchStep="7" PitchOctave="4" Duration="960" Lyric="ソ" DoReMi="true" Phonetic="m,a" />
