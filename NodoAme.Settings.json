@@ -220,7 +220,7 @@
 			"interface":{
 				"type":"REST",
 				"engine":"VOICEVOX",
-				"restHost":"http://localhost:50021/"
+				"restHost":"http://127.0.0.1:50021/"
 			},
 			"voiceParam":[
 				{
@@ -283,7 +283,7 @@
 			"interface":{
 				"type":"REST",
 				"engine":"VOICEVOX",
-				"restHost":"http://localhost:50031/"
+				"restHost":"http://127.0.0.1:50031/"
 			},
 			"voiceParam":[
 			]
@@ -297,7 +297,7 @@
 			"interface":{
 				"type":"REST",
 				"engine":"VOICEVOX",
-				"restHost":"http://localhost:50025/"
+				"restHost":"http://127.0.0.1:50025/"
 			},
 			"voiceParam":[
 				{
