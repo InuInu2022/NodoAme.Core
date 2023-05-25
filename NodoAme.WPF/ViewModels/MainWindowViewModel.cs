@@ -128,6 +128,13 @@ public class MainWindowViewModel
 	public IEnumerable<NoSoundVowelsModes> NoSoundVowelModeList { get; set; }
 		= Enum.GetValues(typeof(NoSoundVowelsModes)).Cast<NoSoundVowelsModes>();
 
+	public Models.ExportFileType CurrentExportFileType { get; set; }
+
+	public IEnumerable<Models.ExportFileType> ExportFileTypeList { get; set; }
+		= Enum.GetValues(typeof(Models.ExportFileType)).Cast<Models.ExportFileType>();
+
+	public bool IsExportFileExtListEnabled { get; set; } = false;
+
 	public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
 		= new ObservableCollection<SongSoftTracFileExtSetting>();
 
@@ -166,7 +173,6 @@ public class MainWindowViewModel
 	public Command SelectExportSerifTextDir { get; set; }
 	public Command InsertMetaTextToSerifTextFileName { get; set; }
 	public Command ExportSusuru { get; set; }
-
 	//---------------------------------------------------
 
 	#endregion
@@ -607,6 +613,10 @@ public class MainWindowViewModel
 			ExportSongCastItems.Add(c);
 		});
 
+		//voisona only selectable
+		IsExportFileExtListEnabled
+			= soft == SongSoftName.VOISONA;
+
 		var a = ExportSongCastItems;
 		ExportSongCastSelected = 0;
 	}
@@ -775,6 +785,9 @@ public class MainWindowViewModel
 
 			SongVoiceStyleParams.Add(p);
 		}
+
+		CurrentExportFileType
+			= current.ExportFile;
 
 		return new ValueTask();
 	}
@@ -1052,8 +1065,7 @@ public class MainWindowViewModel
 		);
 
 		Debug.WriteLine("Export!");
-		var exportFileType = //ExportCastItems.ElementAt(ExportCastSelected).ExportFile;
-		ExportSongCastItems![ExportSongCastSelected].ExportFile;
+		var exportFileType = CurrentExportFileType;
 
 		await this.talkEngine.ExportFileAsync(
 			new(serifText, castId)

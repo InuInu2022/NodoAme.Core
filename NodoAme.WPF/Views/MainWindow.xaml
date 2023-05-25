@@ -1,53 +1,64 @@
-﻿<Window x:Class="NodoAme.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewmodels="clr-namespace:NodoAme.ViewModels"
-        xmlns:local="clr-namespace:NodoAme"
-        xmlns:models="clr-namespace:NodoAme.Models"
-        xmlns:epoxy="https://github.com/kekyo/Epoxy"
-        xmlns:ui="http://schemas.modernwpf.com/2019"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
-        xmlns:fa="http://schemas.fontawesome.com/icons/fonts"
-        xmlns:loc="clr-namespace:CodingSeb.Localization;assembly=CodingSeb.Localization"
-        ui:WindowHelper.UseModernWindowStyle="True"
-        fw:AcrylicWindow.Enabled="True"
-        fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
-        mc:Ignorable="d"
-        Title="{Binding WindowTitle}"
-        Height="600"
-        Width="850"
-        ResizeMode="CanResizeWithGrip">
+﻿<Window
+   x:Class="NodoAme.MainWindow"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:viewmodels="clr-namespace:NodoAme.ViewModels"
+   xmlns:local="clr-namespace:NodoAme"
+   xmlns:models="clr-namespace:NodoAme.Models"
+   xmlns:epoxy="https://github.com/kekyo/Epoxy"
+   xmlns:ui="http://schemas.modernwpf.com/2019"
+   xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+   xmlns:fa="http://schemas.fontawesome.com/icons/fonts"
+   xmlns:loc="clr-namespace:CodingSeb.Localization;assembly=CodingSeb.Localization"
+   ui:WindowHelper.UseModernWindowStyle="True"
+   fw:AcrylicWindow.Enabled="True"
+   fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
+   mc:Ignorable="d"
+   Title="{Binding WindowTitle}"
+   Height="600"
+   Width="850"
+   ResizeMode="CanResizeWithGrip">
   <Window.DataContext>
-    <viewmodels:MainWindowViewModel />
+    <viewmodels:MainWindowViewModel/>
   </Window.DataContext>
   <epoxy:EventBinder.Events>
-    <epoxy:Event Name="Loaded"
-                 Command="{Binding Ready}" />
+    <epoxy:Event
+       Name="Loaded"
+       Command="{Binding Ready}"/>
   </epoxy:EventBinder.Events>
   <Window.Resources>
-    <models:RadioButtonConverter x:Key="VowelOptionConverter" />
-    <Style TargetType="ui:SimpleStackPanel">
-      <Setter Property="Spacing"
-              Value="6" />
+    <models:RadioButtonConverter
+       x:Key="VowelOptionConverter"/>
+    <Style
+       TargetType="ui:SimpleStackPanel">
+      <Setter
+         Property="Spacing"
+         Value="6"/>
     </Style>
-    <Style TargetType="{x:Type Button}"
-           BasedOn="{StaticResource ButtonRevealStyle}">
-      <Setter Property="FontSize"
-              Value="20" />
+    <Style
+       TargetType="{x:Type Button}"
+       BasedOn="{StaticResource ButtonRevealStyle}">
+      <Setter
+         Property="FontSize"
+         Value="20"/>
     </Style>
-  </Window.Resources>
-  <!-- +++++++++++++++++++++++++++++ Screen elements +++++++++++++++++++++++++++++++++++++ -->
-  <Grid fw:PointerTracker.Enabled="True">
+  </Window.Resources><!-- +++++++++++++++++++++++++++++ Screen elements +++++++++++++++++++++++++++++++++++++ -->
+  <Grid
+     fw:PointerTracker.Enabled="True">
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
-    <!-- TextBox x:Name="textbox"
+      <RowDefinition
+         Height="Auto"/>
+      <RowDefinition
+         Height="Auto"/>
+      <RowDefinition
+         Height="Auto"/>
+      <RowDefinition
+         Height="*"/>
+      <RowDefinition
+         Height="Auto"/>
+    </Grid.RowDefinitions><!-- TextBox x:Name="textbox"
              VerticalAlignment="Top"
              Margin="10,10,10,0"
              TextWrapping="Wrap"
@@ -55,15 +66,15 @@
              ToolTip="ここに変換したい歌詞などの文字列を入れてください。"
              Style="{StaticResource TextBoxRevealStyle}"
              Text="{Binding SourceText}" / -->
-    <WrapPanel Grid.Row="0">
-      <fa:FontAwesome Icon="Solid_CommentDots"
-                ToolTip="{Tr 'ToolTips.TalkVoiceIcon'}"
-                FontSize="20"
-                Margin="10,5,0,0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                />
-      <!--
+    <WrapPanel
+       Grid.Row="0">
+      <fa:FontAwesome
+         Icon="Solid_CommentDots"
+         ToolTip="{Tr &apos;ToolTips.TalkVoiceIcon&apos;}"
+         FontSize="20"
+         Margin="10,5,0,0"
+         VerticalAlignment="Center"
+         HorizontalAlignment="Center"/><!--
       <ComboBox x:Name="TalkSoftComboBox"
                 Text="Engine"
                 ToolTip="{Tr 'ToolTips.TalkSoftComboBox'}"
@@ -79,130 +90,148 @@
                 IsEnabled="{Binding IsTalkSoftComboEnabled}"
                 SelectedIndex="{Binding TalkSoftSelected}" />
       -->
-      <ComboBox x:Name="TalkSoftComboBox"
-                Text="Engine"
-                ToolTip="{Tr 'ToolTips.TalkSoftComboBox'}"
-                ToolTipService.ShowDuration="10000000"
-                Width="130"
-                Margin="10,10,0,0"
-                FontSize="16.0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                ItemsSource="{Binding TalkSoftItems}"
-                IsEnabled="{Binding IsTalkSoftComboEnabled}"
-                SelectedIndex="{Binding TalkSoftSelected}">
+      <ComboBox
+         x:Name="TalkSoftComboBox"
+         Text="Engine"
+         ToolTip="{Tr &apos;ToolTips.TalkSoftComboBox&apos;}"
+         ToolTipService.ShowDuration="10000000"
+         Width="130"
+         Margin="10,10,0,0"
+         FontSize="16.0"
+         VerticalAlignment="Center"
+         HorizontalAlignment="Left"
+         ItemsSource="{Binding TalkSoftItems}"
+         IsEnabled="{Binding IsTalkSoftComboEnabled}"
+         SelectedIndex="{Binding TalkSoftSelected}">
         <ComboBox.ItemTemplate>
           <DataTemplate>
-              <TextBlock Text="{Tr {Binding Name}, TextIdStringFormat='Talk.Engine.{0}'}" />
+            <TextBlock
+               Text="{Tr {Binding Name}, TextIdStringFormat=&apos;Talk.Engine.{0}&apos;}"/>
           </DataTemplate>
         </ComboBox.ItemTemplate>
       </ComboBox>
-      <ComboBox x:Name="PreviewVoiceComboBox"
-                Text="Voice"
-                ToolTip="{Tr 'ToolTips.PreviewVoiceComboBox'}"
-                Width="180"
-                Margin="3,10,0,0"
-                FontSize="16.0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                SelectedValuePath="Id"
-                DisplayMemberPath="Name"
-                IsEnabled="{Binding IsPreviewComboEnabled}"
-                ItemsSource="{Binding TalkVoiceItems}"
-                SelectedIndex="{Binding TalkVoiceSelected}" />
-      <ComboBox x:Name="StylePresetComboBox"
-                Text="VoiceStyle"
-                ToolTip="{Tr 'ToolTips.StylePresetComboBox'}"
-                Width="100"
-                Margin="3,10,0,0"
-                FontSize="16.0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                SelectedValuePath="Id"
-                DisplayMemberPath="Name"
-                IsEnabled="{Binding IsStylePresetsComboEnabled}"
-                ItemsSource="{Binding TalkVoiceStylePresetsItems}"
-                SelectedIndex="{Binding VoiceStylePresetsSelected}" />
-      <fa:FontAwesome Icon="Solid_AngleRight"
-                FontSize="20"
-                Margin="10,5,10,0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                />
+      <ComboBox
+         x:Name="PreviewVoiceComboBox"
+         Text="Voice"
+         ToolTip="{Tr &apos;ToolTips.PreviewVoiceComboBox&apos;}"
+         Width="180"
+         Margin="3,10,0,0"
+         FontSize="16.0"
+         VerticalAlignment="Center"
+         HorizontalAlignment="Left"
+         SelectedValuePath="Id"
+         DisplayMemberPath="Name"
+         IsEnabled="{Binding IsPreviewComboEnabled}"
+         ItemsSource="{Binding TalkVoiceItems}"
+         SelectedIndex="{Binding TalkVoiceSelected}"/>
+      <ComboBox
+         x:Name="StylePresetComboBox"
+         Text="VoiceStyle"
+         ToolTip="{Tr &apos;ToolTips.StylePresetComboBox&apos;}"
+         Width="100"
+         Margin="3,10,0,0"
+         FontSize="16.0"
+         VerticalAlignment="Center"
+         HorizontalAlignment="Left"
+         SelectedValuePath="Id"
+         DisplayMemberPath="Name"
+         IsEnabled="{Binding IsStylePresetsComboEnabled}"
+         ItemsSource="{Binding TalkVoiceStylePresetsItems}"
+         SelectedIndex="{Binding VoiceStylePresetsSelected}"/>
+      <fa:FontAwesome
+         Icon="Solid_AngleRight"
+         FontSize="20"
+         Margin="10,5,10,0"
+         VerticalAlignment="Center"
+         HorizontalAlignment="Center"/>
       <WrapPanel
-                Orientation="Vertical"
-                ToolTip="{Tr 'ToolTips.SongVoiceTip'}">
-        <WrapPanel Orientation="Horizontal">
-          <fa:FontAwesome Icon="Solid_Music"
-                    FontSize="20"
-                    Margin="0,5,10,0"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    />
-          <ComboBox x:Name="ExportSongSoftComboBox"
-                    ToolTip="{Tr 'ToolTips.ExportSongSoftComboBox'}"
-                    Width="Auto"
-                    Margin="0,10,0,0"
-                    FontSize="12.5"
-                    Foreground="{DynamicResource SystemBaseMediumColorBrush}"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Left"
-                    ItemsSource="{Binding ExportSongSoftItems}"
-                    SelectedIndex="{Binding ExportSongSoftSelected}"
-                    />
-          <ComboBox x:Name="ExportSongCastComboBox"
-                    ToolTip="{Tr 'ToolTips.ExportSongCastComboBox'}"
-                    Width="Auto"
-                    Margin="0,10,0,0"
-                    FontSize="16.0"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Left"
-                    ItemsSource="{Binding ExportSongCastItems}"
-                    SelectedIndex="{Binding ExportSongCastSelected}"
-                    >
+         Orientation="Vertical"
+         ToolTip="{Tr &apos;ToolTips.SongVoiceTip&apos;}">
+        <WrapPanel
+           Orientation="Horizontal">
+          <fa:FontAwesome
+             Icon="Solid_Music"
+             FontSize="20"
+             Margin="0,5,10,0"
+             VerticalAlignment="Center"
+             HorizontalAlignment="Center"/>
+          <ComboBox
+             x:Name="ExportSongSoftComboBox"
+             ToolTip="{Tr &apos;ToolTips.ExportSongSoftComboBox&apos;}"
+             Width="Auto"
+             Margin="0,10,0,0"
+             FontSize="12.5"
+             Foreground="{DynamicResource SystemBaseMediumColorBrush}"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Left"
+             ItemsSource="{Binding ExportSongSoftItems}"
+             SelectedIndex="{Binding ExportSongSoftSelected}"/>
+          <ComboBox
+             x:Name="ExportSongCastComboBox"
+             ToolTip="{Tr &apos;ToolTips.ExportSongCastComboBox&apos;}"
+             Width="Auto"
+             Margin="0,10,0,0"
+             FontSize="16.0"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Left"
+             ItemsSource="{Binding ExportSongCastItems}"
+             SelectedIndex="{Binding ExportSongCastSelected}">
             <ComboBox.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel
+                   Orientation="Horizontal">
                   <TextBlock>
-                    <Run Text="{Binding Name}" />
+                    <Run
+                       Text="{Binding Name}"/>
                   </TextBlock>
                 </StackPanel>
               </DataTemplate>
             </ComboBox.ItemTemplate>
           </ComboBox>
         </WrapPanel>
-      <Expander x:Name="SongVoiceExportParameters"
-
-                ExpandDirection="Down"
-                IsExpanded="False"
-                VerticalAlignment="Stretch"
-                >
-        <WrapPanel Orientation="Horizontal">
-          <ComboBox x:Name="exportLyricesMode"
-              Width="Auto"
-              ToolTip="{Tr 'ToolTips.ExportLyricesMode'}"
-              ToolTipService.ShowDuration="10000000"
-              Margin="3,10,0,0"
-              FontSize="12.5"
-              VerticalAlignment="Top"
-              HorizontalAlignment="Left"
-              ItemsSource="{Binding ExportLyricsModeList}"
-              SelectedItem="{Binding SongExportLyricsMode}"
-              />
-          <ComboBox x:Name="noteSplitModeByCast"
-              Width="Auto"
-              ToolTip="{Tr 'ToolTips.NoteSplitModeByCast'}"
-              Margin="3,10,0,0"
-              FontSize="12.5"
-              VerticalAlignment="Top"
-              HorizontalAlignment="Left"
-              ItemsSource="{Binding NoteSplitModeList}"
-              SelectedItem="{Binding NoteSplitMode}"
-              />
+        <!-- ソングソフト出力詳細 -->
+        <Expander
+           x:Name="SongVoiceExportParameters"
+           ExpandDirection="Down"
+           IsExpanded="False"
+           VerticalAlignment="Stretch">
+          <WrapPanel
+             Orientation="Horizontal">
+            <ComboBox
+               x:Name="exportLyricesMode"
+               Width="Auto"
+               ToolTip="{Tr &apos;ToolTips.ExportLyricesMode&apos;}"
+               ToolTipService.ShowDuration="10000000"
+               Margin="3,10,0,0"
+               FontSize="12.5"
+               VerticalAlignment="Top"
+               HorizontalAlignment="Left"
+               ItemsSource="{Binding ExportLyricsModeList}"
+               SelectedItem="{Binding SongExportLyricsMode}"/>
+            <ComboBox
+               x:Name="noteSplitModeByCast"
+               Width="Auto"
+               ToolTip="{Tr &apos;ToolTips.NoteSplitModeByCast&apos;}"
+               Margin="3,10,0,0"
+               FontSize="12.5"
+               VerticalAlignment="Top"
+               HorizontalAlignment="Left"
+               ItemsSource="{Binding NoteSplitModeList}"
+               SelectedItem="{Binding NoteSplitMode}"/>
+            <ComboBox
+               x:Name="exportExtList"
+               Width="Auto"
+               ToolTip="VoiSona: ccst or tssprj"
+               Margin="3,10,0,0"
+               FontSize="12.5"
+               VerticalAlignment="Top"
+               HorizontalAlignment="Left"
+               IsEnabled="{Binding IsExportFileExtListEnabled}"
+               ItemsSource="{Binding ExportFileTypeList}"
+               SelectedItem="{Binding CurrentExportFileType}"/>
           </WrapPanel>
         </Expander>
-      </WrapPanel>
-      <!--
+      </WrapPanel><!--
       <ComboBox x:Name="ExportCastComboBox2"
                 Text="ExportCast"
                 ToolTip="喋らせるソングキャストを選びます&#xA;「⚠」のついたキャストはまだ上手くしゃべれません。"
@@ -227,214 +256,233 @@
         </ComboBox.ItemTemplate>
       </ComboBox>
       -->
-    </WrapPanel>
-    <!-- talk soft parameters -->
-    <Expander x:Name="parameters"
-
-              ExpandDirection="Down"
-              IsExpanded="False"
-              VerticalAlignment="Stretch"
-              Margin="10"
-              Grid.Row="1">
+    </WrapPanel><!-- talk soft parameters -->
+    <Expander
+       x:Name="parameters"
+       ExpandDirection="Down"
+       IsExpanded="False"
+       VerticalAlignment="Stretch"
+       Margin="10"
+       Grid.Row="1">
       <Expander.Header>
         <WrapPanel>
-          <fa:FontAwesome Icon="Solid_Sliders" FontSize="14" Margin="2" />
-          <TextBlock Text="{Tr 'UI.ParameterHeader'}" />
+          <fa:FontAwesome
+             Icon="Solid_Sliders"
+             FontSize="14"
+             Margin="2"/>
+          <TextBlock
+             Text="{Tr &apos;UI.ParameterHeader&apos;}"/>
         </WrapPanel>
       </Expander.Header>
-      <ScrollViewer Margin="0"
-                    VerticalScrollBarVisibility="Auto">
-        <WrapPanel>
-          <!-- talk soft common params -->
-          <ItemsControl x:Name="TalkSoftParameterList"
-                        Margin="0,0,0,0"
-                        MaxHeight="300"
-                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                        fw:PointerTracker.Enabled="True"
-                        ItemsSource="{Binding TalkSoftParams}">
+      <ScrollViewer
+         Margin="0"
+         VerticalScrollBarVisibility="Auto">
+        <WrapPanel><!-- talk soft common params -->
+          <ItemsControl
+             x:Name="TalkSoftParameterList"
+             Margin="0,0,0,0"
+             MaxHeight="300"
+             BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+             fw:PointerTracker.Enabled="True"
+             ItemsSource="{Binding TalkSoftParams}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal" />
+                <WrapPanel
+                   Orientation="Horizontal"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Vertical"
-                            HorizontalAlignment="Center"
-                            Height="Auto"
-                            Width="60">
-                  <TextBlock Text="{Binding Name}"
-                        Width="60"
-                        Margin="5,0"
-                        FontSize="11" />
-                  <Slider x:Name="slider"
-                          Width="45"
-                          Height="75"
-                          Margin="10"
-                          Orientation="Vertical"
-                          HorizontalContentAlignment="Center"
-                          Minimum="{Binding Min}"
-                          Maximum="{Binding Max}"
-                          IsSnapToTickEnabled="True"
-                          TickFrequency="{Binding SmallChange}"
-                          SmallChange="{Binding SmallChange}"
-                          Value="{Binding Value}" />
-                  <ui:NumberBox Width="70"
-                                FontSize="10"
-                                Margin="1,0"
-                                SmallChange="{Binding SmallChange}"
-                                SpinButtonPlacementMode="Compact"
-                                ValidationMode="InvalidInputOverwritten"
-                                Value="{Binding Value, ElementName=slider}" />
+                <StackPanel
+                   Orientation="Vertical"
+                   HorizontalAlignment="Center"
+                   Height="Auto"
+                   Width="60">
+                  <TextBlock
+                     Text="{Binding Name}"
+                     Width="60"
+                     Margin="5,0"
+                     FontSize="11"/>
+                  <Slider
+                     x:Name="slider"
+                     Width="45"
+                     Height="75"
+                     Margin="10"
+                     Orientation="Vertical"
+                     HorizontalContentAlignment="Center"
+                     Minimum="{Binding Min}"
+                     Maximum="{Binding Max}"
+                     IsSnapToTickEnabled="True"
+                     TickFrequency="{Binding SmallChange}"
+                     SmallChange="{Binding SmallChange}"
+                     Value="{Binding Value}"/>
+                  <ui:NumberBox
+                     Width="70"
+                     FontSize="10"
+                     Margin="1,0"
+                     SmallChange="{Binding SmallChange}"
+                     SpinButtonPlacementMode="Compact"
+                     ValidationMode="InvalidInputOverwritten"
+                     Value="{Binding Value, ElementName=slider}"/>
                 </StackPanel>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
           <Separator
-            Margin="5,0"
-            Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-          <!-- talk voice params-->
-          <ItemsControl x:Name="TalkVoiceParameterList"
-                        Margin="0,0,0,0"
-                        MaxHeight="300"
-                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                        fw:PointerTracker.Enabled="True"
-                        ItemsSource="{Binding TalkVoiceStyleParams}">
+             Margin="5,0"
+             Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/><!-- talk voice params-->
+          <ItemsControl
+             x:Name="TalkVoiceParameterList"
+             Margin="0,0,0,0"
+             MaxHeight="300"
+             BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+             fw:PointerTracker.Enabled="True"
+             ItemsSource="{Binding TalkVoiceStyleParams}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal" />
+                <WrapPanel
+                   Orientation="Horizontal"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Vertical"
-                            HorizontalAlignment="Center"
-                            Height="Auto"
-                            Width="60">
-                  <TextBlock Text="{Binding Name}"
-                        Width="60"
-                        Margin="5,0"
-                        FontSize="11" />
-                  <Slider x:Name="slider"
-                          Width="45"
-                          Height="75"
-                          Margin="10"
-                          Orientation="Vertical"
-                          HorizontalContentAlignment="Center"
-                          Minimum="{Binding Min}"
-                          Maximum="{Binding Max}"
-                          IsSnapToTickEnabled="True"
-                          TickFrequency="{Binding SmallChange}"
-                          SmallChange="{Binding SmallChange}"
-                          Value="{Binding Value}" />
-                  <ui:NumberBox Width="70"
-                                FontSize="11"
-                                Margin="1,0"
-                                SmallChange="{Binding SmallChange}"
-                                SpinButtonPlacementMode="Compact"
-                                ValidationMode="InvalidInputOverwritten"
-                                Value="{Binding Value, ElementName=slider}" />
+                <StackPanel
+                   Orientation="Vertical"
+                   HorizontalAlignment="Center"
+                   Height="Auto"
+                   Width="60">
+                  <TextBlock
+                     Text="{Binding Name}"
+                     Width="60"
+                     Margin="5,0"
+                     FontSize="11"/>
+                  <Slider
+                     x:Name="slider"
+                     Width="45"
+                     Height="75"
+                     Margin="10"
+                     Orientation="Vertical"
+                     HorizontalContentAlignment="Center"
+                     Minimum="{Binding Min}"
+                     Maximum="{Binding Max}"
+                     IsSnapToTickEnabled="True"
+                     TickFrequency="{Binding SmallChange}"
+                     SmallChange="{Binding SmallChange}"
+                     Value="{Binding Value}"/>
+                  <ui:NumberBox
+                     Width="70"
+                     FontSize="11"
+                     Margin="1,0"
+                     SmallChange="{Binding SmallChange}"
+                     SpinButtonPlacementMode="Compact"
+                     ValidationMode="InvalidInputOverwritten"
+                     Value="{Binding Value, ElementName=slider}"/>
                 </StackPanel>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
           <Separator
-            Margin="5,0"
-            Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-          <!-- song voice params -->
-          <ItemsControl x:Name="SongVoiceParameterList"
-                        Margin="0,0,0,0"
-                        MaxHeight="300"
-                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                        fw:PointerTracker.Enabled="True"
-                        ItemsSource="{Binding SongVoiceStyleParams}">
+             Margin="5,0"
+             Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/><!-- song voice params -->
+          <ItemsControl
+             x:Name="SongVoiceParameterList"
+             Margin="0,0,0,0"
+             MaxHeight="300"
+             BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+             fw:PointerTracker.Enabled="True"
+             ItemsSource="{Binding SongVoiceStyleParams}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal" />
+                <WrapPanel
+                   Orientation="Horizontal"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Vertical"
-                            HorizontalAlignment="Center"
-                            Height="Auto"
-                            Width="60">
-                  <TextBlock Text="{Binding Name}"
-                        Width="60"
-                        Margin="5,0"
-                        FontSize="11" />
-                  <Slider x:Name="slider"
-                          Width="45"
-                          Height="75"
-                          Margin="10"
-                          Orientation="Vertical"
-                          HorizontalContentAlignment="Center"
-                          Minimum="{Binding Min}"
-                          Maximum="{Binding Max}"
-                          IsSnapToTickEnabled="True"
-                          TickFrequency="{Binding SmallChange}"
-                          SmallChange="{Binding SmallChange}"
-                          Value="{Binding Value}" />
-                  <ui:NumberBox Width="70"
-                                FontSize="11"
-                                Margin="1,0"
-                                SmallChange="{Binding SmallChange}"
-                                SpinButtonPlacementMode="Compact"
-                                ValidationMode="InvalidInputOverwritten"
-                                Value="{Binding Value, ElementName=slider}" />
+                <StackPanel
+                   Orientation="Vertical"
+                   HorizontalAlignment="Center"
+                   Height="Auto"
+                   Width="60">
+                  <TextBlock
+                     Text="{Binding Name}"
+                     Width="60"
+                     Margin="5,0"
+                     FontSize="11"/>
+                  <Slider
+                     x:Name="slider"
+                     Width="45"
+                     Height="75"
+                     Margin="10"
+                     Orientation="Vertical"
+                     HorizontalContentAlignment="Center"
+                     Minimum="{Binding Min}"
+                     Maximum="{Binding Max}"
+                     IsSnapToTickEnabled="True"
+                     TickFrequency="{Binding SmallChange}"
+                     SmallChange="{Binding SmallChange}"
+                     Value="{Binding Value}"/>
+                  <ui:NumberBox
+                     Width="70"
+                     FontSize="11"
+                     Margin="1,0"
+                     SmallChange="{Binding SmallChange}"
+                     SpinButtonPlacementMode="Compact"
+                     ValidationMode="InvalidInputOverwritten"
+                     Value="{Binding Value, ElementName=slider}"/>
                 </StackPanel>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
-          <StackPanel Orientation="Vertical">
-            <ComboBox x:Name="scoreDynamicsByCast"
-                Width="Auto"
-                ToolTip="{Tr 'ToolTips.ScoreDynamicsByCast'}"
-                FontSize="12.5"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Left"
-                ItemsSource="{Binding ExportScoreDynamicsList}"
-                SelectedItem="{Binding ExportScoreDynamics}"
-                />
+          <StackPanel
+             Orientation="Vertical">
+            <ComboBox
+               x:Name="scoreDynamicsByCast"
+               Width="Auto"
+               ToolTip="{Tr &apos;ToolTips.ScoreDynamicsByCast&apos;}"
+               FontSize="12.5"
+               VerticalAlignment="Top"
+               HorizontalAlignment="Left"
+               ItemsSource="{Binding ExportScoreDynamicsList}"
+               SelectedItem="{Binding ExportScoreDynamics}"/>
             <ui:NumberBox
-                ToolTip="{Tr 'ToolTips.ScoreTempoByCast'}"
-                Width="Auto"
-                FontSize="12.5"
-                SmallChange="1"
-                SpinButtonPlacementMode="Compact"
-                PlaceholderText="150"
-                ValidationMode="InvalidInputOverwritten"
-                Value="{Binding ExportFileTempo}" />
+               ToolTip="{Tr &apos;ToolTips.ScoreTempoByCast&apos;}"
+               Width="Auto"
+               FontSize="12.5"
+               SmallChange="1"
+               SpinButtonPlacementMode="Compact"
+               PlaceholderText="150"
+               ValidationMode="InvalidInputOverwritten"
+               Value="{Binding ExportFileTempo}"/>
           </StackPanel>
         </WrapPanel>
       </ScrollViewer>
-    </Expander>
-    <!-- standard options -->
-    <WrapPanel Grid.Row="2" />
-    <!-- List start -->
-    <fw:DropShadowPanel Grid.Row="3"
-                        ShadowMode="Outer"
-                        VerticalAlignment="Stretch"
-                        MinHeight="50">
-      <DataGrid BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                fw:PointerTracker.Enabled="True"
-                ItemsSource="{Binding Serifs}"
-                AutoGenerateColumns="False"
-                EnableColumnVirtualization="True"
-                EnableRowVirtualization="True"
-                VirtualizingPanel.IsVirtualizing="True"
-                VirtualizingPanel.VirtualizationMode="Recycling"
-                CanUserAddRows="False"
-                CanUserDeleteRows="True"
-                CanUserReorderColumns="True"
-                CanUserSortColumns="False"
-                SelectionUnit="CellOrRowHeader"
-                VirtualizingPanel.ScrollUnit="Pixel"
-                VerticalScrollBarVisibility="Auto"
-                AllowDrop="True"
-                SelectedIndex="{Binding SelectedSerifIndex, Mode=OneWay}">
-        <!-- 右クリックによるコンテキストメニューの表示 -->
-        <!-- DataGrid.ContextMenu>
+    </Expander><!-- standard options -->
+    <WrapPanel
+       Grid.Row="2"/><!-- List start -->
+    <fw:DropShadowPanel
+       Grid.Row="3"
+       ShadowMode="Outer"
+       VerticalAlignment="Stretch"
+       MinHeight="50">
+      <DataGrid
+         BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+         fw:PointerTracker.Enabled="True"
+         ItemsSource="{Binding Serifs}"
+         AutoGenerateColumns="False"
+         EnableColumnVirtualization="True"
+         EnableRowVirtualization="True"
+         VirtualizingPanel.IsVirtualizing="True"
+         VirtualizingPanel.VirtualizationMode="Recycling"
+         CanUserAddRows="False"
+         CanUserDeleteRows="True"
+         CanUserReorderColumns="True"
+         CanUserSortColumns="False"
+         SelectionUnit="CellOrRowHeader"
+         VirtualizingPanel.ScrollUnit="Pixel"
+         VerticalScrollBarVisibility="Auto"
+         AllowDrop="True"
+         SelectedIndex="{Binding SelectedSerifIndex, Mode=OneWay}"><!-- 右クリックによるコンテキストメニューの表示 --><!-- DataGrid.ContextMenu>
           <ContextMenu x:Name="uxDataGridContextMenu">
             <MenuItem Header="コピー"
                       Command="{Binding CopyRow}" />
@@ -448,132 +496,117 @@
           </ContextMenu>
         </DataGrid.ContextMenu -->
         <DataGrid.Columns>
-          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Words'}"
-                              Width="*"
-                              >
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <StackPanel VerticalAlignment="Stretch">
-                    <epoxy:EventBinder.Events>
-                        <epoxy:Event EventName="PreviewDrop" Command="{Binding Drop}" />
-                      </epoxy:EventBinder.Events>
+          <DataGridTemplateColumn
+             Header="{Tr &apos;UI.SpeechWordsHeader.Words&apos;}"
+             Width="*">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <StackPanel
+                   VerticalAlignment="Stretch">
+                  <epoxy:EventBinder.Events>
+                    <epoxy:Event
+                       EventName="PreviewDrop"
+                       Command="{Binding Drop}"/>
+                  </epoxy:EventBinder.Events>
+                  <TextBlock
+                     Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap"
+                     ToolTip="{Tr &apos;ToolTips.InputTextboxOfSpeechWord&apos;}"
+                     Padding="5"
+                     AllowDrop="True"
+                     VerticalAlignment="Stretch"
+                     Visibility="{Binding SourceTextVisible}"></TextBlock>
+                  <DockPanel
+                     LastChildFill="True"
+                     Visibility="{Binding DropFileNameView}">
                     <TextBlock
-                      Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
-                      TextWrapping="Wrap"
-                      ToolTip="{Tr 'ToolTips.InputTextboxOfSpeechWord'}"
-                      Padding="5"
-                      AllowDrop="True"
-                      VerticalAlignment="Stretch"
-                      Visibility="{Binding SourceTextVisible}"
-                      >
-                    </TextBlock>
-
-                    <DockPanel
-                      LastChildFill="True"
-                      Visibility="{Binding DropFileNameView}">
-                      <TextBlock
-                          x:Name="SerifFileTextView"
-                          DockPanel.Dock="Top"
-                          Text="{Binding DropFileSerif}"
-                          Padding="5"
-                          TextWrapping="Wrap"
-                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
-                          >
-                      </TextBlock>
-                      <fa:FontAwesome
-                        DockPanel.Dock="Left"
-                        Icon="Solid_FileAudio"
-                        Margin="5"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        />
-                      <Button Content="&#xE711;"
-                        DockPanel.Dock="Right"
-                        FontSize="14"
-                        FontFamily="Segoe MDL2 Assets"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Command="{Binding ResetDropFile}"
-                        Style="{StaticResource ButtonRoundRevealStyle}">
-                      </Button>
-                      <TextBlock
-                          x:Name="fileNameView"
-                          DockPanel.Dock="Bottom"
-                          Text="{Binding DropFileName}"
-                          FontSize="11"
-                          Padding="5"
-                          VerticalAlignment="Center"
-                          TextWrapping="Wrap"
-                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
-                          >
-                      </TextBlock>
-                    </DockPanel>
-
-                  </StackPanel>
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-              <DataGridTemplateColumn.CellEditingTemplate>
-                <DataTemplate>
-                  <DockPanel LastChildFill="True">
-
-                    <DockPanel
-                      LastChildFill="True"
-                      Visibility="{Binding DropFileNameView}">
-                      <TextBlock
-                          x:Name="SerifFileTextView"
-                          DockPanel.Dock="Top"
-                          Text="{Binding DropFileSerif}"
-                          Padding="5"
-                          TextWrapping="Wrap"
-                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
-                          >
-                      </TextBlock>
-                      <fa:FontAwesome
-                        DockPanel.Dock="Left"
-                        Icon="Solid_FileAudio"
-                        Margin="5"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        />
-                      <Button Content="&#xE711;"
-                        DockPanel.Dock="Right"
-                        FontSize="14"
-                        FontFamily="Segoe MDL2 Assets"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Command="{Binding ResetDropFile}"
-                        Style="{StaticResource ButtonRoundRevealStyle}">
-                      </Button>
-                      <TextBlock
-                          x:Name="fileNameView"
-                          DockPanel.Dock="Bottom"
-                          Text="{Binding DropFileName}"
-                          FontSize="11"
-                          Padding="5"
-                          VerticalAlignment="Center"
-                          TextWrapping="Wrap"
-                          Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"
-                          >
-                      </TextBlock>
-                    </DockPanel>
-
-                    <TextBox
-                      DockPanel.Dock="Top"
-                      Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
-                      TextWrapping="Wrap"
-                      AcceptsReturn="False"
-                      Padding="5"
-                      VerticalAlignment="Stretch"
-                      HorizontalAlignment="Stretch"
-                      Style="{StaticResource TextBoxRevealStyle}"
-                      Visibility="{Binding SourceTextVisible}"
-                      >
-                    </TextBox>
+                       x:Name="SerifFileTextView"
+                       DockPanel.Dock="Top"
+                       Text="{Binding DropFileSerif}"
+                       Padding="5"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"></TextBlock>
+                    <fa:FontAwesome
+                       DockPanel.Dock="Left"
+                       Icon="Solid_FileAudio"
+                       Margin="5"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+                    <Button
+                       Content=""
+                       DockPanel.Dock="Right"
+                       FontSize="14"
+                       FontFamily="Segoe MDL2 Assets"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Command="{Binding ResetDropFile}"
+                       Style="{StaticResource ButtonRoundRevealStyle}"></Button>
+                    <TextBlock
+                       x:Name="fileNameView"
+                       DockPanel.Dock="Bottom"
+                       Text="{Binding DropFileName}"
+                       FontSize="11"
+                       Padding="5"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"></TextBlock>
                   </DockPanel>
-                </DataTemplate>
-              </DataGridTemplateColumn.CellEditingTemplate>
-          </DataGridTemplateColumn>
-          <!--
+                </StackPanel>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+            <DataGridTemplateColumn.CellEditingTemplate>
+              <DataTemplate>
+                <DockPanel
+                   LastChildFill="True">
+                  <DockPanel
+                     LastChildFill="True"
+                     Visibility="{Binding DropFileNameView}">
+                    <TextBlock
+                       x:Name="SerifFileTextView"
+                       DockPanel.Dock="Top"
+                       Text="{Binding DropFileSerif}"
+                       Padding="5"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"></TextBlock>
+                    <fa:FontAwesome
+                       DockPanel.Dock="Left"
+                       Icon="Solid_FileAudio"
+                       Margin="5"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+                    <Button
+                       Content=""
+                       DockPanel.Dock="Right"
+                       FontSize="14"
+                       FontFamily="Segoe MDL2 Assets"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Command="{Binding ResetDropFile}"
+                       Style="{StaticResource ButtonRoundRevealStyle}"></Button>
+                    <TextBlock
+                       x:Name="fileNameView"
+                       DockPanel.Dock="Bottom"
+                       Text="{Binding DropFileName}"
+                       FontSize="11"
+                       Padding="5"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemBaseMediumHighColorBrush}"></TextBlock>
+                  </DockPanel>
+                  <TextBox
+                     DockPanel.Dock="Top"
+                     Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="False"
+                     Padding="5"
+                     VerticalAlignment="Stretch"
+                     HorizontalAlignment="Stretch"
+                     Style="{StaticResource TextBoxRevealStyle}"
+                     Visibility="{Binding SourceTextVisible}"></TextBox>
+                </DockPanel>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellEditingTemplate>
+          </DataGridTemplateColumn><!--
           <DataGridTextColumn Header="セリフ"
                               Width="*"
                               Binding="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}"
@@ -604,502 +637,559 @@
 
           </DataGridTextColumn>
           -->
-          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Listen'}"
-                                  Width="SizeToCells">
+          <DataGridTemplateColumn
+             Header="{Tr &apos;UI.SpeechWordsHeader.Listen&apos;}"
+             Width="SizeToCells">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
-                <StackPanel VerticalAlignment="Center">
-                  <Button x:Name="PreviewButton"
-                          Content=""
-                          ToolTip="{Tr 'ToolTips.PreviewButton'}"
-                          VerticalAlignment="Center"
-                          HorizontalAlignment="Left"
-                          Width="50"
-                          FontSize="28"
-                          FontFamily="Segoe MDL2 Assets"
-                          Style="{StaticResource ButtonRoundRevealStyle}"
-                          IsEnabled="{Binding EnabledPreview}"
-                          Command="{Binding PreviewTalk}" />
-                  <ProgressBar x:Name="previewProgress"
-                                  IsIndeterminate="True"
-                                  Visibility="{Binding PreviewProgress}"/>
+                <StackPanel
+                   VerticalAlignment="Center">
+                  <Button
+                     x:Name="PreviewButton"
+                     Content=""
+                     ToolTip="{Tr &apos;ToolTips.PreviewButton&apos;}"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Left"
+                     Width="50"
+                     FontSize="28"
+                     FontFamily="Segoe MDL2 Assets"
+                     Style="{StaticResource ButtonRoundRevealStyle}"
+                     IsEnabled="{Binding EnabledPreview}"
+                     Command="{Binding PreviewTalk}"/>
+                  <ProgressBar
+                     x:Name="previewProgress"
+                     IsIndeterminate="True"
+                     Visibility="{Binding PreviewProgress}"/>
                 </StackPanel>
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
-          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Export'}"
-                                  Width="SizeToCells">
+          <DataGridTemplateColumn
+             Header="{Tr &apos;UI.SpeechWordsHeader.Export&apos;}"
+             Width="SizeToCells">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
-                <StackPanel VerticalAlignment="Center">
-                  <Button Content=""
-                        Width="50"
-                        FontSize="28"
-                        FontFamily="Segoe MDL2 Assets"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        ToolTip="{Tr 'ToolTips.ExportButton'}"
-                        Style="{StaticResource ButtonRoundRevealStyle}"
-                        IsEnabled="{Binding EnabledExport}"
-                        Command="{Binding ExportTrackFile}">
-                  </Button>
-                  <ProgressBar x:Name="exportProgress"
-                                IsIndeterminate="True"
-                                Visibility="{Binding ExportProgress}"
-                 />
+                <StackPanel
+                   VerticalAlignment="Center">
+                  <Button
+                     Content=""
+                     Width="50"
+                     FontSize="28"
+                     FontFamily="Segoe MDL2 Assets"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     ToolTip="{Tr &apos;ToolTips.ExportButton&apos;}"
+                     Style="{StaticResource ButtonRoundRevealStyle}"
+                     IsEnabled="{Binding EnabledExport}"
+                     Command="{Binding ExportTrackFile}"></Button>
+                  <ProgressBar
+                     x:Name="exportProgress"
+                     IsIndeterminate="True"
+                     Visibility="{Binding ExportProgress}"/>
                 </StackPanel>
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
-          <DataGridTextColumn Header="{Tr 'UI.SpeechWordsHeader.Seconds'}"
-                              Width="SizeToHeader"
-                              MinWidth="50"
-                              Binding="{Binding SerifTime}"
-                              >
+          <DataGridTextColumn
+             Header="{Tr &apos;UI.SpeechWordsHeader.Seconds&apos;}"
+             Width="SizeToHeader"
+             MinWidth="50"
+             Binding="{Binding SerifTime}">
             <DataGridTextColumn.ElementStyle>
-              <Style TargetType="TextBlock">
-                <Setter Property="ToolTip"
-                        Value="{Tr 'ToolTips.ShowSecondsColumn'}" />
-                <Setter Property="VerticalAlignment"
-                        Value="Center" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Right" />
-                <Setter Property="Margin"
-                        Value="5" />
-                <Setter Property="FontSize"
-                        Value="10" />
+              <Style
+                 TargetType="TextBlock">
+                <Setter
+                   Property="ToolTip"
+                   Value="{Tr &apos;ToolTips.ShowSecondsColumn&apos;}"/>
+                <Setter
+                   Property="VerticalAlignment"
+                   Value="Center"/>
+                <Setter
+                   Property="HorizontalAlignment"
+                   Value="Right"/>
+                <Setter
+                   Property="Margin"
+                   Value="5"/>
+                <Setter
+                   Property="FontSize"
+                   Value="10"/>
               </Style>
             </DataGridTextColumn.ElementStyle>
             <DataGridTextColumn.EditingElementStyle>
-              <Style TargetType="{x:Type TextBox}">
-                <Setter Property="AcceptsReturn"
-                        Value="False" />
-                <Setter Property="VerticalAlignment"
-                        Value="Center" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Right" />
-                <Setter Property="Padding"
-                        Value="5" />
-                <Setter Property="Margin"
-                        Value="5" />
-                <Setter Property="FontSize"
-                        Value="10" />
-                <Setter Property="IsReadOnly"
-                        Value="True" />
+              <Style
+                 TargetType="{x:Type TextBox}">
+                <Setter
+                   Property="AcceptsReturn"
+                   Value="False"/>
+                <Setter
+                   Property="VerticalAlignment"
+                   Value="Center"/>
+                <Setter
+                   Property="HorizontalAlignment"
+                   Value="Right"/>
+                <Setter
+                   Property="Padding"
+                   Value="5"/>
+                <Setter
+                   Property="Margin"
+                   Value="5"/>
+                <Setter
+                   Property="FontSize"
+                   Value="10"/>
+                <Setter
+                   Property="IsReadOnly"
+                   Value="True"/>
               </Style>
             </DataGridTextColumn.EditingElementStyle>
           </DataGridTextColumn>
-          <DataGridTemplateColumn Header="{Tr 'UI.SpeechWordsHeader.Phoneme'}"
-                                  Width="*">
+          <DataGridTemplateColumn
+             Header="{Tr &apos;UI.SpeechWordsHeader.Phoneme&apos;}"
+             Width="*">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
                 <DockPanel>
-                  <TextBox VerticalAlignment="Stretch"
-                           TextWrapping="Wrap"
-                           AcceptsReturn="False"
-                           FontFamily="Georgia"
-                           FontSize="16.5"
-                           ToolTip="{Tr 'ToolTips.PhonemeTextboxCell'}"
-                           IsReadOnly="True"
-                           Style="{StaticResource TextBoxRevealStyle}"
-                           Text="{Binding ConvertedText}" />
+                  <TextBox
+                     VerticalAlignment="Stretch"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="False"
+                     FontFamily="Georgia"
+                     FontSize="16.5"
+                     ToolTip="{Tr &apos;ToolTips.PhonemeTextboxCell&apos;}"
+                     IsReadOnly="True"
+                     Style="{StaticResource TextBoxRevealStyle}"
+                     Text="{Binding ConvertedText}"/>
                 </DockPanel>
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
         </DataGrid.Columns>
       </DataGrid>
-    </fw:DropShadowPanel>
-    <!-- List end -->
-    <Expander x:Name="options"
-              ExpandDirection="Down"
-              IsExpanded="False"
-              VerticalAlignment="Stretch"
-              Margin="10"
-              Grid.Row="4">
+    </fw:DropShadowPanel><!-- List end -->
+    <Expander
+       x:Name="options"
+       ExpandDirection="Down"
+       IsExpanded="False"
+       VerticalAlignment="Stretch"
+       Margin="10"
+       Grid.Row="4">
       <Expander.Header>
         <WrapPanel>
-          <fa:FontAwesome Icon="Solid_EllipsisVertical" FontSize="14" Margin="5,2" />
-          <TextBlock Text="{Tr 'UI.OptionHeader'}" />
+          <fa:FontAwesome
+             Icon="Solid_EllipsisVertical"
+             FontSize="14"
+             Margin="5,2"/>
+          <TextBlock
+             Text="{Tr &apos;UI.OptionHeader&apos;}"/>
         </WrapPanel>
       </Expander.Header>
-      <ScrollViewer Margin="10,10,10,0"
-                    MaxHeight="400px"
-                    VerticalScrollBarVisibility="Auto">
+      <ScrollViewer
+         Margin="10,10,10,0"
+         MaxHeight="400px"
+         VerticalScrollBarVisibility="Auto">
         <StackPanel>
-          <WrapPanel fw:PointerTracker.Enabled="True"
-            HorizontalAlignment="Stretch">
-            <ui:RadioButtons x:Name="ShowOptions"
-                             MaxColumns="2"
-                             Margin="10,0">
-              <RadioButton x:Name="RadioOptionShowPhoneme"
-                           Content="{Tr 'UI.Options.ShowOptions.Phoneme'}"
-                           ToolTip="{Tr 'ToolTips.Options.ShowPhoneme'}"
-                           IsChecked="{Binding IsConvertToPhoneme}" />
-              <RadioButton x:Name="RadioOptionShowHiragana"
-                           Content="{Tr 'UI.Options.ShowOptions.Kana'}"
-                           ToolTip="{Tr 'ToolTips.Options.ShowHiragana'}"
-                           IsEnabled="true"
-                           IsChecked="{Binding IsConvertToHiragana}" />
+          <WrapPanel
+             fw:PointerTracker.Enabled="True"
+             HorizontalAlignment="Stretch">
+            <ui:RadioButtons
+               x:Name="ShowOptions"
+               MaxColumns="2"
+               Margin="10,0">
+              <RadioButton
+                 x:Name="RadioOptionShowPhoneme"
+                 Content="{Tr &apos;UI.Options.ShowOptions.Phoneme&apos;}"
+                 ToolTip="{Tr &apos;ToolTips.Options.ShowPhoneme&apos;}"
+                 IsChecked="{Binding IsConvertToPhoneme}"/>
+              <RadioButton
+                 x:Name="RadioOptionShowHiragana"
+                 Content="{Tr &apos;UI.Options.ShowOptions.Kana&apos;}"
+                 ToolTip="{Tr &apos;ToolTips.Options.ShowHiragana&apos;}"
+                 IsEnabled="true"
+                 IsChecked="{Binding IsConvertToHiragana}"/>
             </ui:RadioButtons>
-            <CheckBox x:Name="Spacing"
-                      Content="{Tr 'UI.Options.ShowOptions.Spacing'}"
-                      Margin="10,0,10,0"
-                      IsChecked="{Binding IsUseSeparaterSpace}" />
-            <StackPanel Orientation="Horizontal">
-              <Label Content="{Tr 'UI.Options.ShowOptions.DisplayLines'}" Margin="10,5,5,0" />
-              <ui:NumberBox Width="100"
-                          FontSize="11"
-                          Minimum="2"
-                          SmallChange="1"
-                          Margin="10,0"
-                          SpinButtonPlacementMode="Compact"
-                          ValidationMode="InvalidInputOverwritten"
-                          Value="{Binding DefaultSerifLines}" />
-              <Label Content="⚠"
-                      Margin="5,5,5,0"
-                      ToolTip="{Tr 'ToolTips.Options.NeedRestart'}"/>
+            <CheckBox
+               x:Name="Spacing"
+               Content="{Tr &apos;UI.Options.ShowOptions.Spacing&apos;}"
+               Margin="10,0,10,0"
+               IsChecked="{Binding IsUseSeparaterSpace}"/>
+            <StackPanel
+               Orientation="Horizontal">
+              <Label
+                 Content="{Tr &apos;UI.Options.ShowOptions.DisplayLines&apos;}"
+                 Margin="10,5,5,0"/>
+              <ui:NumberBox
+                 Width="100"
+                 FontSize="11"
+                 Minimum="2"
+                 SmallChange="1"
+                 Margin="10,0"
+                 SpinButtonPlacementMode="Compact"
+                 ValidationMode="InvalidInputOverwritten"
+                 Value="{Binding DefaultSerifLines}"/>
+              <Label
+                 Content="⚠"
+                 Margin="5,5,5,0"
+                 ToolTip="{Tr &apos;ToolTips.Options.NeedRestart&apos;}"/>
             </StackPanel>
-          </WrapPanel>
-
-          <!-- ///////////////////////////note option////////////////////////// -->
-          <Expander x:Name="phonemeOptions"
-                    Header="{Tr 'UI.Options.PhonemeOptions.Header'}"
-                    ToolTip="{Tr 'ToolTips.Options.PhonemeOptions'}"
-                    ExpandDirection="Down"
-                    IsExpanded="True"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Stretch"
-                    Margin="10,0,0,0">
-            <WrapPanel fw:PointerTracker.Enabled="True">
-              <CheckBox x:Name="ConvertNasal"
-                        Content="{Tr 'UI.Options.PhonemeOptions.ConvertNasal'}"
-                        ToolTip="{Tr 'ToolTips.Options.ConvertNasal'}"
-                        IsChecked="{Binding IsCheckJapaneseSyllabicNasal}"
-                        Margin="10,0"
-                        IsEnabled="{Binding IsConvertToPhoneme}" />
-              <CheckBox x:Name="ConvertGa"
-                        Content="{Tr 'UI.Options.PhonemeOptions.ConvertGa'}"
-                        ToolTip="{Tr 'ToolTips.Options.ConvertGa'}"
-                        IsChecked="{Binding IsCheckJananeseNasalGa}"
-                        Margin="10,0"
-                        IsEnabled="{Binding IsConvertToPhoneme}" />
-              <ui:RadioButtons x:Name="RemoveNonSoundVowel"
-                               MaxColumns="3"
-                               Margin="10,0"
-                               Header="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelHeader'}"
-                               IsEnabled="{Binding IsConvertToPhoneme}">
-                <RadioButton x:Name="RadioOptionNonSoundVowelDoNothing"
-                             GroupName="NonSoundVowel"
-                             IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=DoNothing}"
-                             Content="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelDoNothing'}"
-                             ToolTip="{Tr 'ToolTips.Options.NonSoundVowelDoNothing'}" />
-                <RadioButton x:Name="RadioOptionNonSoundVowelSmall"
-                             GroupName="NonSoundVowel"
-                             IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=Small}"
-                             Content="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelSmall'}"
-                             ToolTip="{Tr 'ToolTips.Options.NonSoundVowelSmall'}" />
-                <RadioButton x:Name="RadioOptionNonSoundVowelRemoving"
-                             GroupName="NonSoundVowel"
-                             IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=Remove}"
-                             Content="{Tr 'UI.Options.PhonemeOptions.NonSoundVowelRemoving'}"
-                             ToolTip="{Tr 'ToolTips.Options.NonSoundVowelRemoving'}" />
+          </WrapPanel><!-- ///////////////////////////note option////////////////////////// -->
+          <Expander
+             x:Name="phonemeOptions"
+             Header="{Tr &apos;UI.Options.PhonemeOptions.Header&apos;}"
+             ToolTip="{Tr &apos;ToolTips.Options.PhonemeOptions&apos;}"
+             ExpandDirection="Down"
+             IsExpanded="True"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Stretch"
+             Margin="10,0,0,0">
+            <WrapPanel
+               fw:PointerTracker.Enabled="True">
+              <CheckBox
+                 x:Name="ConvertNasal"
+                 Content="{Tr &apos;UI.Options.PhonemeOptions.ConvertNasal&apos;}"
+                 ToolTip="{Tr &apos;ToolTips.Options.ConvertNasal&apos;}"
+                 IsChecked="{Binding IsCheckJapaneseSyllabicNasal}"
+                 Margin="10,0"
+                 IsEnabled="{Binding IsConvertToPhoneme}"/>
+              <CheckBox
+                 x:Name="ConvertGa"
+                 Content="{Tr &apos;UI.Options.PhonemeOptions.ConvertGa&apos;}"
+                 ToolTip="{Tr &apos;ToolTips.Options.ConvertGa&apos;}"
+                 IsChecked="{Binding IsCheckJananeseNasalGa}"
+                 Margin="10,0"
+                 IsEnabled="{Binding IsConvertToPhoneme}"/>
+              <ui:RadioButtons
+                 x:Name="RemoveNonSoundVowel"
+                 MaxColumns="3"
+                 Margin="10,0"
+                 Header="{Tr &apos;UI.Options.PhonemeOptions.NonSoundVowelHeader&apos;}"
+                 IsEnabled="{Binding IsConvertToPhoneme}">
+                <RadioButton
+                   x:Name="RadioOptionNonSoundVowelDoNothing"
+                   GroupName="NonSoundVowel"
+                   IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=DoNothing}"
+                   Content="{Tr &apos;UI.Options.PhonemeOptions.NonSoundVowelDoNothing&apos;}"
+                   ToolTip="{Tr &apos;ToolTips.Options.NonSoundVowelDoNothing&apos;}"/>
+                <RadioButton
+                   x:Name="RadioOptionNonSoundVowelSmall"
+                   GroupName="NonSoundVowel"
+                   IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=Small}"
+                   Content="{Tr &apos;UI.Options.PhonemeOptions.NonSoundVowelSmall&apos;}"
+                   ToolTip="{Tr &apos;ToolTips.Options.NonSoundVowelSmall&apos;}"/>
+                <RadioButton
+                   x:Name="RadioOptionNonSoundVowelRemoving"
+                   GroupName="NonSoundVowel"
+                   IsChecked="{Binding VowelOption, Converter={StaticResource VowelOptionConverter}, Mode=TwoWay, ConverterParameter=Remove}"
+                   Content="{Tr &apos;UI.Options.PhonemeOptions.NonSoundVowelRemoving&apos;}"
+                   ToolTip="{Tr &apos;ToolTips.Options.NonSoundVowelRemoving&apos;}"/>
               </ui:RadioButtons>
-
-
             </WrapPanel>
-          </Expander>
-          <!-- ///////////////////////////note option////////////////////////// -->
-          <Expander x:Name="noteOptions"
-                    Header="{Tr 'UI.Options.NoteOptions.Header'}"
-                    ToolTip="{Tr 'ToolTips.Options.NoteOptions'}"
-                    ExpandDirection="Down"
-                    IsExpanded="false"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Stretch"
-                    Margin="10,0,0,0">
-            <WrapPanel fw:PointerTracker.Enabled="True">
-              <Label Content="{Tr 'UI.Options.NoteOptions.AdaptingPitchMode'}"
-                     Margin="10,10,5,0"
-                     VerticalAlignment="Center"
-                     />
-              <ComboBox x:Name="noteAdaptingPitchMode"
-                        Width="Auto"
-                        ToolTip="{Tr 'ToolTips.Options.NoteAdaptingPitchMode'}"
-                        Margin="3,10,0,0"
-                        FontSize="12.5"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        ItemsSource="{Binding NoteAdaptModeList}"
-                        SelectedItem="{Binding AdaptingNoteToPitchMode}"
-                        />
-              <Label Content="{Tr 'UI.Options.NoteOptions.SuppressBreathMode'}"
-                     Margin="10,10,5,0"
-                     VerticalAlignment="Center"
-                     />
-              <ComboBox x:Name="breathSuppressMode"
-                        Width="Auto"
-                        ToolTip="{Tr 'ToolTips.Options.BreathSuppressMode'}"
-                        Margin="3,10,0,0"
-                        FontSize="12.5"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        ItemsSource="{Binding BreathSuppressModeList}"
-                        SelectedItem="{Binding BreathSuppress}"
-                        />
-              <Label Content="{Tr 'UI.Options.NoteOptions.NoteSplitMode'}"
-                     Margin="10,10,5,0"
-                     VerticalAlignment="Center"
-                     />
-              <ComboBox x:Name="noteSplitMode"
-                        Width="Auto"
-                        ToolTip="{Tr 'ToolTips.Options.NoteSplitMode'}"
-                        Margin="3,10,0,0"
-                        FontSize="12.5"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        ItemsSource="{Binding NoteSplitModeList}"
-                        SelectedItem="{Binding NoteSplitMode}"
-                        />
-              <Label Content="{Tr 'UI.Options.NoteOptions.NoPitchMode'}"
-                     Margin="10,10,5,0"
-                     VerticalAlignment="Center"
-                     />
-              <ComboBox x:Name="noPitchMode"
-                        Width="Auto"
-                        ToolTip="{Tr 'ToolTips.Options.NoPitchMode'}"
-                        Margin="3,10,0,0"
-                        FontSize="12.5"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        ItemsSource="{Binding NoPitchModesList}"
-                        SelectedItem="{Binding NoPitchMode}"
-                        />
-              <Label Content="{Tr 'UI.Options.NoteOptions.NoSoundVowelMode'}"
-                     Margin="10,10,5,0"
-                     VerticalAlignment="Center"
-                     />
-              <ComboBox x:Name="noSoundVowelsMode"
-                        Width="Auto"
-                        ToolTip="{Tr 'ToolTips.Options.NoSoundVowelsMode'}"
-                        Margin="3,10,0,0"
-                        FontSize="12.5"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        ItemsSource="{Binding NoSoundVowelModeList}"
-                        SelectedItem="{Binding NoSoundVowelMode}"
-                        />
-              <ItemsControl x:Name="songExportFileExtList"
-                      Margin="0,0,0,0"
-                      MaxHeight="300"
-                      IsEnabled="false"
-                      Visibility="Collapsed"
-                      BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                      fw:PointerTracker.Enabled="True"
-                      ItemsSource="{Binding ExportFileExtentions}">
+          </Expander><!-- ///////////////////////////note option////////////////////////// -->
+          <Expander
+             x:Name="noteOptions"
+             Header="{Tr &apos;UI.Options.NoteOptions.Header&apos;}"
+             ToolTip="{Tr &apos;ToolTips.Options.NoteOptions&apos;}"
+             ExpandDirection="Down"
+             IsExpanded="false"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Stretch"
+             Margin="10,0,0,0">
+            <WrapPanel
+               fw:PointerTracker.Enabled="True">
+              <Label
+                 Content="{Tr &apos;UI.Options.NoteOptions.AdaptingPitchMode&apos;}"
+                 Margin="10,10,5,0"
+                 VerticalAlignment="Center"/>
+              <ComboBox
+                 x:Name="noteAdaptingPitchMode"
+                 Width="Auto"
+                 ToolTip="{Tr &apos;ToolTips.Options.NoteAdaptingPitchMode&apos;}"
+                 Margin="3,10,0,0"
+                 FontSize="12.5"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 ItemsSource="{Binding NoteAdaptModeList}"
+                 SelectedItem="{Binding AdaptingNoteToPitchMode}"/>
+              <Label
+                 Content="{Tr &apos;UI.Options.NoteOptions.SuppressBreathMode&apos;}"
+                 Margin="10,10,5,0"
+                 VerticalAlignment="Center"/>
+              <ComboBox
+                 x:Name="breathSuppressMode"
+                 Width="Auto"
+                 ToolTip="{Tr &apos;ToolTips.Options.BreathSuppressMode&apos;}"
+                 Margin="3,10,0,0"
+                 FontSize="12.5"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 ItemsSource="{Binding BreathSuppressModeList}"
+                 SelectedItem="{Binding BreathSuppress}"/>
+              <Label
+                 Content="{Tr &apos;UI.Options.NoteOptions.NoteSplitMode&apos;}"
+                 Margin="10,10,5,0"
+                 VerticalAlignment="Center"/>
+              <ComboBox
+                 x:Name="noteSplitMode"
+                 Width="Auto"
+                 ToolTip="{Tr &apos;ToolTips.Options.NoteSplitMode&apos;}"
+                 Margin="3,10,0,0"
+                 FontSize="12.5"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 ItemsSource="{Binding NoteSplitModeList}"
+                 SelectedItem="{Binding NoteSplitMode}"/>
+              <Label
+                 Content="{Tr &apos;UI.Options.NoteOptions.NoPitchMode&apos;}"
+                 Margin="10,10,5,0"
+                 VerticalAlignment="Center"/>
+              <ComboBox
+                 x:Name="noPitchMode"
+                 Width="Auto"
+                 ToolTip="{Tr &apos;ToolTips.Options.NoPitchMode&apos;}"
+                 Margin="3,10,0,0"
+                 FontSize="12.5"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 ItemsSource="{Binding NoPitchModesList}"
+                 SelectedItem="{Binding NoPitchMode}"/>
+              <Label
+                 Content="{Tr &apos;UI.Options.NoteOptions.NoSoundVowelMode&apos;}"
+                 Margin="10,10,5,0"
+                 VerticalAlignment="Center"/>
+              <ComboBox
+                 x:Name="noSoundVowelsMode"
+                 Width="Auto"
+                 ToolTip="{Tr &apos;ToolTips.Options.NoSoundVowelsMode&apos;}"
+                 Margin="3,10,0,0"
+                 FontSize="12.5"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 ItemsSource="{Binding NoSoundVowelModeList}"
+                 SelectedItem="{Binding NoSoundVowelMode}"/>
+              <ItemsControl
+                 x:Name="songExportFileExtListBottom"
+                 Margin="0,0,0,0"
+                 MaxHeight="300"
+                 IsEnabled="false"
+                 Visibility="Visible"
+                 BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                 fw:PointerTracker.Enabled="True"
+                 ItemsSource="{Binding ExportFileExtentions}">
                 <ItemsControl.ItemsPanel>
                   <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
+                    <WrapPanel
+                       Orientation="Horizontal"/>
                   </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
-                    <StackPanel Orientation="Horizontal" >
-                      <Label Content="{Binding SongSoft}"
-                            Width="45"
-                            Margin="5,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            FontSize="11" />
-                      <TextBox Text="{Binding FileExt, UpdateSourceTrigger=PropertyChanged}"
-                            Width="100"
-                            VerticalAlignment="Center"
-                            Margin="5" />
+                    <StackPanel
+                       Orientation="Horizontal">
+                      <Label
+                         Content="{Binding SongSoft}"
+                         Width="45"
+                         Margin="5,0"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center"
+                         FontSize="11"/>
+                      <TextBox
+                         Text="{Binding FileExt, UpdateSourceTrigger=PropertyChanged}"
+                         Width="100"
+                         VerticalAlignment="Center"
+                         Margin="5"/>
                     </StackPanel>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
-
             </WrapPanel>
-          </Expander>
-          <!-- ///////////////////////////save option////////////////////////// -->
-          <Expander x:Name="saveOptions"
-                    Header="{Tr 'UI.Options.SaveOptions.Header'}"
-                    ExpandDirection="Down"
-                    IsExpanded="False"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Stretch"
-                    Margin="10,0,0,0">
-            <WrapPanel fw:PointerTracker.Enabled="True"
-                       HorizontalAlignment="Stretch"
-                        >
-
-              <!-- ///////////////// Export trac file save option /////////////// -->
+          </Expander><!-- ///////////////////////////save option////////////////////////// -->
+          <Expander
+             x:Name="saveOptions"
+             Header="{Tr &apos;UI.Options.SaveOptions.Header&apos;}"
+             ExpandDirection="Down"
+             IsExpanded="False"
+             VerticalAlignment="Top"
+             HorizontalAlignment="Stretch"
+             Margin="10,0,0,0">
+            <WrapPanel
+               fw:PointerTracker.Enabled="True"
+               HorizontalAlignment="Stretch"><!-- ///////////////// Export trac file save option /////////////// -->
               <Border
-                BorderBrush="{DynamicResource SystemBaseMediumLowColorBrush}"
-                BorderThickness="1"
-                Margin="10,5,0,0"
-                HorizontalAlignment="Stretch"
-                CornerRadius="5" >
-                <WrapPanel Orientation="Horizontal">
-                  <Button x:Name="selectSavePath"
-                          Content="{Tr 'UI.Options.SaveOptions.SelectSavePath'}"
-                          Margin="10"
-                          Padding="5"
-                          Style="{StaticResource ButtonRevealStyle}"
-                          Command="{Binding SelectExportDirectory}" />
-                  <TextBox Text="{Binding PathToSaveDirectory}"
-                          Width="300"
-                          VerticalAlignment="Center"
-                          IsReadOnly="true"
-                          Margin="5" />
-                  <CheckBox Content="{Tr 'UI.Options.SaveOptions.IsOpenCeVIOWhenExport'}"
-                        IsChecked="{Binding IsOpenCeVIOWhenExport}"
-                        Margin="10,0,10,0" />
+                 BorderBrush="{DynamicResource SystemBaseMediumLowColorBrush}"
+                 BorderThickness="1"
+                 Margin="10,5,0,0"
+                 HorizontalAlignment="Stretch"
+                 CornerRadius="5">
+                <WrapPanel
+                   Orientation="Horizontal">
+                  <Button
+                     x:Name="selectSavePath"
+                     Content="{Tr &apos;UI.Options.SaveOptions.SelectSavePath&apos;}"
+                     Margin="10"
+                     Padding="5"
+                     Style="{StaticResource ButtonRevealStyle}"
+                     Command="{Binding SelectExportDirectory}"/>
+                  <TextBox
+                     Text="{Binding PathToSaveDirectory}"
+                     Width="300"
+                     VerticalAlignment="Center"
+                     IsReadOnly="true"
+                     Margin="5"/>
+                  <CheckBox
+                     Content="{Tr &apos;UI.Options.SaveOptions.IsOpenCeVIOWhenExport&apos;}"
+                     IsChecked="{Binding IsOpenCeVIOWhenExport}"
+                     Margin="10,0,10,0"/>
                 </WrapPanel>
-              </Border>
-
-              <!-- ///////////////// Export serif file save option ///////////////// -->
+              </Border><!-- ///////////////// Export serif file save option ///////////////// -->
               <Border
-                BorderBrush="{DynamicResource SystemBaseMediumLowColorBrush}"
-                BorderThickness="1"
-                Margin="10,5,0,0"
-                HorizontalAlignment="Stretch"
-                CornerRadius="5" >
-                <WrapPanel Orientation="Horizontal">
-                  <CheckBox Content="{Tr 'UI.Options.SaveOptions.IsExportWordsAsText'}"
-                          IsChecked="{Binding IsExportSerifText}"
-                          IsEnabled="true"
-                          Margin="10,0,10,0" />
-                  <Button x:Name="selectExportSerifTextPath"
-                          Content="{Tr 'UI.Options.SaveOptions.SelectExportTextPath'}"
-                          Margin="10"
-                          Padding="5"
-                          IsEnabled="{Binding IsExportSerifText}"
-                          Style="{StaticResource ButtonRevealStyle}"
-                          Command="{Binding SelectExportSerifTextDir}" />
-                  <TextBox Text="{Binding PathToExportSerifTextDir}"
-                          Width="300"
-                          VerticalAlignment="Center"
-                          IsEnabled="{Binding IsExportSerifText}"
-                          IsReadOnly="true"
-                          HorizontalContentAlignment="Right"
-                          Margin="5" />
-                  <Expander x:Name="exportSerifTextOptions"
-                      Header="{Tr 'UI.Options.TextSaveOptions.Header'}"
-                      ExpandDirection="Down"
-                      IsExpanded="False"
-                      IsEnabled="{Binding IsExportSerifText}"
-                      VerticalAlignment="Top"
-                      HorizontalAlignment="Stretch"
-                      Margin="10,0,0,0">
+                 BorderBrush="{DynamicResource SystemBaseMediumLowColorBrush}"
+                 BorderThickness="1"
+                 Margin="10,5,0,0"
+                 HorizontalAlignment="Stretch"
+                 CornerRadius="5">
+                <WrapPanel
+                   Orientation="Horizontal">
+                  <CheckBox
+                     Content="{Tr &apos;UI.Options.SaveOptions.IsExportWordsAsText&apos;}"
+                     IsChecked="{Binding IsExportSerifText}"
+                     IsEnabled="true"
+                     Margin="10,0,10,0"/>
+                  <Button
+                     x:Name="selectExportSerifTextPath"
+                     Content="{Tr &apos;UI.Options.SaveOptions.SelectExportTextPath&apos;}"
+                     Margin="10"
+                     Padding="5"
+                     IsEnabled="{Binding IsExportSerifText}"
+                     Style="{StaticResource ButtonRevealStyle}"
+                     Command="{Binding SelectExportSerifTextDir}"/>
+                  <TextBox
+                     Text="{Binding PathToExportSerifTextDir}"
+                     Width="300"
+                     VerticalAlignment="Center"
+                     IsEnabled="{Binding IsExportSerifText}"
+                     IsReadOnly="true"
+                     HorizontalContentAlignment="Right"
+                     Margin="5"/>
+                  <Expander
+                     x:Name="exportSerifTextOptions"
+                     Header="{Tr &apos;UI.Options.TextSaveOptions.Header&apos;}"
+                     ExpandDirection="Down"
+                     IsExpanded="False"
+                     IsEnabled="{Binding IsExportSerifText}"
+                     VerticalAlignment="Top"
+                     HorizontalAlignment="Stretch"
+                     Margin="10,0,0,0">
                     <WrapPanel>
-                      <TextBlock x:Name="serifFileNameTextBox"
-                                Text="{Tr 'UI.Options.TextSaveOptions.FileName'}"
-                                Margin="5,0,5,0"
-                                FontSize="12.5"
-                                VerticalAlignment="Center" />
-                      <TextBox x:Name="exportSerifTextFileName"
-                                Text="{Binding DefaultExportSerifTextFileName}"
-                                ToolTip="{Tr 'ToolTips.Options.DefaultExportSerifTextFileName'}"
-                                Width="300"
-                                VerticalAlignment="Center"
-                                IsEnabled="{Binding IsExportSerifText}"
-                                IsReadOnly="false"
-                                epoxy:Anchor.Pile="{Binding SerifTextFileNamePile}"
-                                Margin="5"
-                                />
-                      <Button x:Name="insertCastName"
-                                Content="{Tr 'UI.Options.TextSaveOptions.CastName'}"
-                                Margin="5,10"
-                                Padding="5"
-                                Style="{StaticResource ButtonRevealStyle}"
-                                Command="{Binding InsertMetaTextToSerifTextFileName}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
-                                />
-                      <Button x:Name="insertDate"
-                                Content="{Tr 'UI.Options.TextSaveOptions.Date'}"
-                                Margin="5,10"
-                                Padding="5"
-                                Style="{StaticResource ButtonRevealStyle}"
-                                Command="{Binding InsertMetaTextToSerifTextFileName}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
-                                />
-                      <Button x:Name="insertSerif"
-                                Content="{Tr 'UI.Options.TextSaveOptions.Words'}"
-                                Margin="5,10"
-                                Padding="5"
-                                Style="{StaticResource ButtonRevealStyle}"
-                                Command="{Binding InsertMetaTextToSerifTextFileName}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
-                                />
-                      <Button x:Name="insertTracName"
-                                Content="{Tr 'UI.Options.TextSaveOptions.TrackName'}"
-                                Margin="5,10"
-                                Padding="5"
-                                Style="{StaticResource ButtonRevealStyle}"
-                                Command="{Binding InsertMetaTextToSerifTextFileName}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
-                                />
-                      <Button x:Name="insertReset"
-                                Content=""
-                                ToolTip="{Tr 'ToolTips.Options.Reset'}"
-                                Margin="5,10"
-                                Padding="5"
-                                FontFamily="Segoe MDL2 Assets"
-                                Style="{StaticResource ButtonRevealStyle}"
-                                Command="{Binding InsertMetaTextToSerifTextFileName}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"
-                                />
+                      <TextBlock
+                         x:Name="serifFileNameTextBox"
+                         Text="{Tr &apos;UI.Options.TextSaveOptions.FileName&apos;}"
+                         Margin="5,0,5,0"
+                         FontSize="12.5"
+                         VerticalAlignment="Center"/>
+                      <TextBox
+                         x:Name="exportSerifTextFileName"
+                         Text="{Binding DefaultExportSerifTextFileName}"
+                         ToolTip="{Tr &apos;ToolTips.Options.DefaultExportSerifTextFileName&apos;}"
+                         Width="300"
+                         VerticalAlignment="Center"
+                         IsEnabled="{Binding IsExportSerifText}"
+                         IsReadOnly="false"
+                         epoxy:Anchor.Pile="{Binding SerifTextFileNamePile}"
+                         Margin="5"/>
+                      <Button
+                         x:Name="insertCastName"
+                         Content="{Tr &apos;UI.Options.TextSaveOptions.CastName&apos;}"
+                         Margin="5,10"
+                         Padding="5"
+                         Style="{StaticResource ButtonRevealStyle}"
+                         Command="{Binding InsertMetaTextToSerifTextFileName}"
+                         CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"/>
+                      <Button
+                         x:Name="insertDate"
+                         Content="{Tr &apos;UI.Options.TextSaveOptions.Date&apos;}"
+                         Margin="5,10"
+                         Padding="5"
+                         Style="{StaticResource ButtonRevealStyle}"
+                         Command="{Binding InsertMetaTextToSerifTextFileName}"
+                         CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"/>
+                      <Button
+                         x:Name="insertSerif"
+                         Content="{Tr &apos;UI.Options.TextSaveOptions.Words&apos;}"
+                         Margin="5,10"
+                         Padding="5"
+                         Style="{StaticResource ButtonRevealStyle}"
+                         Command="{Binding InsertMetaTextToSerifTextFileName}"
+                         CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"/>
+                      <Button
+                         x:Name="insertTracName"
+                         Content="{Tr &apos;UI.Options.TextSaveOptions.TrackName&apos;}"
+                         Margin="5,10"
+                         Padding="5"
+                         Style="{StaticResource ButtonRevealStyle}"
+                         Command="{Binding InsertMetaTextToSerifTextFileName}"
+                         CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"/>
+                      <Button
+                         x:Name="insertReset"
+                         Content=""
+                         ToolTip="{Tr &apos;ToolTips.Options.Reset&apos;}"
+                         Margin="5,10"
+                         Padding="5"
+                         FontFamily="Segoe MDL2 Assets"
+                         Style="{StaticResource ButtonRevealStyle}"
+                         Command="{Binding InsertMetaTextToSerifTextFileName}"
+                         CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Name}"/>
                     </WrapPanel>
                   </Expander>
                 </WrapPanel>
-              </Border>
-
-              <!-- ///////////////// Other save options ///////////////// -->
-
-              <CheckBox Content="{Tr 'UI.Options.OtherSaveOptions.ExportLabFile'}"
-                        IsChecked="false"
-                        IsEnabled="false"
-                        Margin="10,0,10,0" />
-              <CheckBox Content="{Tr 'UI.Options.OtherSaveOptions.SavePreviewVoice'}"
-                        IsChecked="false"
-                        IsEnabled="false"
-                        Margin="10,0,10,0" />
-              <Button x:Name="exportSusuruTrack"
-                        Content="{Tr 'UI.Options.OtherSaveOptions.ExportSusuru'}"
-                        Margin="10"
-                        Padding="5"
-                        Style="{StaticResource ButtonRevealStyle}"
-                        Command="{Binding ExportSusuru}" />
-
+              </Border><!-- ///////////////// Other save options ///////////////// -->
+              <CheckBox
+                 Content="{Tr &apos;UI.Options.OtherSaveOptions.ExportLabFile&apos;}"
+                 IsChecked="false"
+                 IsEnabled="false"
+                 Margin="10,0,10,0"/>
+              <CheckBox
+                 Content="{Tr &apos;UI.Options.OtherSaveOptions.SavePreviewVoice&apos;}"
+                 IsChecked="false"
+                 IsEnabled="false"
+                 Margin="10,0,10,0"/>
+              <Button
+                 x:Name="exportSusuruTrack"
+                 Content="{Tr &apos;UI.Options.OtherSaveOptions.ExportSusuru&apos;}"
+                 Margin="10"
+                 Padding="5"
+                 Style="{StaticResource ButtonRevealStyle}"
+                 Command="{Binding ExportSusuru}"/>
             </WrapPanel>
           </Expander>
-          <Expander x:Name="otherOptions"
-                    Header="{Tr 'UI.Options.OtherOptions.Header'}"
-                    ExpandDirection="Down"
-                    IsExpanded="False"
-                    VerticalAlignment="Top"
-                    Margin="10,0,0,0">
-            <WrapPanel fw:PointerTracker.Enabled="True">
-              <Button x:Name="openLicense"
-                      Content="{Tr 'UI.Options.OtherOptions.OpenLicense'}"
-                      Margin="10"
-                      Padding="5"
-                      Style="{StaticResource ButtonRevealStyle}"
-                      Command="{Binding OpenLicenses}" />
-              <Button x:Name="openWebsite"
-                      Content="{Tr 'UI.Options.OtherOptions.OpenWebsite'}"
-                      Margin="10"
-                      Padding="5"
-                      Style="{StaticResource ButtonRevealStyle}"
-                      Command="{Binding OpenWebsite}" />
+          <Expander
+             x:Name="otherOptions"
+             Header="{Tr &apos;UI.Options.OtherOptions.Header&apos;}"
+             ExpandDirection="Down"
+             IsExpanded="False"
+             VerticalAlignment="Top"
+             Margin="10,0,0,0">
+            <WrapPanel
+               fw:PointerTracker.Enabled="True">
+              <Button
+                 x:Name="openLicense"
+                 Content="{Tr &apos;UI.Options.OtherOptions.OpenLicense&apos;}"
+                 Margin="10"
+                 Padding="5"
+                 Style="{StaticResource ButtonRevealStyle}"
+                 Command="{Binding OpenLicenses}"/>
+              <Button
+                 x:Name="openWebsite"
+                 Content="{Tr &apos;UI.Options.OtherOptions.OpenWebsite&apos;}"
+                 Margin="10"
+                 Padding="5"
+                 Style="{StaticResource ButtonRevealStyle}"
+                 Command="{Binding OpenWebsite}"/>
               <WrapPanel
-                  VerticalAlignment="Center">
-                  <Label Content="{Tr 'UI.Options.OtherOptions.Language'}" Margin="5" />
-                  <ComboBox
-                    ItemsSource="{Binding AvailableLanguages, Source={x:Static loc:Loc.Instance}}"
-                    SelectedItem="{Binding DisplayLanguage}"/>
+                 VerticalAlignment="Center">
+                <Label
+                   Content="{Tr &apos;UI.Options.OtherOptions.Language&apos;}"
+                   Margin="5"/>
+                <ComboBox
+                   ItemsSource="{Binding AvailableLanguages, Source={x:Static loc:Loc.Instance}}"
+                   SelectedItem="{Binding DisplayLanguage}"/>
               </WrapPanel>
             </WrapPanel>
           </Expander>

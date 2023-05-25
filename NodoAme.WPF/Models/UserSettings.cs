@@ -33,7 +33,8 @@ public class UserSettings
 		= new()
 		{
 			new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_AI, FileExt="ccst"},
-			new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_CS, FileExt="ccst"}
+			new SongSoftTracFileExtSetting{SongSoft=SongSoftName.CEVIO_CS, FileExt="ccst"},
+			new SongSoftTracFileExtSetting{SongSoft=SongSoftName.VOISONA, FileExt="tssprj"}
 		};
 
 	public const string SERIF_FILE_NAME = "$セリフ$.txt";

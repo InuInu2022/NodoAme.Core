@@ -305,9 +305,7 @@ public class SerifViewModel
 		);
 
 		Debug.WriteLine("Export!");
-		var exportFileType = //ExportCastItems.ElementAt(ExportCastSelected).ExportFile;
-		ParentVM!.ExportSongCastItems![ParentVM!.ExportSongCastSelected].ExportFile;
-
+		var exportFileType = ParentVM!.CurrentExportFileType;
 		var engine = CurrentEngine as ITalkWrapper;
 
 		string serif;
