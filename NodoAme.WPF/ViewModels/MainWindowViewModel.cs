@@ -134,6 +134,7 @@ public class MainWindowViewModel
 		= Enum.GetValues(typeof(Models.ExportFileType)).Cast<Models.ExportFileType>();
 
 	public bool IsExportFileExtListEnabled { get; set; } = false;
+	public bool IsSongVoiceParamExportEnabled { get; set; } = true;
 
 	public ObservableCollection<SongSoftTracFileExtSetting> ExportFileExtentions { get; set; }
 		= new ObservableCollection<SongSoftTracFileExtSetting>();
@@ -1469,5 +1470,15 @@ public class MainWindowViewModel
 		//reload ui comboboxes
 		await TalkSoftChangedAsync(TalkSoftSelected);
 		await ExportSongSoftSelectedChangedAsync(ExportSongSoftSelected);
+	}
+
+	[PropertyChanged(nameof(CurrentExportFileType))]
+	[SuppressMessage("Usage", "IDE0051")]
+	private async ValueTask CurrentExportFileTypeChangedAsync(ExportFileType value)
+	{
+		//TODO: voisona export support & remove this method
+		IsSongVoiceParamExportEnabled
+			= value is ExportFileType.CCS;
+		await Task.CompletedTask.ConfigureAwait(false);
 	}
 }

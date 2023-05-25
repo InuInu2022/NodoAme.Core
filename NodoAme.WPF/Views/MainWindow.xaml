@@ -330,7 +330,8 @@
           </ItemsControl>
           <Separator
              Margin="5,0"
-             Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/><!-- talk voice params-->
+             Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+          <!-- talk voice params-->
           <ItemsControl
              x:Name="TalkVoiceParameterList"
              Margin="0,0,0,0"
@@ -383,8 +384,13 @@
           </ItemsControl>
           <Separator
              Margin="5,0"
-             Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/><!-- song voice params -->
-          <ItemsControl
+             Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+          <!-- song voice params -->
+          <StackPanel
+            Orientation="Horizontal"
+            IsEnabled="{Binding IsSongVoiceParamExportEnabled}"
+            >
+            <ItemsControl
              x:Name="SongVoiceParameterList"
              Margin="0,0,0,0"
              MaxHeight="300"
@@ -455,11 +461,14 @@
                ValidationMode="InvalidInputOverwritten"
                Value="{Binding ExportFileTempo}"/>
           </StackPanel>
+          </StackPanel>
         </WrapPanel>
       </ScrollViewer>
-    </Expander><!-- standard options -->
+    </Expander>
+    <!-- standard options -->
     <WrapPanel
-       Grid.Row="2"/><!-- List start -->
+       Grid.Row="2"/>
+    <!-- List start -->
     <fw:DropShadowPanel
        Grid.Row="3"
        ShadowMode="Outer"
