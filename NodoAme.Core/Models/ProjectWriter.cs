@@ -273,7 +273,8 @@ public static class ProjectWriter{
 		double paramLen,
 		string engineType,
 		int trackParamOffsetIndex,
-		NoPitchModes noPitch
+		NoPitchModes noPitch,
+		SongExportPresets presets = SongExportPresets.NONE
 	)
 	{
 		#region write_logf0

@@ -77,25 +77,12 @@ public record SongVoiceStyleParam{
 	public double Value { get; set; }
 }
 
-public enum SongExportPresets
-{
-	/// <summary>
-	/// 何もしない
-	/// </summary>
-	NONE = 0,
-
-	/// <summary>
-	/// ささやき
-	/// </summary>
-	WHISPER = 1
-}
-
 /// <summary>
 /// <see cref="SongExportPresets"/>選択時の全体共通設定
 /// </summary>
 public record SongExportPresetCommon{
 	[JsonPropertyName("id")]
-	public SongExportPresets Id { get; set; }
+	public Models.SongExportPresets Id { get; set; }
 
 	/// <summary>
 	/// トラック全体のDynamics指定
@@ -109,7 +96,7 @@ public record SongExportPresetCommon{
 /// </summary>
 public record SongExportPresetCast{
 	[JsonPropertyName("id")]
-	public SongExportPresets Id { get; set; }
+	public Models.SongExportPresets Id { get; set; }
 
 	/// <summary>
 	/// special label as "※", "＠”, etc...
