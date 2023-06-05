@@ -19,4 +19,7 @@ public class SongSoft
 
 	[JsonPropertyName("voiceParam")]
 	public IList<SongVoiceStyleParam>? VoiceParam { get; set; }
+
+	[JsonPropertyName("songExportPreset")]
+	public IList<SongExportPresetCommon>? SongExportPreset { get; set;}
 }
