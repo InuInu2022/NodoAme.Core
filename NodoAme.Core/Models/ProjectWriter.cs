@@ -237,10 +237,12 @@ public static class ProjectWriter{
 		ObservableCollection<SongVoiceStyleParam>? songVoiceStyles,
 		XElement scoreRoot
 	){
+		const double ALP_DEFAULT = 0.55;
+		var xmlAlpha = ALP_DEFAULT + (0.05 * songVoiceStyles.First(v => v.Id == "Alpha").Value);
 		scoreRoot
 			.SetAttributeValue(
 				"Alpha",
-				songVoiceStyles.First(v => v.Id == "Alpha").Value
+				xmlAlpha
 			);
 	}
 

@@ -368,9 +368,9 @@
 				{
 					"id":"Alpha",
 					"name":"♫声質",
-					"min":0.5,
-					"max":0.6,
-					"defaultValue":0.55,
+					"min":-1.00,
+					"max":1.00,
+					"defaultValue":0.00,
 					"smallChange":0.01,
 					"version": "1.07"
 				},
@@ -398,9 +398,9 @@
 				{
 					"id":"Alpha",
 					"name":"♫ALP",
-					"min":0.5,
-					"max":0.6,
-					"defaultValue":0.55,
+					"min":-1.00,
+					"max":1.00,
+					"defaultValue":0.00,
 					"smallChange":0.01,
 					"version": "1.07"
 				},
@@ -422,9 +422,9 @@
 				{
 					"id":"Alpha",
 					"name":"♫声質",
-					"min":0.5,
-					"max":0.6,
-					"defaultValue":0.55,
+					"min":-1.00,
+					"max":1.00,
+					"defaultValue":0.00,
 					"smallChange":0.01,
 					"version": "1.07"
 				}
@@ -442,7 +442,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37,
 					"specialLabel":"%"
 				}
@@ -457,8 +457,8 @@
 			"songExportPreset":[
 				{
 					"id":1,
-					"clipVol":4.5,
-					"trackAlp":0.53,
+					"clipVol":4.25,
+					"trackAlp":-0.20,
 					"trackHus":0.48
 				}
 			]
@@ -474,7 +474,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":-0.20,
 					"trackHus":0.37
 				}
 			]
@@ -489,7 +489,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -505,7 +505,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -521,7 +521,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -536,7 +536,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -551,7 +551,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -566,7 +566,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -584,7 +584,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -603,7 +603,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -621,7 +621,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -640,7 +640,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -658,7 +658,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -677,7 +677,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -693,7 +693,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -709,7 +709,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -724,7 +724,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -742,7 +742,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -758,7 +758,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -774,7 +774,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -789,7 +789,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -805,7 +805,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -821,7 +821,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -836,7 +836,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -851,7 +851,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
@@ -867,7 +867,7 @@
 				{
 					"id":1,
 					"clipVol":4.5,
-					"trackAlp":0.55,
+					"trackAlp":0.00,
 					"trackHus":0.37
 				}
 			]
