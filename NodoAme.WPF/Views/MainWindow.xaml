@@ -256,7 +256,8 @@
         </ComboBox.ItemTemplate>
       </ComboBox>
       -->
-    </WrapPanel><!-- talk soft parameters -->
+    </WrapPanel>
+    <!-- talk soft parameters -->
     <Expander
        x:Name="parameters"
        ExpandDirection="Down"
@@ -275,9 +276,13 @@
         </WrapPanel>
       </Expander.Header>
       <ScrollViewer
-         Margin="0"
-         VerticalScrollBarVisibility="Auto">
-        <WrapPanel><!-- talk soft common params -->
+         Padding="0,0,0,10"
+         VerticalScrollBarVisibility="Auto"
+         HorizontalScrollBarVisibility="Visible">
+        <StackPanel
+         Orientation="Horizontal"
+         >
+         <!-- talk soft common params -->
           <ItemsControl
              x:Name="TalkSoftParameterList"
              Margin="0,0,0,0"
@@ -297,10 +302,10 @@
                    Orientation="Vertical"
                    HorizontalAlignment="Center"
                    Height="Auto"
-                   Width="60">
+                   Width="70">
                   <TextBlock
                      Text="{Binding Name}"
-                     Width="60"
+                     Width="70"
                      Margin="5,0"
                      FontSize="11"/>
                   <Slider
@@ -317,7 +322,7 @@
                      SmallChange="{Binding SmallChange}"
                      Value="{Binding Value}"/>
                   <ui:NumberBox
-                     Width="70"
+                     Width="75"
                      FontSize="10"
                      Margin="1,0"
                      SmallChange="{Binding SmallChange}"
@@ -351,10 +356,10 @@
                    Orientation="Vertical"
                    HorizontalAlignment="Center"
                    Height="Auto"
-                   Width="60">
+                   Width="70">
                   <TextBlock
                      Text="{Binding Name}"
-                     Width="60"
+                     Width="70"
                      Margin="5,0"
                      FontSize="11"/>
                   <Slider
@@ -371,7 +376,7 @@
                      SmallChange="{Binding SmallChange}"
                      Value="{Binding Value}"/>
                   <ui:NumberBox
-                     Width="70"
+                     Width="75"
                      FontSize="11"
                      Margin="1,0"
                      SmallChange="{Binding SmallChange}"
@@ -409,10 +414,10 @@
                    Orientation="Vertical"
                    HorizontalAlignment="Center"
                    Height="Auto"
-                   Width="60">
+                   Width="70">
                   <TextBlock
                      Text="{Binding Name}"
-                     Width="60"
+                     Width="70"
                      Margin="5,0"
                      FontSize="11"/>
                   <Slider
@@ -429,7 +434,7 @@
                      SmallChange="{Binding SmallChange}"
                      Value="{Binding Value, Mode=TwoWay}"/>
                   <ui:NumberBox
-                     Width="70"
+                     Width="75"
                      FontSize="11"
                      Margin="1,0"
                      SmallChange="{Binding SmallChange}"
@@ -445,7 +450,7 @@
             <ComboBox
                x:Name="exportPresetByCast"
                Width="Auto"
-               ToolTip="{Tr &apos;ToolTips.ScoreDynamicsByCast&apos;}"
+               ToolTip="{Tr &apos;ToolTips.ExportPresetByCast&apos;}"
                FontSize="12.5"
                VerticalAlignment="Top"
                HorizontalAlignment="Left"
@@ -472,7 +477,7 @@
                Value="{Binding ExportFileTempo}"/>
           </StackPanel>
           </StackPanel>
-        </WrapPanel>
+        </StackPanel>
       </ScrollViewer>
     </Expander>
     <!-- standard options -->
