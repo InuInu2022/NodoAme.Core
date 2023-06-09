@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -54,6 +56,7 @@ public class MainWindowViewModel
 	/// ソングエクスポート用：声質や感情など
 	/// </summary>
 	public ObservableCollection<SongVoiceStyleParam>? SongVoiceStyleParams { get; set; } = new();
+	public ObservableCollection<VoiceParamViewModel>? VoiceParams { get; set; } = new();
 	public IConfigurationRoot? Config { get; private set; }
 	public UserSettings? UserSettings { get; set; }
 
@@ -149,6 +152,12 @@ public class MainWindowViewModel
 	public double ExportFileTempo { get; set; }
 		= 150;
 
+	public IEnumerable<SongExportPresets> SongExportPresetList { get; set; }
+		= Enum.GetValues(typeof(SongExportPresets)).Cast<SongExportPresets>();
+	public SongExportPresets SongExportPreset { get; set; }
+		= SongExportPresets.NONE;
+	public bool IsEnabledSongExportPreset { get; private set; }
+
 	#endregion
 
 	#region commands
@@ -174,6 +183,8 @@ public class MainWindowViewModel
 	public Command SelectExportSerifTextDir { get; set; }
 	public Command InsertMetaTextToSerifTextFileName { get; set; }
 	public Command ExportSusuru { get; set; }
+
+
 	//---------------------------------------------------
 
 	#endregion
@@ -759,9 +770,14 @@ public class MainWindowViewModel
 
 		var current = ExportSongCastItems[index];
 		SongExportLyricsMode = current.LyricsMode;
-		NoteSplitMode = current.NoteSplitMode ?? NoteSplitModes.SPLIT_ONLY_OLD;	//初期値
+		NoteSplitMode = current.NoteSplitMode ?? NoteSplitModes.SPLIT_ONLY_OLD; //初期値
 
-		SongVoiceStyleParams = new();   //reset
+		if (SongVoiceStyleParams is not null)
+		{
+			SongVoiceStyleParams!.Clear();   //reset
+		}
+
+		VoiceParams?.Clear();
 
 		var songSoft = setting
 			.SongSofts
@@ -784,11 +800,29 @@ public class MainWindowViewModel
 				Value = item.DefaultValue
 			};
 
-			SongVoiceStyleParams.Add(p);
+			SongVoiceStyleParams?.Add(p);
+
+			var np = new VoiceParamViewModel
+			{
+				Source = p,
+				Name = p.Name,
+				Value = p.Value,
+				Id = p.Id,
+				Max = p.Max,
+				Min = p.Min,
+				SmallChange = p.SmallChange,
+				DefaultValue = p.DefaultValue,
+				Version = p.Version
+			};
+			VoiceParams?.Add(np);
 		}
 
 		CurrentExportFileType
 			= current.ExportFile;
+
+		SongExportPreset = SongExportPresets.NONE;
+		IsEnabledSongExportPreset
+			= current.SongExportPreset is not null;
 
 		return new ValueTask();
 	}
@@ -1086,6 +1120,7 @@ public class MainWindowViewModel
 				NoSoundVowelsModes = NoSoundVowelMode,
 				Dynamics = ExportScoreDynamics,
 				Tempo = ExportFileTempo,
+				SongExportPreset = this.SongExportPreset
 			}
 		);
 
@@ -1479,6 +1514,55 @@ public class MainWindowViewModel
 		//TODO: voisona export support & remove this method
 		IsSongVoiceParamExportEnabled
 			= value is ExportFileType.CCS;
+		await Task.CompletedTask.ConfigureAwait(false);
+	}
+
+	[PropertyChanged(nameof(SongExportPreset))]
+	[SuppressMessage("Usage", "IDE0051")]
+	private async ValueTask SongExportPresetChangedAsync(SongExportPresets value){
+		if(
+			ExportSongCastItems?[ExportSongCastSelected]?.SongExportPreset is null
+		)
+		{
+			return;
+		}
+
+		var castPreset =
+			ExportSongCastItems[ExportSongCastSelected]
+				.SongExportPreset?
+				.FirstOrDefault(v => v.Id == value);
+		if(castPreset is null){
+			return;
+		}
+		//ALP
+		var alp = SongVoiceStyleParams
+			.First(p => p.Id == "Alpha");
+		if(alp is not null)
+		{
+			alp.Value = castPreset.TrackAlpha ?? alp.Value;
+			VoiceParams
+				.First(p => p.Id == "Alpha")
+				.Value = alp.Value;
+		}
+		//HUS
+		var hus = SongVoiceStyleParams
+			.First(p => p.Id == "Husky");
+		if(hus is not null)
+		{
+			hus.Value = castPreset.TrackHusky ?? hus.Value;
+			VoiceParams
+				.First(p => p.Id == "Husky")
+				.Value = hus.Value;
+		}
+
+		if (value is SongExportPresets.WHISPER){
+			//var softPreset = ExportSongSoftItems[ExportSongSoftSelected].
+
+			//TODO: load from json settings
+			ExportScoreDynamics = ScoreDynamics.PP_PP;
+		}
+		//UserSettings.SongExportPreset = value;
+		//await UserSettings.SaveAsync();
 		await Task.CompletedTask.ConfigureAwait(false);
 	}
 }

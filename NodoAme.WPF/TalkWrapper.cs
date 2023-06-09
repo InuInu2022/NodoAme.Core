@@ -1001,7 +1001,8 @@ public class Wrapper : ITalkWrapper
 				engineType,
 				(int)(noteOffset / INDEX_SPAN_TIME),
 				//TRACK_PARAM_OFFSET_INDEX,
-				option.NoPitch
+				option.NoPitch,
+				option.SongExportPreset
 			);
 		sw.Stop();
 		Debug.WriteLine($"TIME[end f0]:{sw.ElapsedMilliseconds}");
@@ -1015,7 +1016,8 @@ public class Wrapper : ITalkWrapper
 			paramLen,
 			(int)(noteOffset / INDEX_SPAN_TIME),
 			INDEX_SPAN_TIME,
-			option.NoSoundVowelsModes
+			option.NoSoundVowelsModes,
+			option
 		);
 		sw.Stop();
 		Debug.WriteLine($"TIME[end vol]:{sw.ElapsedMilliseconds}");

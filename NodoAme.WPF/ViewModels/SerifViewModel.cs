@@ -343,6 +343,7 @@ public class SerifViewModel
 				NoSoundVowelsModes = ParentVM!.NoSoundVowelMode,
 				Dynamics = ParentVM!.ExportScoreDynamics,
 				Tempo = ParentVM!.ExportFileTempo,
+				SongExportPreset = ParentVM!.SongExportPreset,
 				SoundFilePath = sourcePath,
 				LabelFilePath = Path.ChangeExtension(sourcePath, "lab")
 			}

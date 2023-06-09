@@ -383,6 +383,12 @@
 					"smallChange":0.01,
 					"version": "1.08"
 				}
+			],
+			"songExportPreset":[
+				{
+					"id":1,
+					"trackDynamics": 0
+				}
 			]
 		},
 		{
@@ -431,12 +437,31 @@
 			"name":"KAFU",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37,
+					"specialLabel":"%"
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.53,
+					"trackHus":0.48
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-VCLMK1",
@@ -444,12 +469,30 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-AHS1",
 			"name":"東北きりたん",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-FP5",
@@ -457,6 +500,15 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-ENF-FP5",
@@ -464,24 +516,60 @@
 			"songSoft":"CeVIO AI",
 			"noteSplitMode":"SPLIT_ONLY_OLD",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-FP4",
 			"name":"OИE",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-AHS5",
 			"name":"東北ずん子",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-AHS6",
 			"name":"東北イタコ",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"nitech-jp_ja_JP_f008_svss.tsnvoice",
@@ -491,6 +579,15 @@
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"Chis-A",
 			"voiceVersion":"1.3.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"nitech-jp_en_US_f008_svss.tsnvoice",
@@ -501,6 +598,15 @@
 			"noteSplitMode":"SPLIT_ONLY_OLD",
 			"charaNameAsAlphabet":"Chis-A",
 			"voiceVersion":"1.1.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"techno-sp_ja_JP_f801_svss.tsnvoice",
@@ -510,6 +616,15 @@
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"Sato Sasara",
 			"voiceVersion":"1.0.1 ported from CeVIO AI"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"techno-sp_ja_JP_m868_svss.tsnvoice",
@@ -520,6 +635,15 @@
 			"noteSplitMode":"SYLLABLE",
 			"charaNameAsAlphabet":"Kirune",
 			"voiceVersion":"1.1.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"techno-sp_ja_JP_f834_svss.tsnvoice",
@@ -529,6 +653,15 @@
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"AiSuu",
 			"voiceVersion":"1.0.2"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"techno-sp_ja_JP_f811_svss.tsnvoice",
@@ -539,6 +672,15 @@
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"Yuzuki Yukari Rei",
 			"voiceVersion":"1.1.0 ported from CeVIO AI"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-THR2",
@@ -546,6 +688,15 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"hasEmotion":true
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-B",
@@ -553,12 +704,30 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"hasEmotion":true
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-KZA1",
 			"name":"#kzn(キズナ)",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"techno-sp_ja_JP_f824_svss.tsnvoice",
@@ -568,6 +737,15 @@
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"#kzn",
 			"voiceVersion":"1.0.0 ported from CeVIO AI"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-THR3",
@@ -575,6 +753,15 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-GLA1",
@@ -582,12 +769,30 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-BSR1",
 			"name":"POPY",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-BSR2",
@@ -595,6 +800,15 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-THR4",
@@ -602,18 +816,45 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"hasEmotion":true
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-ICTR1",
 			"name":"Ci flower",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-THR5",
 			"name":"⚠羽累（HARU）",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"CSNV-JPF-TRF1",
@@ -621,6 +862,15 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.55,
+					"trackHus":0.37
+				}
+			]
 		},
 		{
 			"id":"A",

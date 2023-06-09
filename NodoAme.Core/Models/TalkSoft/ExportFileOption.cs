@@ -42,6 +42,8 @@ public record ExportFileOption
 		= NoSoundVowelsModes.VOLUME;
 	public ScoreDynamics Dynamics { get; set; }
 		= ScoreDynamics.N;
+	public SongExportPresets SongExportPreset { get; set; }
+		= SongExportPresets.NONE;
 	public double Tempo { get; set; } = 150;
 	public string SoundFilePath { get; set; } = "";
 	public string LabelFilePath { get; set; } = "";

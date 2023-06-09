@@ -396,7 +396,7 @@
              MaxHeight="300"
              BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
              fw:PointerTracker.Enabled="True"
-             ItemsSource="{Binding SongVoiceStyleParams}">
+             ItemsSource="{Binding VoiceParams, Mode=TwoWay}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
                 <WrapPanel
@@ -427,7 +427,7 @@
                      IsSnapToTickEnabled="True"
                      TickFrequency="{Binding SmallChange}"
                      SmallChange="{Binding SmallChange}"
-                     Value="{Binding Value}"/>
+                     Value="{Binding Value, Mode=TwoWay}"/>
                   <ui:NumberBox
                      Width="70"
                      FontSize="11"
@@ -442,6 +442,16 @@
           </ItemsControl>
           <StackPanel
              Orientation="Vertical">
+            <ComboBox
+               x:Name="exportPresetByCast"
+               Width="Auto"
+               ToolTip="{Tr &apos;ToolTips.ScoreDynamicsByCast&apos;}"
+               FontSize="12.5"
+               VerticalAlignment="Top"
+               HorizontalAlignment="Left"
+               IsEnabled="{Binding IsEnabledSongExportPreset}"
+               ItemsSource="{Binding SongExportPresetList}"
+               SelectedItem="{Binding SongExportPreset}"/>
             <ComboBox
                x:Name="scoreDynamicsByCast"
                Width="Auto"

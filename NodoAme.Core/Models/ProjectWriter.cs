@@ -284,6 +284,21 @@ public static class ProjectWriter{
 			new XAttribute("Length", paramLen)
 		);
 
+		//ささやきの時は全部NoData
+		if(presets is SongExportPresets.WHISPER){
+			logF0Node.Add(
+				new XElement(
+					"NoData",
+					new XAttribute(
+						"Repeat",
+						paramLen)
+				)
+			);
+			parameterRoot.Add(logF0Node);
+
+			return logF0Node;
+		}
+
 		for (int i = 0; i < parameters.f0_length; i++)
 		{
 			var logF0 = engineType switch
@@ -417,7 +432,8 @@ public static class ProjectWriter{
 		double paramLen,
 		int trackParamOffsetIndex,
 		double indexSpanTime,
-		NoSoundVowelsModes noSoundVowelsModes
+		NoSoundVowelsModes noSoundVowelsModes,
+		ExportFileOption? option = null
 	)
 	{
 		//Volumeの線を書き込む
@@ -474,11 +490,7 @@ public static class ProjectWriter{
 			;
 		foreach (var ph in noSoundVowels)
 		{
-			var s = ph.StartTime is null ? 0.0 : (double)ph.StartTime! / indexSpanTime;
-			var index = Math.Round(s, 0, MidpointRounding.AwayFromZero);
-			var e = ph.EndTime is null ? 0.0 : (double)ph.EndTime! / indexSpanTime;
-			var eIndex = Math.Round(e, 0, MidpointRounding.AwayFromZero);
-			var rep = eIndex - index;
+			CulcTimes(indexSpanTime, ph, out double index, out double rep);
 
 			var tVol = new XElement(
 				"Data",
@@ -487,6 +499,44 @@ public static class ProjectWriter{
 				VOL_ZERO
 			);
 			volumeNode.Add(tVol);
+		}
+
+		//whisper preset
+		if (option?.SongExportPreset == SongExportPresets.WHISPER){
+			var soundsVowels = phs
+				.AsParallel()
+				.Where(l =>
+					l.Phoneme is not null &&
+						!reg.IsMatch(l.Phoneme)
+				);
+
+			var vol = option?
+				.Cast?
+				.SongExportPreset
+				.First(v => v.Id == SongExportPresets.WHISPER)
+				.ClipVol
+				;
+
+			foreach(var ph in soundsVowels)
+			{
+				CulcTimes(indexSpanTime, ph, out double index, out double rep);
+
+				var tVol = new XElement(
+					"Data",
+					new XAttribute("Index", trackParamOffsetIndex + index),
+					new XAttribute("Repeat", rep),
+					vol?.ToString() ?? "5.0"
+				);
+				volumeNode.Add(tVol);
+			}
+
+			//順番を並び替える
+			var ordered = volumeNode
+				.Descendants("Data")
+				.OrderBy(e =>
+					Convert.ToInt32(e.Attribute("Index").Value))
+				;
+			volumeNode.ReplaceNodes(ordered);
 		}
 
 		//CeVIOのバグ終了部分のVOLを削る
@@ -504,6 +554,20 @@ public static class ProjectWriter{
 
 		#endregion
 		return volumeNode;
+
+		static void CulcTimes(
+			double indexSpanTime,
+			Label? ph,
+			out double index,
+			out double rep
+		)
+		{
+			var s = ph?.StartTime is null ? 0.0 : (double)ph.StartTime! / indexSpanTime;
+			index = Math.Round(s, 0, MidpointRounding.AwayFromZero);
+			var e = ph?.EndTime is null ? 0.0 : (double)ph.EndTime! / indexSpanTime;
+			var eIndex = Math.Round(e, 0, MidpointRounding.AwayFromZero);
+			rep = eIndex - index;
+		}
 	}
 
 	/// <summary>
