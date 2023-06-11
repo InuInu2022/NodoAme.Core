@@ -473,9 +473,9 @@
 			"songExportPreset":[
 				{
 					"id":1,
-					"clipVol":4.5,
+					"clipVol":4.3,
 					"trackAlp":-0.20,
-					"trackHus":0.37
+					"trackHus":0.47
 				}
 			]
 		},
@@ -676,9 +676,9 @@
 			"songExportPreset":[
 				{
 					"id":1,
-					"clipVol":4.5,
-					"trackAlp":0.00,
-					"trackHus":0.37
+					"clipVol":4.3,
+					"trackAlp":-0.20,
+					"trackHus":0.47
 				}
 			]
 		},
