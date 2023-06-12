@@ -604,6 +604,9 @@ ToolTips:
             SPLIT_SILENTNOTE: Modified sentence-by-sentence division (default),
             SILLABLE: Syllable division (Japanese only),
             IGNORE_NOSOUND: Unused'
+    ExportPresetByCast:
+        ja: プリセットを選びます。「WHISPER」はささやき風（CeVIO AI/VoiSonaのみ）。「NONE」は何もしません（デフォルト）。
+        en: Select a preset. "WHISPER" is a whisper style (only for CeVIO AI/VoiSona). "NONE" does nothing (default).
     ScoreDynamicsByCast:
         ja: 強弱指定（ダイナミクス）。「ffff」が強い、「pppp」が弱い。
         en: Strength designation (dynamics). "ffff" is strong, "pppp" is weak.
