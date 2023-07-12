@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -831,6 +832,9 @@ public class Wrapper : ITalkWrapper
 			//throw new NullReferenceException();
 			return false;//new ValueTask<bool>(false);
 		}
+
+		//xmlの文字列カルチャ依存をなくす
+		CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
 		var sw = new System.Diagnostics.Stopwatch();
 		sw.Start();

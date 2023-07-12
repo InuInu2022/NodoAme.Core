@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -325,7 +326,7 @@ public static class ProjectWriter{
 				new XElement(
 					"Data",
 					new XAttribute("Index", (trackParamOffsetIndex + i).ToString()),
-					logF0.ToString()
+					logF0.ToString(CultureInfo.InvariantCulture)
 				) :
 				//default pitch remove
 				new XElement(
@@ -527,7 +528,7 @@ public static class ProjectWriter{
 					"Data",
 					new XAttribute("Index", trackParamOffsetIndex + index),
 					new XAttribute("Repeat", rep),
-					vol?.ToString() ?? "5.0"
+					vol?.ToString(CultureInfo.InvariantCulture) ?? "5.0"
 				);
 				volumeNode.Add(tVol);
 			}
@@ -833,7 +834,7 @@ public static class ProjectWriter{
 		var data = baseNode
 			.Elements()
 			.Select(v => new Tssproj.Data(
-				double.Parse(v.Value),
+				double.Parse(v.Value, CultureInfo.InvariantCulture),
 				v.HasAttributes && v.Attribute("Index") is not null ?
 					int.Parse(v.Attribute("Index").Value) : null,
 				v.HasAttributes && v.Attribute("Repeat") is not null ?
