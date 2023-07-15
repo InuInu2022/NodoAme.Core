@@ -192,6 +192,11 @@ public static class ProjectWriter{
 				}
 			}
 
+			if(noteLen == 0){
+				//長さが０なら休符
+				continue;
+			}
+
 			var note = new XElement(
 				"Note",
 				new XAttribute("Clock", offset + startClock),
