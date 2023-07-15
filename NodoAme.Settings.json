@@ -664,6 +664,24 @@
 			]
 		},
 		{
+			"id":"techno-sp_ja_JP_m867_svss.tsnvoice",
+			"name":"MYK-IV",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"MYK-IV",
+			"voiceVersion":"2.1.0 Beta"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":0.00,
+					"trackHus":0.47
+				}
+			]
+		},
+		{
 			"id":"techno-sp_ja_JP_f811_svss.tsnvoice",
 			"name":"結月ゆかり麗",
 			"songSoft":"VoiSona",
