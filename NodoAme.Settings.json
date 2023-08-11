@@ -891,6 +891,22 @@
 			]
 		},
 		{
+			"id":"CSNV-JPF-BNE1",
+			"name":"りむる",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
