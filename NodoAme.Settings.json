@@ -798,6 +798,24 @@
 			]
 		},
 		{
+			"id":"techno-sp_ja_JP_f830_svss.tsnvoice",
+			"name":"双葉湊音",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Futaba Minato",
+			"voiceVersion":"1.0.0 ported from CeVIO AI"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.2,
+					"trackAlp":-0.20,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"CSNV-JPF-BSR1",
 			"name":"POPY",
 			"songSoft":"CeVIO AI",
