@@ -501,6 +501,9 @@ UI:
             IsOpenCeVIOWhenExport:
                 ja: '保存時自動でCeVIOを開く'
                 en: 'Automatically opens CeVIO on save'
+            IsOpenFolderWhenExport:
+                ja: '保存時自動でフォルダを開く'
+                en: 'Automatically opens saved folder on save'
             IsExportWordsAsText:
                 ja: 'セリフをテキストファイルに保存'
                 en: 'Save words as a text file'

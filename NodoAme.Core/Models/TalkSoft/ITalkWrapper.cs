@@ -28,7 +28,8 @@ public interface ITalkWrapper
 		bool isOpenCeVIO = false,
 		string exportPath = "",
 		ExportFileType fileType = ExportFileType.CCS,
-		ExportLyricsMode exportMode = ExportLyricsMode.KANA);
+		ExportLyricsMode exportMode = ExportLyricsMode.KANA,
+		bool isOpenFolder = false);
 
 	ObservableCollection<TalkSoftVoice>? GetAvailableCasts();
 	ValueTask<IList<string>> GetLabelsAsync(string sourceText);

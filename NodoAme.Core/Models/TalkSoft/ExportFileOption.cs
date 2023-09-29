@@ -22,6 +22,7 @@ public record ExportFileOption
 	public double Alpha { get; set; }
 	public bool IsExportAsTrack { get; set; } = true;
 	public bool IsOpenCeVIO { get; set; } = false;
+	public bool IsOpenFolder { get; set; } = false;
 	public string ExportPath { get; set; } = "";
 	public ExportLyricsMode ExportMode { get; set; }
 		= ExportLyricsMode.KANA;

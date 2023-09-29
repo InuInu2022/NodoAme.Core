@@ -331,6 +331,7 @@ public class SerifViewModel
 				Alpha = alpha,
 				IsExportAsTrack = isTrack,
 				IsOpenCeVIO = ParentVM!.IsOpenCeVIOWhenExport,
+				IsOpenFolder = ParentVM!.IsOpenFolderWhenExport,
 				ExportPath = ParentVM!.PathToSaveDirectory,
 				ExportMode = ParentVM!.SongExportLyricsMode,
 				Cast = songCast,

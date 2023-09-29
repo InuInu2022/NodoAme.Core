@@ -1063,7 +1063,8 @@ public class Wrapper : ITalkWrapper
 			exportData,
 			option.IsOpenCeVIO,
 			option.FileType,
-			option.Cast
+			option.Cast,
+			option.IsOpenFolder
 		);
 
 		sw.Stop();
@@ -1266,7 +1267,8 @@ public class Wrapper : ITalkWrapper
 		dynamic/*XElement or byte[]*/ tmplTrack,
 		bool isOpenCeVIO,
 		ExportFileType fileType,
-		SongCast cast
+		SongCast cast,
+		bool IsOpenFolder
 	)
 	{
 		logger.Info($"export start: '{exportPath}', {trackFileName}");
@@ -1380,6 +1382,13 @@ public class Wrapper : ITalkWrapper
 			};
 			await Task.Run(() => Process.Start(psi));
 		}
+
+		if (IsOpenFolder)
+		{
+			//保存ファイルを開く
+			var dir = Path.GetDirectoryName(outPath);
+			await Task.Run(()=> Process.Start(dir));
+		}
 	}
 
 	/// <summary>
@@ -1395,7 +1404,8 @@ public class Wrapper : ITalkWrapper
 		bool isOpenCeVIO = false,
 		string exportPath = "",
 		ExportFileType fileType = ExportFileType.CCS,
-		ExportLyricsMode exportMode = ExportLyricsMode.KANA
+		ExportLyricsMode exportMode = ExportLyricsMode.KANA,
+		bool isOpenFolder = false
 	)
 	{
 		if (this.engine is null)
@@ -1440,7 +1450,8 @@ public class Wrapper : ITalkWrapper
 			tmplTrack,
 			isOpenCeVIO,
 			fileType,
-			cast
+			cast,
+			isOpenFolder
 		);
 
 		return true;//new ValueTask<bool>(true);

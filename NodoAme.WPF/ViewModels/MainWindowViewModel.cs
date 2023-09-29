@@ -24,6 +24,7 @@ using NLog;
 using NodoAme.Models;
 using System.Diagnostics.CodeAnalysis;
 using CodingSeb.Localization;
+using Windows.System;
 
 namespace NodoAme.ViewModels;
 
@@ -99,6 +100,7 @@ public class MainWindowViewModel
 		= Enum.GetValues(typeof(ExportLyricsMode)).Cast<ExportLyricsMode>();
 
 	public bool IsOpenCeVIOWhenExport { get; set; } = true;
+	public bool IsOpenFolderWhenExport { get; set; } = false;
 	public bool IsExportAsTrac { get; set; } = true;
 	public bool IsExportSerifText { get; set; }
 	public string? PathToExportSerifTextDir { get; set; }
@@ -317,6 +319,7 @@ public class MainWindowViewModel
 		IsCheckJapaneseRemoveNonSoundVowel = UserSettings.IsCheckJapaneseRemoveNonSoundVowel;
 		IsCheckJapaneseSmallVowel = UserSettings.IsCheckJapaneseSmallVowel;
 		IsOpenCeVIOWhenExport = UserSettings.IsOpenCeVIOWhenExport;
+		IsOpenFolderWhenExport = UserSettings.IsOpenFolderWhenExport;
 		IsExportAsTrac = UserSettings.IsExportAsTrac;
 		IsExportSerifText = UserSettings.IsExportSerifText;
 		PathToExportSerifTextDir = UserSettings.PathToExportSerifTextDir;
@@ -1108,6 +1111,7 @@ public class MainWindowViewModel
 				Alpha = alpha,
 				IsExportAsTrack = isTrack,
 				IsOpenCeVIO = IsOpenCeVIOWhenExport,
+				IsOpenFolder = IsOpenFolderWhenExport,
 				ExportPath = PathToSaveDirectory,
 				ExportMode = SongExportLyricsMode,
 				Cast = songCast,
@@ -1178,7 +1182,8 @@ public class MainWindowViewModel
 				IsExportAsTrac,
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory,
-				exportMode: SongExportLyricsMode
+				exportMode: SongExportLyricsMode,
+				isOpenFolder: IsOpenFolderWhenExport
 			);
 
 			MainWindow.Logger.Info($"Special file export finished: {PathToSaveDirectory}");
@@ -1396,6 +1401,14 @@ public class MainWindowViewModel
 		}
 
 		UserSettings.IsOpenCeVIOWhenExport = value;
+		await UserSettings.SaveAsync();
+	}
+
+	[PropertyChanged(nameof(IsOpenFolderWhenExport))]
+	[SuppressMessage("Usage","IDE0051")]
+	private async ValueTask IsOpenFolderWhenExportChangedAsync(bool value){
+		if (UserSettings?.IsOpenFolderWhenExport is null) return;
+		UserSettings.IsOpenFolderWhenExport = value;
 		await UserSettings.SaveAsync();
 	}
 

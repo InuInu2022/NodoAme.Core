@@ -41,6 +41,7 @@ public class UserSettings
 
 	public bool IsOpenCeVIOWhenExport { get; set; } = true;
 	public bool IsExportAsTrac { get; set; } = true;
+	public bool IsOpenFolderWhenExport { get; set; } = true;
 
 	#endregion export_serif_text_options
 

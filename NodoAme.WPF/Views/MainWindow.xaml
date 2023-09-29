@@ -1061,6 +1061,10 @@
                      Content="{Tr &apos;UI.Options.SaveOptions.IsOpenCeVIOWhenExport&apos;}"
                      IsChecked="{Binding IsOpenCeVIOWhenExport}"
                      Margin="10,0,10,0"/>
+                  <CheckBox
+                     Content="{Tr &apos;UI.Options.SaveOptions.IsOpenFolderWhenExport&apos;}"
+                     IsChecked="{Binding IsOpenFolderWhenExport}"
+                     Margin="10,0,10,0"/>
                 </WrapPanel>
               </Border><!-- ///////////////// Export serif file save option ///////////////// -->
               <Border
