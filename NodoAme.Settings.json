@@ -733,6 +733,24 @@
 			]
 		},
 		{
+			"id":"techno-sp_ja_JP_f802_svss.tsnvoice",
+			"name":"すずきつづみ",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Suzuki Tsudumi",
+			"voiceVersion":"1.0.1 ported from CeVIO AI"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.45
+				}
+			]
+		},
+		{
 			"id":"CSNV-JPF-KZA1",
 			"name":"#kzn(キズナ)",
 			"songSoft":"CeVIO AI",
