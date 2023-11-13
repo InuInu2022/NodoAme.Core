@@ -897,16 +897,18 @@
 		},
 		{
 			"id":"CSNV-JPF-THR5",
-			"name":"⚠羽累（HARU）",
+			"name":"羽累（HARU）",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
+			"lyricsMode":"PHONEME",
+			"hasEmotion":true,
+			"noteSplitMode":"SYLLABLE"
 			,
 			"songExportPreset":[
 				{
 					"id":1,
-					"clipVol":4.3,
-					"trackAlp":0.00,
-					"trackHus":0.37
+					"clipVol":4.25,
+					"trackAlp":-0.10,
+					"trackHus":0.47
 				}
 			]
 		},
@@ -929,6 +931,22 @@
 		{
 			"id":"CSNV-JPF-BNE1",
 			"name":"りむる",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"CSNV-JPF-USTL2",
+			"name":"⚠ユニちゃん",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
