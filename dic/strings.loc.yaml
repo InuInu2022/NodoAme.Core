@@ -350,6 +350,10 @@ Song:
             *song_kzn
         techno-sp_ja_JP_f811_svss.tsnvoice:
             *song_yukari
+        techno-sp_ja_JP_f802_svss.tsnvoice:
+            *song_suzukitsudumi
+        techno-sp_ja_JP_f830_svss.tsnvoice:
+            *song_futabaminato
         CSNV-JPF-THR2:
             ja: 星界（SEKAI）
             en: SEKAI
@@ -362,7 +366,7 @@ Song:
         CSNV-JPF-THR3:
             ja: 裏命（RIME）
             en: RIME
-        CSNV-JPF-GLA1:
+        CSNV-JPF-GLA1: &song_futabaminato
             ja: 双葉湊音
             en: Futaba Minato
         CSNV-JPF-BSR1:
@@ -378,11 +382,17 @@ Song:
             ja: Ci flower
             en: Ci flower
         CSNV-JPF-THR5:
-            ja: ⚠羽累（HARU）
-            en: ⚠ HARU
+            ja: 羽累（HARU）
+            en: HARU
         CSNV-JPF-TRF1:
             ja: 奏兎める
             en: Kanato Mell
+        CSNV-JPF-BNE1:
+            ja: りむる
+            en: Reml
+        CSNV-JPF-USTL2:
+            ja: ⚠ユニちゃん
+            en: ⚠UNI-chan
         A: *song_satosasara
         ONE: *song_one
         CSV-ENF-FP3-N:
