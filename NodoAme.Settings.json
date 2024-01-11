@@ -961,6 +961,24 @@
 			]
 		},
 		{
+			"id":"techno-sp_ja_JP_f605_svss.tsnvoice",
+			"name":"Pepper",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Pepper",
+			"voiceVersion":"2.0.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
