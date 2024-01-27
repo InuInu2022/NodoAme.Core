@@ -511,6 +511,23 @@
 			]
 		},
 		{
+			"id":"techno-sp_ja_JP_f808_svss.tsnvoice",
+			"name":"IA",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"IA",
+			"voiceVersion":"1.0.1 ported from CeVIO AI",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.1,
+					"trackAlp":-0.30,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"CSNV-ENF-FP5",
 			"name":"IA (ENG)",
 			"songSoft":"CeVIO AI",
@@ -527,11 +544,47 @@
 			]
 		},
 		{
+			"id":"techno-sp_en_US_f808_svss.tsnvoice",
+			"name":"IA ENGLISH",
+			"songSoft":"VoiSona",
+			"noteSplitMode":"SPLIT_ONLY_OLD",
+			"lyricsMode":"ALPHABET",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"IA ENGLISH",
+			"voiceVersion":"1.0.2 ported from CeVIO AI",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.1,
+					"trackAlp":-0.20,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"CSNV-JPF-FP4",
 			"name":"OИE",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
 			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.5,
+					"trackAlp":0.00,
+					"trackHus":0.47
+				}
+			]
+		},
+		{
+			"id":"techno-sp_ja_JP_f803_svss.tsnvoice",
+			"name":"OИE",
+			"songSoft":"VoiSona",
+			"noteSplitMode":"SPLIT_ONLY_OLD",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"OИE",
+			"voiceVersion":"1.0.1 ported from CeVIO AI",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -578,8 +631,7 @@
 			"lyricsMode":"KANA",
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"Chis-A",
-			"voiceVersion":"1.3.0"
-			,
+			"voiceVersion":"1.3.0",
 			"songExportPreset":[
 				{
 					"id":1,
