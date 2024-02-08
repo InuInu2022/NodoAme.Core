@@ -1073,9 +1073,11 @@ public class MainWindowViewModel
 			return string.Empty;
 		}
 
+		var soft = _talksofts.ElementAt(TalkSoftSelected);
+		soft.TalkSoftParams = this.TalkSoftParams;
 		this.talkEngine = await GenerateWrapperAsync(
 			this.currentEngine,
-			_talksofts.ElementAt(TalkSoftSelected),
+			soft,
 			_voices.ElementAt(TalkVoiceSelected),
 			_stylePresets.ElementAt(VoiceStylePresetsSelected),
 			TalkVoiceStyleParams ?? new()
@@ -1094,9 +1096,11 @@ public class MainWindowViewModel
 		string? engineName = null
 	)
 	{
+		var soft = _talksofts.ElementAt(TalkSoftSelected);
+		soft.TalkSoftParams = TalkSoftParams;
 		this.talkEngine = await GenerateWrapperAsync(
 			engineName ?? this.currentEngine!,
-			_talksofts.ElementAt(TalkSoftSelected),
+			soft,
 			_voices.ElementAt(TalkVoiceSelected),
 			_stylePresets.ElementAt(VoiceStylePresetsSelected),
 			TalkVoiceStyleParams ?? new()
@@ -1212,6 +1216,13 @@ public class MainWindowViewModel
 			isNotGenerated = true;
 		}
 
+		//
+		if (TalkSoftParams is not null)
+		{
+			soft.TalkSoftParams = TalkSoftParams;
+		}
+
+		//
 		if (isNotGenerated)
 		{
 			return await Wrapper.FactoryAsync(engine, soft, voice, style, styleParams);

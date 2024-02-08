@@ -46,6 +46,7 @@ public class Wrapper : ITalkWrapper
 	public TalkSoftVoiceStylePreset? VoiceStyle { get; set; }
 	public IList<TalkVoiceStyleParam>? VoiceStyleParams { get; set; }
 	public TalkSoft TalkSoft { get; set; }
+	public IList<TalkSoftParam>? TalkSoftParams { get; set; }
 	public bool IsActive { get; set; }
 
 	private dynamic? engine;
@@ -66,7 +67,8 @@ public class Wrapper : ITalkWrapper
 		TalkSoft soft,
 		TalkSoftVoice? voice = null,
 		TalkSoftVoiceStylePreset? style = null,
-		IList<TalkVoiceStyleParam>? styleParams = null
+		IList<TalkVoiceStyleParam>? styleParams = null,
+		IList<TalkSoftParam>? softParams = null
 	)
 	{
 		engineType = type;
@@ -74,6 +76,7 @@ public class Wrapper : ITalkWrapper
 		TalkVoice = voice ?? null;
 		VoiceStyle = style;
 		VoiceStyleParams = styleParams;
+		TalkSoftParams = softParams;
 	}
 
 	public static async ValueTask<Wrapper> FactoryAsync(
