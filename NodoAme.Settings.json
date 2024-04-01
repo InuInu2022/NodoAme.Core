@@ -1049,6 +1049,78 @@
 			]
 		},
 		{
+			"id":"techno-sp_ja_JP_f972_svss.tsnvoice",
+			"name":"やまだかのん",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Yamada Kanon",
+			"voiceVersion":"2.0.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"techno-sp_ja_JP_f973_svss.tsnvoice",
+			"name":"たかむらひびき",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Takamura Hibiki",
+			"voiceVersion":"2.1.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"techno-sp_ja_JP_f974_svss.tsnvoice",
+			"name":"かざまつりあさひ",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Kazamatsuri Asahi",
+			"voiceVersion":"2.1.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"techno-sp_ja_JP_f975_svss.tsnvoice",
+			"name":"こむらさきももか",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Komurasaki Momoka",
+			"voiceVersion":"2.2.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
