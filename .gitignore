@@ -6,7 +6,9 @@ rest_test.md
 /out_/*
 /dic/*.tar.gz
 /dic/hts_voice_nitech_jp_atr503_m001-1.04/*
-/dic/open_jtalk_dic_utf_8-1.11/*
+/dic/open_jtalk_dic_utf_8-1.11/*.bin
+/dic/open_jtalk_dic_utf_8-1.11/*.def
+/dic/open_jtalk_dic_utf_8-1.11/*.dic
 NodoAme.net48.csproj.tmp
 template/temp.track - コピー.ccst
 usersettings.json
