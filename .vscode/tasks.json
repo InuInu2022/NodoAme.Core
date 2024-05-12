@@ -1,0 +1,80 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/NodoAme.WPF/NodoAme.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary",
+				//"/property:Configuration=Release",
+				"/property:TargetFramework=net48",
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			//【重要】タスク名を記載する（後述のlaunch.jsonと連動します）
+			"label": "debug msbuild",
+			// プログラムの種類
+			"type": "process",
+			// ビルドツール（MSBuild.exe）の位置。以下の例ではv.4.0を使うのでその実行ファイルパスを指定します。
+			"command": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe",
+			// MSBuild.exeへの引数を指定します。
+			"args": [
+			  // プロジェクトファイル（*.slnなど）のあるパスを指定します。
+			  "${workspaceFolder}/NodoAme.net48.csproj",
+			  // ターゲット（/target）をビルドする
+			  "/t:Build",
+			  // プロジェクトのビルドに使用するツールセットのバージョン
+			  "/p:toolsVersion=4.0",
+			  // デバッグビルド
+			  "/p:Configuration=Debug",
+			  // プラットフォームは「Any CPU（32bit, 64bit）」
+			  "/p:Platform=AnyCPU"
+			],
+			// タスクのグループを設定します。この場合は一つだけなので適当の「build」としました。
+			"group": "build",
+			// タスクの出力がユーザーインターフェースでどのように処理されるかを定義します。
+			"presentation": {
+			  // 出力を表示する統合ターミナルが常に表示され、タスクの実行ごとに新しいターミナルが作成されます。
+			  "reveal": "always",
+			  // 実行後にターミナルウィンドウにフォーカスを移します（
+			  "focus": true,
+			},
+			// ビルドにエラーが発生した場合に、その出力から問題点を検出する際に使用する「プロブレムマッチャー」を指定する。
+			// ここではC#のコードなので、"$msCompile"が指定されています。
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/NodoAme.WPF/NodoAme.csproj",
+				"/property:GenerateFullPaths=true",
+				//"/consoleloggerparameters:NoSummary",
+				"/property:Configuration=Release",
+				"/property:TargetFramework=net48",
+				//"/property:Platform=win10-x64",
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"run",
+				"${workspaceFolder}/NodoAme.WPF/NodoAme.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		}
+	]
+}

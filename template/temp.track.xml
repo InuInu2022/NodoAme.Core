@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definition Id="">
+  <Generation>
+    <Author Version="7.0.23.1" />
+    <TTS Version="5.1.5">
+      <Dictionary Version="3.0.2" />
+      <SoundSources>
+        <SoundSource Version="1.7.3" Id="A" Name="さとうささら" />
+        <SoundSource Version="1.6.0" Id="B" Name="すずきつづみ" />
+        <SoundSource Version="1.7.0" Id="C" Name="タカハシ" />
+      </SoundSources>
+    </TTS>
+    <SVSS Version="5.1.1">
+      <Dictionary Version="3.0.0" />
+      <SoundSources>
+        <SoundSource Version="1.7.0" Id="A" Name="さとうささら" />
+        <SoundSource Version="1.0.0" Id="XSV-JPM-HRM-P" Name="ハルオロイド" />
+		<SoundSource Version="1.0.1" Id="CSNV-JPF-A" Name="さとうささら" />
+        <SoundSource Version="1.0.2" Id="CSNV-JPF-THR1" Name="KAFU" />
+        <SoundSource Version="1.1.0" Id="CSNV-JPF-VCLMK1" Name="結月ゆかり 麗" />
+        <SoundSource Version="1.1.0" Id="CSNV-JPF-AHS1" Name="東北きりたん" />
+        <SoundSource Version="1.0.1" Id="CSNV-JPF-FP5" Name="IA" />
+        <SoundSource Version="1.0.2" Id="CSNV-ENF-FP5" Name="IA (ENG)" />
+        <SoundSource Version="1.0.1" Id="CSNV-JPF-FP4" Name="OИE" />
+      </SoundSources>
+    </SVSS>
+  </Generation>
+  <Timeline Partition="200,331.333333333333" CurrentPosition="00:00:00">
+    <ViewScale Horizontal="1" Vertical="0.64583333333333337" />
+  </Timeline>
+  <TalkEditor Partition="575">
+    <Extension VerticalRatio="224*,208.666666666667*" />
+  </TalkEditor>
+  <SongEditor Partition="64" Quantize="240" Mode="0" EditingTool="1">
+    <ViewScale Horizontal="80" Vertical="14" />
+    <ReferenceState Current="None" Previous="None" />
+  </SongEditor>
+  <Units>
+    <Unit Version="1.0" Id="" Category="SingerSong" Group="808369d0-a468-4d86-95f1-07ceae06d853" StartTime="00:00:00" Duration="00:00:06" CastId="A" Language="Japanese">
+      <Song Version="1.07">
+        <Tempo>
+          <Sound Clock="0" Tempo="150" />
+        </Tempo>
+        <Beat>
+          <Time Clock="0" Beats="4" BeatType="4" />
+        </Beat>
+        <Score>
+          <Key Clock="0" Fifths="0" Mode="0" />
+          <Dynamics Clock="0" Value="5" />
+          
+        </Score>
+      </Song>
+    </Unit>
+  </Units>
+  <Groups>
+    <Group Version="1.0" Id="808369d0-a468-4d86-95f1-07ceae06d853" Category="SingerSong" Name="INPUT NAME HERE" Color="#FFAF1F14" Volume="0" Pan="0" IsSolo="false" IsMuted="false" CastId="A" Language="Japanese" />
+  </Groups>
+  <SoundSetting Rhythm="4/4" Tempo="78" MasterVolume="-8.8817841970012523E-15" />
+</Definition>

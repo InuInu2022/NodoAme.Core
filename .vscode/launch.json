@@ -1,0 +1,74 @@
+{
+	// IntelliSense を使用して利用可能な属性を学べます。
+	// 既存の属性の説明をホバーして表示します。
+	// 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+
+
+		{
+			// Use IntelliSense to find out which attributes exist for C# debugging
+			// Use hover for the description of the existing attributes
+			// For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+			"name": ".NET Core Launch (console)",
+			"type": "clr",
+			"request": "launch",
+			"preLaunchTask": "build",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/NodoAme.WPF/bin/Debug/net48/win10-x64/NodoAme.exe",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"stopAtEntry": false
+		},
+		{
+			"name": ".NET Core Attach",
+			"type": "coreclr",
+			"request": "attach"
+		},
+		{
+			// デバッグ時のウィンドウから実行を選択する際のメニュー項目名になります。
+			"name": ".NET Launch (console)",
+			// プログラムの種類は「Desktop CLR debugger」を指定します。
+			"type": "clr",
+			// 起動設定のリクエストの種類です。ここでは単純に「launch」です。
+			"request": "launch",
+			// 起動前のタスクを指定します。「tasks.json」内「label」で指定した名前を記載します。
+			"preLaunchTask": "debug msbuild",
+			// 起動する（ビルドされた）実行ファイルパスを指定します。
+			"program": "${workspaceFolder}/NodoAme.WPF/bin/Debug/net48/win10-x64/NodoAme.exe",
+			// 上記の実行ファイルに付加する引数を以下に記載します。
+			"args": [],
+			// 作業ファイルのあるディレクトリーパスを指定します。この例では実行ファイルのある場所です。
+			"cwd": "${workspaceFolder}",
+			// For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+			// 上記URLにあるとおり、コンソールは、VSCode内のコンソールに表示されるように指定します。
+			"console": "internalConsole",
+			// デバッグ中にデバッグコンソール表示をどうするかを指定します。ここではスタートと同時に表示としています。
+			"internalConsoleOptions": "openOnSessionStart"
+		  },
+		  {
+			  // デバッグ時のウィンドウから実行を選択する際のメニュー項目名になります。
+			  "name": ".NET Launch (test debug)",
+			  // プログラムの種類は「Desktop CLR debugger」を指定します。
+			  "type": "clr",
+			  // 起動設定のリクエストの種類です。ここでは単純に「launch」です。
+			  "request": "launch",
+			  // 起動前のタスクを指定します。「tasks.json」内「label」で指定した名前を記載します。
+			  "preLaunchTask": "debug msbuild",
+			  // 起動する（ビルドされた）実行ファイルパスを指定します。
+			  "program": "${workspaceFolder}/test/bin/Debug/net48/win10-x64/NodoAme.exe",
+			  // 上記の実行ファイルに付加する引数を以下に記載します。
+			  "args": [],
+			  // 作業ファイルのあるディレクトリーパスを指定します。この例では実行ファイルのある場所です。
+			  "cwd": "${workspaceFolder}",
+			  // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+			  // 上記URLにあるとおり、コンソールは、VSCode内のコンソールに表示されるように指定します。
+			  "console": "internalConsole",
+			  // デバッグ中にデバッグコンソール表示をどうするかを指定します。ここではスタートと同時に表示としています。
+			  "internalConsoleOptions": "openOnSessionStart"
+			},
+	]
+}

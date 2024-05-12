@@ -1,0 +1,21 @@
+rest_test.md
+*.pdf
+/bin/*
+/obj/*
+/out/*
+/out_/*
+/dic/*.tar.gz
+/dic/hts_voice_nitech_jp_atr503_m001-1.04/*
+/dic/open_jtalk_dic_utf_8-1.11/*
+NodoAme.net48.csproj.tmp
+template/temp.track - コピー.ccst
+usersettings.json
+NodoAme.Core/obj/*
+NodoAme.Core/bin/*
+NodoAme.WPF/bin/*
+NodoAme.WPF/obj/*
+test/bin/*
+test/obj/*
+inspectcode.xml
+NodoAme.WPF/Licenses/*.txt
+dic/*.htsvoice

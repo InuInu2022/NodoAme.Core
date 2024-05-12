@@ -1,0 +1,730 @@
+LanguageName:
+    en: English
+    ja: 日本語
+
+Talk:
+    Engine:
+        標準トーク:
+            ja: 標準トーク
+            en: Std talk
+        CeVIO AI:
+            ja: CeVIO AI
+            en: CeVIO AI
+        CeVIO CS:
+            ja: CeVIO CS
+            en: CeVIO CS
+        VOICEVOX:
+            ja: VOICEVOX
+            en: VOICEVOX
+        SHAREVOX:
+            ja: SHAREVOX
+            en: SHAREVOX
+    Voice:
+        標準女声:
+            ja: 標準女声
+            en: Std female (ja)
+        標準男声:
+            ja: 標準男声
+            en: Std male (ja)
+        # VOICEVOX voices
+        四国めたん:
+            ja: 四国めたん
+            en: Shikoku Metan
+        ずんだもん:
+            ja: ずんだもん
+            en: Zundamon
+        春日部つむぎ:
+            en: Kasukabe Tsumugi
+        雨晴はう:
+            en: Amehare Hau
+        波音リツ:
+            en: Namine Ritsu
+        玄野武宏:
+            en: Kurono Takehiro
+        白上虎太郎:
+            en: Shiragami Kotaro
+        青山龍星:
+            en: Aoyama Ryusei
+        冥鳴ひまり:
+            en: Meimei Himari
+        九州そら:
+            en: Kyushu Sora
+        もち子さん:
+            en: Mochiko-san
+        剣崎雌雄:
+            en: Kenzaki Mesuo
+        WhiteCUL:
+            en: White CUL
+        後鬼:
+            en: Goki
+        No.7:
+            en: No.7
+        ちび式じい:
+            en: Chibi Shiki-ji
+        櫻歌ミコ:
+            en: Ohka Miko
+        小夜/SAYO:
+            en: SAYO
+        ナースロボ＿タイプＴ:
+            en: Nurse robot Type T
+        †聖騎士 紅桜†:
+            en: †Holy knight Benizakura†
+        雀松朱司:
+            en: Wakamatsu Akashi
+        麒ヶ島宗麟:
+            en: Kigashima Sohrin
+        春歌ナナ:
+            en: Haruka Nana
+        猫使アル:
+            en: Nekotsuka Aru
+        猫使ビィ:
+            en: Nekotsuka Bii
+        # SHAREVOX voices
+        小春音アミ:
+            en: Koharune Ami
+        つくよみちゃん:
+            en: Tsukuyomi-chan
+        白痴ー:
+            en: Hakuti
+        Yくん/開発者:
+            en: Y-kun (developer)
+    Style:
+        標準女声:
+            普通:
+                ja: 普通
+                en: Neutral
+            喜び:
+                ja: 喜び
+                en: Happy
+            怒り:
+                ja: 怒り
+                en: Angry
+            悲しみ:
+                ja: 悲しみ
+                en: Sad
+        標準男声:
+            標準:
+                ja: 標準
+                en: Standard
+        ずんだもん: &style_voicevox_zundamon
+            ノーマル: &style_voicevox_normal
+                ja: ノーマル
+                en: Normal
+            あまあま: &style_voicevox_sweet
+                ja: あまあま
+                en: Sweet
+            ツンツン: &style_voicevox_prim
+                ja: ツンツン
+                en: Prim(?)
+            セクシー: &style_voicevox_sexy
+                ja: セクシー
+                en: Sexy
+            ささやき: &style_voicevox_whisper
+                ja: ささやき
+                en: Whisper
+            ヒソヒソ:
+                en: Lowered
+            喜び:
+                en: Happy
+            ツンギレ:
+                en: Angry
+            悲しみ:
+                en: Sad
+            たのしい:
+                en: Happy
+            かなしい:
+                en: Sad
+            アナウンス:
+                en: For announce
+            読み聞かせ:
+                en: For reading
+            人間ver.:
+                en: Human voice
+            ぬいぐるみver.:
+                en: Doll voice
+        四国めたん: *style_voicevox_zundamon
+        春日部つむぎ: *style_voicevox_zundamon
+        雨晴はう: *style_voicevox_zundamon
+        波音リツ: *style_voicevox_zundamon
+        玄野武宏: *style_voicevox_zundamon
+        白上虎太郎:
+            ノーマル:
+                en: Normal
+            ふつう:
+                en: Normal
+            わーい:
+                en: Happy
+            おこ:
+                en: Angry
+            びくびく:
+                en: Scary
+            ぴえーん:
+                en: Boohoo
+        青山龍星:
+            *style_voicevox_zundamon
+        冥鳴ひまり:
+            *style_voicevox_zundamon
+        九州そら:
+            *style_voicevox_zundamon
+        もち子さん:
+            *style_voicevox_zundamon
+        剣崎雌雄:
+            *style_voicevox_zundamon
+        WhiteCUL:
+            *style_voicevox_zundamon
+        後鬼:
+            *style_voicevox_zundamon
+        No.7:
+            *style_voicevox_zundamon
+        ちび式じい:
+            *style_voicevox_zundamon
+        櫻歌ミコ:
+            ノーマル:
+                en: Normal
+            第二形態:
+                en: 2nd form
+            ロリ:
+                en: Very young
+        小夜/SAYO:
+            *style_voicevox_zundamon
+        ナースロボ＿タイプＴ:
+            ノーマル:
+                en: Normal
+            楽々:
+                en: Relax
+            恐怖:
+                en: Scary
+            内緒話:
+                en: Whisper
+        †聖騎士 紅桜†:
+            *style_voicevox_zundamon
+        雀松朱司:
+            *style_voicevox_zundamon
+        麒ヶ島宗麟:
+            *style_voicevox_zundamon
+        春歌ナナ:
+            *style_voicevox_zundamon
+        猫使アル:
+            *style_voicevox_zundamon
+        猫使ビィ:
+            *style_voicevox_zundamon
+        # SHAREVOX voices
+        小春音アミ:
+            ノーマル:
+                en: Normal
+            喜び:
+                en: Happy
+            怒り:
+                en: Angry
+            悲しみ:
+                en: Sad
+            ノーマルv2:
+                en: Normal v2
+            喜びv2:
+                en: Happy v2
+            怒りv2:
+                en: Angry v2
+            悲しみv2:
+                en: Sad v2
+        つくよみちゃん:
+            おしとやか:
+                en: Graceful
+            おしとやかv2:
+                en: Graceful v2
+        白痴ー:
+            虚偽:
+                en: Lying
+            虚偽v2:
+                en: Lying v2
+        Yくん/開発者:
+            ノーマル:
+                en: Normal
+            ノーマルv2:
+                en: Normal v2
+    Param:
+        標準トーク:
+            大きさ:
+                ja: 大きさ
+                en: Volume
+            話速:
+                ja: 話速
+                en: Speed
+            高さ:
+                ja: 高さ
+                en: Tone
+            声質:
+                ja: 声質
+                en: Alpha
+            抑揚:
+                ja: 抑揚
+                en: Tone Scale
+        CeVIO AI: &param_cevio
+            大きさ:
+                ja: 大きさ
+                en: Volume
+            速さ:
+                ja: 速さ
+                en: Speed
+            高さ:
+                ja: 高さ
+                en: Tone
+            声質:
+                ja: 声質
+                en: Alpha
+            抑揚:
+                ja: 抑揚
+                en: Tone Scale
+        CeVIO CS: *param_cevio
+        VOICEVOX: &param_voicevox
+            話速:
+                ja: 話速
+                en: Speed Scale
+            音高:
+                ja: 音高
+                en: Pitch Scale
+            抑揚:
+                ja: 抑揚
+                en: Intonation Scale
+            音量:
+                ja: 音量
+                en: Volume Scale
+            開始無音:
+                ja: 開始無音
+                en: Pre Phoneme Length
+            終了無音:
+                ja: 終了無音
+                en: Post Phoneme Length
+        SHAREVOX: *param_voicevox
+Song:
+    Param:
+        Emotion:
+            ja: ♫感情
+            en: ♫EMO
+        Alpha:
+            en: ♫ALP
+        Husky:
+            en: ♫HUS
+    Voice:
+        CSNV-JPF-THR1:
+            ja: 可不(KAFU)
+            en: KAFU
+        CSNV-JPF-A: &song_satosasara
+            ja: さとうささら
+            en: Sato Sasara
+        CSNV-JPF-VCLMK1: &song_yukari
+            ja: 結月ゆかり麗
+            en: Yuzuki Yukari Rei
+        CSNV-JPF-AHS1:
+            ja: 東北きりたん
+            en: Tohoku Kiritan
+        CSNV-JPF-FP5:
+            ja: IA
+            en: IA (ja)
+        CSNV-ENF-FP5:
+            ja: IA (ENG)
+            en: IA (en)
+        CSNV-JPF-FP4: &song_one
+            ja: OИE
+            en: OИE
+        CSNV-JPF-AHS5:
+            ja: 東北ずん子
+            en: Tohoku Zunko
+        CSNV-JPF-AHS6:
+            ja: 東北イタコ
+            en: Tohoku Itako
+        nitech-jp_ja_JP_f008_svss.tsnvoice:
+            ja: 知声
+            en: Chis-A (ja)
+        nitech-jp_en_US_f008_svss.tsnvoice:
+            ja: Chis-A (ENG)
+            en: Chis-A (en)
+        techno-sp_ja_JP_f801_svss.tsnvoice:
+            *song_satosasara
+        techno-sp_ja_JP_m868_svss.tsnvoice:
+            ja: 機流⾳
+            en: Kirune
+        techno-sp_ja_JP_f834_svss.tsnvoice:
+            ja: AiSuu
+            en: AiSuu
+        techno-sp_ja_JP_f824_svss.tsnvoice:
+            *song_kzn
+        techno-sp_ja_JP_f811_svss.tsnvoice:
+            *song_yukari
+        techno-sp_ja_JP_f802_svss.tsnvoice:
+            *song_suzukitsudumi
+        techno-sp_ja_JP_f830_svss.tsnvoice:
+            *song_futabaminato
+        CSNV-JPF-THR2:
+            ja: 星界（SEKAI）
+            en: SEKAI
+        CSNV-JPF-B: &song_suzukitsudumi
+            ja: すずきつづみ
+            en: Suzuki Tsudumi
+        CSNV-JPF-KZA1: &song_kzn
+            ja: "#kzn(キズナ)"
+            en: "#kzn"
+        CSNV-JPF-THR3:
+            ja: 裏命（RIME）
+            en: RIME
+        CSNV-JPF-GLA1: &song_futabaminato
+            ja: 双葉湊音
+            en: Futaba Minato
+        CSNV-JPF-BSR1:
+            ja: POPY
+            en: POPY
+        CSNV-JPF-BSR2:
+            ja: ROSE
+            en: ROSE
+        CSNV-JPF-THR4:
+            ja: 狐子（COKO）
+            en: COKO
+        CSNV-JPF-ICTR1:
+            ja: Ci flower
+            en: Ci flower
+        CSNV-JPF-THR5:
+            ja: 羽累（HARU）
+            en: HARU
+        CSNV-JPF-TRF1:
+            ja: 奏兎める
+            en: Kanato Mell
+        CSNV-JPF-BNE1:
+            ja: りむる
+            en: Reml
+        CSNV-JPF-USTL2:
+            ja: ⚠ユニちゃん
+            en: ⚠UNI-chan
+        A: *song_satosasara
+        ONE: *song_one
+        CSV-ENF-FP3-N:
+            ja: ⚠IA (En) Natural
+            en: ⚠IA (En) Natural
+        CSV-ENF-FP3-P:
+            ja: ⚠IA (En) Powerful
+            en: ⚠IA (En) Powerful
+        XSV-JPM-HRM-P:
+            ja: ハルオロイド
+            en: HAL-O-ROID
+        XSV-JPM-P:
+            ja: 赤咲 湊
+            en: Akasaki Minato
+        XSV-JPF-W:
+            ja: 緑咲 香澄
+            en: Midorizaki Kasumi
+        XSV-JPM-E:
+            ja: 銀咲 大和
+            en: Ginsaki Yamato
+        XSV-JPF-E:
+            ja: 金咲 小春
+            en: Kinzaki Koharu
+        XSV-JPM-W:
+            ja: 白咲 優大
+            en: Shirosaki Yudai
+        XSV-JPF-P:
+            ja: 黄咲 愛里
+            en: Kizaki Airi
+
+UI:
+    ParameterHeader:
+        ja: 'パラメータ'
+        en: 'Parameters'
+    SpeechWordsHeader:
+        Words:
+            ja: 'セリフ'
+            en: 'Words'
+        Listen:
+            ja: '試聴'
+            en: 'Play'
+        Export:
+            ja: '出力'
+            en: 'Export'
+        Seconds:
+            ja: '秒'
+            en: 'sec.'
+        Phoneme:
+            ja: '音素'
+            en: 'Phonemes'
+    OptionHeader:
+        ja: 'オプション'
+        en: 'Options'
+    Options:
+        ShowOptions:
+            Phoneme:
+                ja: '音素'
+                en: 'Phonemes'
+            Kana:
+                ja: 'ひらがな'
+                en: 'Hiragana (*ja only)'
+            Spacing:
+                ja: 'スペース区切り'
+                en: 'Separate spaces'
+            DisplayLines:
+                ja: '表示行数'
+                en: 'Disp. lines'
+        PhonemeOptions:
+            Header:
+                ja: '音素'
+                en: 'Phoneme options'
+            ConvertNasal:
+                ja: '「ん」を変換する(N,n,m,ng)'
+                en: 'Convert ja. nasal phonemes (N,n,m,ng)'
+            ConvertGa:
+                ja: '「が行」を変換する(g,ng)'
+                en: 'Converting ja. "ga-go" line phonemes (g,ng)'
+            NonSoundVowelHeader:
+                ja: '無声母音'
+                en: '(*ja) Non sound vowels:'
+            NonSoundVowelDoNothing:
+                ja: 'そのまま'
+                en: 'Do noting'
+            NonSoundVowelSmall:
+                ja: '小文字化'
+                en: 'Lowercase'
+            NonSoundVowelRemoving:
+                ja: '削除'
+                en: 'Remove'
+        NoteOptions:
+            Header:
+                ja: '楽譜'
+                en: 'Music sheet options'
+            AdaptingPitchMode:
+                ja: 'ノート音程:'
+                en: 'Note pitch:'
+            SuppressBreathMode:
+                ja: '息継ぎブレス抑制:'
+                en: 'Suppress (remove) breath:'
+            NoteSplitMode:
+                ja: 'ノート分割:'
+                en: 'Note split:'
+            NoPitchMode:
+                ja: 'ピッチ削除:'
+                en: 'No pitch:'
+            NoSoundVowelMode:
+                ja: '無声母音:'
+                en: 'Non sound vowels (*ja):'
+        SaveOptions:
+            Header:
+                ja: '保存'
+                en: 'Save options'
+            SelectSavePath:
+                ja: '保存先選択'
+                en: 'Select save path'
+            IsOpenCeVIOWhenExport:
+                ja: '保存時自動でCeVIOを開く'
+                en: 'Automatically opens CeVIO on save'
+            IsOpenFolderWhenExport:
+                ja: '保存時自動でフォルダを開く'
+                en: 'Automatically opens saved folder on save'
+            IsExportWordsAsText:
+                ja: 'セリフをテキストファイルに保存'
+                en: 'Save words as a text file'
+            SelectExportTextPath:
+                ja: 'セリフ保存先選択'
+                en: 'Select a save text path'
+        TextSaveOptions:
+            Header:
+                ja: 'セリフ保存オプション'
+                en: 'Words save options'
+            FileName:
+                ja: 'ファイル名:'
+                en: 'File name:'
+            CastName:
+                ja: 'キャスト名'
+                en: 'Cast'
+            Date:
+                ja: '日付'
+                en: 'Date'
+            Words:
+                ja: 'セリフ'
+                en: 'Words'
+            TrackName:
+                ja: 'トラック名'
+                en: 'Track'
+        OtherSaveOptions:
+            ExportLabFile:
+                ja: '.labファイルも出力'
+                en: 'Export with a .lab file'
+            SavePreviewVoice:
+                ja: '試聴ボイスを保存'
+                en: 'Save preview voice'
+            ExportSusuru:
+                ja: 'カレーうどんをすする'
+                en: 'Slurp curry udon'
+        OtherOptions:
+            Header:
+                ja: 'そのほか'
+                en: 'Other options'
+            OpenLicense:
+                ja: 'ライセンス'
+                en: 'License'
+            OpenWebsite:
+                ja: '公式サイト'
+                en: 'Official web'
+            Language:
+                ja: 'Language'
+                en: 'Language'
+
+
+ToolTips:
+    TalkVoiceIcon:
+        ja: 'TALK VOICE: 演技指導するトークボイスを選択してください'
+        en: 'TALK VOICE: Please select a talk voice'
+    TalkSoftComboBox:
+        ja:
+            しゃべらせるお手本になるトークソフトを選びます。
+            最初は NodoAme 標準エンジンです。
+            「⚠」のつくトークソフトは制限があります。
+        en:
+            Select a talk software (TTS) that will serve as a model for a song voice to speak.
+            The default one is the NodoAme standard engine.
+            Talk software with "⚠" has some restrictions.
+    PreviewVoiceComboBox:
+        ja:
+            しゃべらせるお手本になる、トークのボイスを選びます。
+            最初は NodoAme 標準ボイスです。
+        en:
+            Select a voice of selected talk softwere that will serve as a model for a song voice to speak.
+            The default one is the standard NodoAme voice.
+    StylePresetComboBox:
+        ja: 'ボイスの感情・スタイル・声質プリセットを選びます'
+        en: Select voice emotion, style, or voice quality presets
+    SongVoiceTip:
+        ja: 'SONG VOICE: しゃべらせたい”ソング”ボイスを選択してください'
+        en: 'SONG VOICE: Select a song voice library to speak'
+    ExportSongSoftComboBox:
+        ja: 'Song soft: ソングソフトを選びます。'
+        en: 'Song soft: Select a song softwere (vocal synth)'
+    ExportSongCastComboBox:
+        ja:
+            喋らせるソングキャストを選びます
+            「⚠」のついたキャストはまだ上手くしゃべれません。
+        en:
+            Select a song cast to speak.
+            Cast members marked with "⚠" cannot speak well yet.
+    ExportLyricesMode:
+        ja:
+           歌詞の出力方法を選びます。
+           CeVIO AIは「PHONEME」（音素）、CeVIO CSは「KANA」（ひらがな）がベストです。
+           日本語ソングボイスに英語をしゃべらせる場合は「EN_TO_JA」を選択してください。
+        en:
+            Select a lyrics output method.
+            For CeVIO AI, "PHONEME" (phoneme) is recommended, and for CeVIO CS, "KANA" (hiragana).
+            Select "EN_TO_JA" if you want a Japanese song voice to speak English.
+    NoteSplitModeByCast: &NoteSplitModeByCast
+        ja:
+            【⚠実験機能】SPLIT_ONLY:0.3までの文節単位分割、SPLIT_SILENTNOTE:修正文節単位分割（デフォルト）, SILLABLE:音節単位分割（日本語のみ）,IGNORE_NOSOUND:未使用
+        en:
+            '[⚠Experimental] SPLIT_ONLY: Sentence-by-sentence division up to ver. 0.3,
+            SPLIT_SILENTNOTE: Modified sentence-by-sentence division (default),
+            SILLABLE: Syllable division (Japanese only),
+            IGNORE_NOSOUND: Unused'
+    ExportPresetByCast:
+        ja: プリセットを選びます。「WHISPER」はささやき風（CeVIO AI/VoiSonaのみ）。「NONE」は何もしません（デフォルト）。
+        en: Select a preset. "WHISPER" is a whisper style (only for CeVIO AI/VoiSona). "NONE" does nothing (default).
+    ScoreDynamicsByCast:
+        ja: 強弱指定（ダイナミクス）。「ffff」が強い、「pppp」が弱い。
+        en: Strength designation (dynamics). "ffff" is strong, "pppp" is weak.
+    ScoreTempoByCast:
+        ja: テンポ
+        en: Tempo
+    InputTextboxOfSpeechWord:
+        ja: ここに変換したいセリフや歌詞などの文字列を入れてください。
+        en: Enter words or lyrics you wish to convert here.
+    PreviewButton:
+        ja:
+            文字列を現在のボイスでプレビュー試聴します。
+            ⚠音素の差し替えオプションは反映されません。
+        en:
+            Preview words with a current selected voice.
+            ⚠ The phoneme replacement option is not reflected.
+    ExportButton:
+        ja:
+            ソング向けのCeVIOのファイルを出力します。
+            ⚠音素の差し替えオプションは反映されません。
+        en:
+            Outputs a CeVIO file for a song.
+            ⚠ The phoneme replacement option is not reflected.
+    ShowSecondsColumn:
+        ja:
+            セリフの時間を表示します。
+            ⚠試聴ボタンを押すことで更新。
+        en:
+            Displays time of a speech word.
+            ⚠ Updated by pressing a Play button.
+    PhonemeTextboxCell:
+        ja:
+           音素またはひらがなの文字列を表示します。
+           オプションで音素の差し替えに対応します。
+        en:
+           Displays phoneme or hiragana strings.
+           Optionally supports replacement of phonemes.
+    Options:
+        ShowPhoneme:
+            ja: 「音素」の表示に変換します。CeVIOやVOICEVOXの音素表記形式です。
+            en:
+                Converts to "phoneme" display. This is the phoneme notation format of CeVIO and VOICEVOX.
+        ShowHiragana:
+            ja: 実際の発音の「ひらがな」に変換します。例：「こんにちは」→「こんにちわ」
+            en:
+                "Converts to actual pronunciation Hiragana.
+                Example: 「こんにちは」→「こんにちわ」"
+        NeedRestart:
+            ja: 反映には再起動が必要です。
+            en: App reboot is required for this setting to take effect.
+        PhonemeOptions:
+            ja: 音素に関係するオプションです。
+            en: Options related to phonemes.
+        ConvertNasal:
+            ja: 「ん」の発音を4パターンに変換します。
+            en: Converts the pronunciation of "n" into four patterns.
+        ConvertGa:
+            ja:
+                語頭のガ行は「g」,語中の鼻濁音ガ行は「n,g」に変換します。
+                ※本当はもっと複雑ですが、シンプルな変換ルールです
+            en:
+                The "ga-go" line at the beginning of a word is converted to "g", and the nasal "ga-go" line in a word is converted to "n,g".
+               (Actually, it is more complicated than this, but it is a simple conversion rule.)
+        NonSoundVowelDoNothing:
+            ja: 無声母音「U」「I」をそのまま何もしません。
+            en: The silent vowels "U" and "I" do nothing as they are.
+        NonSoundVowelSmall:
+            ja: 無声母音「U」「I」を小文字音素「u」「i」に変換します。母音が無声母音でないときと同じになります。
+            en: Converts silent vowels "U" and "I" to lower case phonemes "u" and "i". This is the same as when the vowel is not a silent vowel.
+        NonSoundVowelRemoving:
+            ja: 無声母音「U」「I」を削除（脱落）します。
+            en: Delete (drop out) the silent vowels "U" and "I".
+        NoteOptions:
+            ja: 出力する楽譜情報に関係するオプションです。
+            en: Options related to the score information to be output.
+        NoteAdaptingPitchMode:
+            ja:
+                出力するノートの音程への合わせ方を選択します。
+                「FIXED」は固定(G4)、「AVERAGE」は平均、「MEDIAN」は中央値の音程のノートが出力されます。
+            en:
+                "Selects how the notes to be output are aligned to the pitch.
+                Fixed (FIXED, G4), Average (AVERAGE), and Median (MEDIAN) will output notes of the median pitch."
+        BreathSuppressMode:
+            ja: 【⚠実験機能】息継ぎのブレス音を抑えます。NONE:なにもしない。NO_BREATH:ブレス音なし。
+            en:
+                "[⚠ Experimental]
+                Suppresses breath sound.
+                NONE: Do nothing.
+                NO_BREATH: No breath sound."
+        NoteSplitMode:
+            *NoteSplitModeByCast
+        NoPitchMode:
+            ja: 【⚠実験機能】
+            en: [⚠ Experimental]
+        NoSoundVowelsMode:
+            ja: 【⚠実験機能】
+            en: [⚠ Experimental]
+        DefaultExportSerifTextFileName:
+            ja: ファイル名を変更できます。「$キャスト名$」「$日付$」「$セリフ$」「$トラック名$」の文字列の置き換えに対応してます。
+            en:
+                You can rename output text file.
+                Cast name = 「$キャスト名$」,
+                Date = 「$日付$」,
+                Speech words = 「$セリフ$」,
+                Track name = 「$トラック名$」.
+        Reset:
+            ja: リセット
+            en: Reset

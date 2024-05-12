@@ -1,0 +1,64 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "NodoAme convert rule",
+	"description": "NodoAme convert rule schema",
+	"type":"object",
+	"required": ["lang"],
+	"properties": {
+		"name":{
+			"description":"convert rule name",
+			"type":"string"
+		},
+		"lang":{
+			"description":"language locale for this convert rule",
+			"type":"string"
+		},
+		"rules":{
+			"type":"object",
+			"required": ["p2k"],
+			"properties":{
+				"p2k":{
+					"description":"[a->あ] phonemes to kana convert rule",
+					"type":"object",
+					"properties":{
+						"k":{ "$ref":"#/$defs/normalmora" },
+						"ky":{ "$ref":"#/$defs/normalmora" }
+					}
+				},
+				"k2p":{
+					"description":"[あ->a] kana to phonemes convert rule",
+					"type":"object"
+				}
+			}
+		}
+	},
+	"$defs":{
+		"normalmora":{
+			"type":"object",
+			"required":["a","i","u","e","o","U","I"],
+			"properties":{
+				"a":{
+					"type":"string"
+				},
+				"i":{
+					"type":"string"
+				},
+				"u":{
+					"type":"string"
+				},
+				"e":{
+					"type":"string"
+				},
+				"o":{
+					"type":"string"
+				},
+				"I":{
+					"type":"string"
+				},
+				"U":{
+					"type":"string"
+				}
+			}
+		}
+	}
+}
