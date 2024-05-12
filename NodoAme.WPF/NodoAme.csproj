@@ -50,7 +50,7 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <MakeDir Directories="$(OutputPath)/_publish/" />
         <Delete Files="$(OutputPath)/NodoAme.pdb" />
         <Delete Files="$(OutputPath)/publish/NodoAme.pdb" />
-        <ZipDirectory SourceDirectory="$(OutputPath)/publish/" DestinationFile="$(OutputPath)/_publish/$(AssemblyName)-v.$(Version).zip" Overwrite="true" />
+        <ZipDirectory SourceDirectory="$(OutputPath)/publish/" DestinationFile="$(OutputPath)/../../../../../publish/$(AssemblyName)-v.$(Version).zip" Overwrite="true" />
         <Message Text="Actions After Publish" Importance="high" />
     </Target>
     <ItemGroup>
