@@ -65,7 +65,7 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="../dic/*.htsvoice" LinkBase="dic">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewests</CopyToOutputDirectory>
         </Content>
         <Content Include="../dic/open_jtalk_dic_utf_8-1.11/*" LinkBase="dic/open_jtalk_dic_utf_8-1.11/">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -91,12 +91,12 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <PackageReference Include="ModernWpfUI" Version="0.9.6" />
         <PackageReference Include="NAudio" Version="2.2.1" />
         <PackageReference Include="SharpOpenJTalk" Version="1.4.0" />
-        <PackageReference Include="System.Text.Json" Version="8.0.2" />
+        <PackageReference Include="System.Text.Json" Version="8.0.3" />
         <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0" />
         <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
         <PackageReference Include="RestSharp" Version="110.2.0" />
-        <PackageReference Include="NLog" Version="5.2.8" />
-        <PackageReference Include="MinVer" Version="4.3.0">
+        <PackageReference Include="NLog" Version="5.3.2" />
+        <PackageReference Include="MinVer" Version="5.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>

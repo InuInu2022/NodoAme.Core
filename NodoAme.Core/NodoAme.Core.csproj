@@ -24,10 +24,10 @@
     <PackageReference Include="NAudio" Version="2.2.1" NoWarn="NU1701" />
     <PackageReference Include="NAudio.Core" Version="2.2.1" />
     <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
-    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="NLog" Version="5.3.2" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
-    <PackageReference Include="System.Text.Json" Version="8.0.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
     <PackageReference Include="WanaKana-net" Version="1.0.0" />
   </ItemGroup>
 
