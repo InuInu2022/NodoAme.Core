@@ -60,27 +60,35 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <!-- アプリに付与するファイル -->
         <Content Include="../dic/japanese.json" LinkBase="dic">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <Content Include="../dic/*.loc.yaml" LinkBase="dic">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <Content Include="../dic/*.htsvoice" LinkBase="dic">
-            <CopyToOutputDirectory>PreserveNewests</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <Content Include="../dic/open_jtalk_dic_utf_8-1.11/*" LinkBase="dic/open_jtalk_dic_utf_8-1.11/">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <Content Include="../NodoAme.Settings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <Content Include="../template/**/*" LinkBase="template">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <Content Include="./Licenses/*/*" LinkBase="Licenses">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <Content Include="../はじめによんでねReadme.md">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
         <!-- nuget libs -->
         <PackageReference Include="CodingSeb.Localization.WPF" Version="1.2.0" />

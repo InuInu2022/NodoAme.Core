@@ -21,4 +21,4 @@ test/obj/*
 inspectcode.xml
 NodoAme.WPF/Licenses/*.txt
 dic/*.htsvoice
-publish/*.zip
+publish/*
