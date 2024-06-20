@@ -452,8 +452,8 @@
 			"id":"CSNV-JPF-A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
-			,
+			"lyricsMode":"PHONEME",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -468,8 +468,8 @@
 			"name":"結月ゆかり麗",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
-			"noteSplitMode":"SYLLABLE"
-			,
+			"noteSplitMode":"SYLLABLE",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -483,8 +483,25 @@
 			"id":"CSNV-JPF-AHS1",
 			"name":"東北きりたん",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
-			,
+			"lyricsMode":"PHONEME",
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":0.00,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"s-s-s-llc_ja_JP_f812_svss.tsnvoice",
+			"name":"東北きりたん",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Tohoku Kiritan",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -600,6 +617,24 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
 			,
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.1,
+					"trackAlp":0.00,
+					"trackHus":0.47
+				}
+			]
+		},
+		{
+			"id":"s-s-s-llc_ja_JP_f820_svss.tsnvoice",
+			"name":"東北ずん子",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Tohoku Zunko",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -615,6 +650,24 @@
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME"
 			,
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.1,
+					"trackAlp":0.00,
+					"trackHus":0.47
+				}
+			]
+		},
+		{
+			"id":"s-s-s-llc_ja_JP_f821_svss.tsnvoice",
+			"name":"東北イタコ",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Tohoku Itako",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -773,8 +826,8 @@
 			"name":"すずきつづみ",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
-			"hasEmotion":true
-			,
+			"hasEmotion":true,
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -806,8 +859,8 @@
 			"id":"CSNV-JPF-KZA1",
 			"name":"#kzn(キズナ)",
 			"songSoft":"CeVIO AI",
-			"lyricsMode":"PHONEME"
-			,
+			"lyricsMode":"PHONEME",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -856,8 +909,8 @@
 			"name":"双葉湊音",
 			"songSoft":"CeVIO AI",
 			"lyricsMode":"PHONEME",
-			"noteSplitMode":"SYLLABLE"
-			,
+			"noteSplitMode":"SYLLABLE",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -1031,6 +1084,72 @@
 			]
 		},
 		{
+			"id":"CSNV-JPF-AHS8",
+			"name":"ずんだもん",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE",
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"s-s-s-llc_ja_JP_f843_svss.tsnvoice",
+			"name":"ずんだもん",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Zundamon",
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"CSNV-JPF-AHS9",
+			"name":"四国めたん",
+			"songSoft":"CeVIO AI",
+			"lyricsMode":"PHONEME",
+			"noteSplitMode":"SYLLABLE",
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"s-s-s-llc_ja_JP_f844_svss.tsnvoice",
+			"name":"四国めたん",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Shikoku Metan",
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"techno-sp_ja_JP_f605_svss.tsnvoice",
 			"name":"Pepper",
 			"songSoft":"VoiSona",
@@ -1110,6 +1229,24 @@
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"Komurasaki Momoka",
 			"voiceVersion":"2.2.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"techno-sp_ja_JP_f841_svss.tsnvoice",
+			"name":"玉姫",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"Tamaki",
+			"voiceVersion":"2.1.0"
 			,
 			"songExportPreset":[
 				{
