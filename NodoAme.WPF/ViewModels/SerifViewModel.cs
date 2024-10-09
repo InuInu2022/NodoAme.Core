@@ -61,7 +61,7 @@ public class SerifViewModel
 
 	public SerifViewModel()
 	{
-		PreviewTalk = CommandFactory.Create<RoutedEventArgs>(
+		PreviewTalk = Command.Factory.Create<RoutedEventArgs>(
 			async _ =>
 			{
 				if(CurrentEngineType is TalkEngine.SOUNDFILE
@@ -83,7 +83,7 @@ public class SerifViewModel
 			}
 		);
 
-		ExportTrackFile = CommandFactory.Create<RoutedEventArgs>(async _ =>
+		ExportTrackFile = Command.Factory.Create<RoutedEventArgs>(async _ =>
 		{
 			if(CurrentEngineType is TalkEngine.SOUNDFILE
 				&& string.IsNullOrEmpty(SoundFilePath))	{
@@ -122,7 +122,7 @@ public class SerifViewModel
 			ExportProgress = Visibility.Collapsed;
 		});
 
-		Drop = CommandFactory
+		Drop = Command.Factory
 			.Create(DropEvent());
 
 		ResetDropFile =
@@ -142,7 +142,7 @@ public class SerifViewModel
 					CurrentEngineType = ParentVM?.TalkSoftItems?[ParentVM.TalkSoftSelected]?.Id ?? TalkEngine.OPENJTALK;
 				});
 
-		ExportPreviewWav = CommandFactory
+		ExportPreviewWav = Command.Factory
 			.Create<RoutedEventArgs>(
 				async _ =>
 				{

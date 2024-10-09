@@ -229,12 +229,12 @@ public class MainWindowViewModel
 		Ready = Command.Factory.CreateSync((Action<RoutedEventArgs>)(
 			_ => Debug.WriteLine("ready...!")));
 
-		Close = CommandFactory.Create<RoutedEventArgs>(
+		Close = Command.Factory.Create<RoutedEventArgs>(
 			async (_) => await this.UserSettings!.SaveAsync()
 		);
 
 		//open license folder
-		OpenLicenses = CommandFactory.Create<RoutedEventArgs>(_ =>
+		OpenLicenses = Command.Factory.Create<RoutedEventArgs>(_ =>
 		{
 			var lpath = Path.GetFullPath(
 				Path.Combine(
@@ -252,24 +252,24 @@ public class MainWindowViewModel
 			return new ValueTask();
 		});
 
-		OpenWebsite = CommandFactory.Create<RoutedEventArgs>(_ =>
+		OpenWebsite = Command.Factory.Create<RoutedEventArgs>(_ =>
 		{
 			Process.Start("https://inuinu2022.github.io/NodoAme.Home/#/");
 			return new ValueTask();
 		});
 
-		SelectExportDirectory = CommandFactory
+		SelectExportDirectory = Command.Factory
 			.Create<RoutedEventArgs>(OpenSelectExportDirDialog());
 
-		SelectExportSerifTextDir = CommandFactory
+		SelectExportSerifTextDir = Command.Factory
 			.Create<RoutedEventArgs>(OpenSelectExportSerifTextDirDialogAsync);
 
-		InsertMetaTextToSerifTextFileName = CommandFactory
+		InsertMetaTextToSerifTextFileName = Command.Factory
 			.Create<string>(InsertMetaTextAsync);
 
-		SerifTextFileNamePile = PileFactory.Create<System.Windows.Controls.TextBox>();
+		SerifTextFileNamePile = Pile.Factory.Create<System.Windows.Controls.TextBox>();
 
-		ExportSusuru = CommandFactory.Create<RoutedEventArgs>(ExportSusuruTrack());
+		ExportSusuru = Command.Factory.Create<RoutedEventArgs>(ExportSusuruTrack());
 	}
 
 	private void LoadUserSettings()
