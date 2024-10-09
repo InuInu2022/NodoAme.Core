@@ -534,7 +534,7 @@
 			"lyricsMode":"KANA",
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"IA",
-			"voiceVersion":"1.0.1 ported from CeVIO AI",
+			"voiceVersion":"2.0.1",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -568,7 +568,7 @@
 			"lyricsMode":"ALPHABET",
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"IA ENGLISH",
-			"voiceVersion":"1.0.2 ported from CeVIO AI",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -601,7 +601,7 @@
 			"lyricsMode":"KANA",
 			"exportFile":"TSSPRJ",
 			"charaNameAsAlphabet":"OИE",
-			"voiceVersion":"1.0.1 ported from CeVIO AI",
+			"voiceVersion":"2.0.1",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -1042,6 +1042,26 @@
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
 			,
+			"voiceVersion":"2.0.0",
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"techno-sp_ja_JP_f833_svss.tsnvoice",
+			"name":"奏兎める",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"noteSplitMode":"SYLLABLE"
+			,
+			"charaNameAsAlphabet":"Kanato Mell",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
@@ -1058,6 +1078,25 @@
 			"lyricsMode":"PHONEME",
 			"noteSplitMode":"SYLLABLE"
 			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
+			"id":"techno-sp_ja_JP_f831_svss.tsnvoice",
+			"name":"りむる",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"noteSplitMode":"SYLLABLE"
+			,
+			"charaNameAsAlphabet":"REML",
+			"voiceVersion":"2.0.0",
 			"songExportPreset":[
 				{
 					"id":1,
