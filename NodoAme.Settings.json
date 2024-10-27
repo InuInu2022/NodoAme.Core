@@ -1297,6 +1297,24 @@
 			]
 		},
 		{
+			"id":"techno-sp_ja_JP_m701_svss.tsnvoice",
+			"name":"vs-m701",
+			"songSoft":"VoiSona",
+			"lyricsMode":"KANA",
+			"exportFile":"TSSPRJ",
+			"charaNameAsAlphabet":"vs-m701",
+			"voiceVersion":"2.0.0"
+			,
+			"songExportPreset":[
+				{
+					"id":1,
+					"clipVol":4.3,
+					"trackAlp":-0.10,
+					"trackHus":0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
