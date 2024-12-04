@@ -1315,6 +1315,76 @@
 			]
 		},
 		{
+			"id": "CSNV-JPM-SGF1",
+			"name": "梵そよぎ",
+			"songSoft": "CeVIO AI",
+			"lyricsMode": "PHONEME",
+			"noteSplitMode": "SYLLABLE",
+			"charaNameAsAlphabet": "Soyogi Soyogi",
+			"voiceVersion": "2.0.0",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
+			"id": "techno-sp_ja_JP_m804_svss.tsnvoice",
+			"name": "梵そよぎ",
+			"songSoft": "VoiSona",
+			"lyricsMode": "KANA",
+			"exportFile": "TSSPRJ",
+			"charaNameAsAlphabet": "Soyogi Soyogi",
+			"voiceVersion": "2.1.0",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
+			"id": "techno-sp_en_US_f845_svss.tsnvoice",
+			"name": "SELENA",
+			"songSoft": "VoiSona",
+			"lyricsMode": "KANA",
+			"exportFile": "TSSPRJ",
+			"charaNameAsAlphabet": "SELENA",
+			"hasEmotion": true,
+			"voiceVersion": "2.2.1",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
+			"id": "techno-sp_ja_JP_f846_svss.tsnvoice",
+			"name": "月音",
+			"songSoft": "VoiSona",
+			"lyricsMode": "KANA",
+			"exportFile": "TSSPRJ",
+			"charaNameAsAlphabet": "Lunon",
+			"hasEmotion": true,
+			"voiceVersion": "2.2.0",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
