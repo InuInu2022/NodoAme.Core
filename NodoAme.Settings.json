@@ -396,6 +396,15 @@
 			"name":"VoiSona",
 			"voiceParam":[
 				{
+					"id": "Emotion",
+					"name": "♫Style",
+					"min": 0.00,
+					"max": 1.00,
+					"defaultValue": 0.00,
+					"smallChange": 0.01,
+					"version": "1.07"
+				},
+				{
 					"id":"Alpha",
 					"name":"♫ALP",
 					"min":-1.00,
