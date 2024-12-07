@@ -1394,6 +1394,38 @@
 			]
 		},
 		{
+			"id": "CSNV-JPF-MCL1",
+			"name": "箱庭ハノ",
+			"songSoft": "CeVIO AI",
+			"lyricsMode": "PHONEME",
+			"noteSplitMode": "SYLLABLE",
+			"voiceVersion": "1.0.1",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
+			"id": "CSNV-JPF-MCL2",
+			"name": "箱庭コト",
+			"songSoft": "CeVIO AI",
+			"lyricsMode": "PHONEME",
+			"noteSplitMode": "SYLLABLE",
+			"voiceVersion": "1.0.1",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
