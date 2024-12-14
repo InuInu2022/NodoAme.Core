@@ -1426,6 +1426,24 @@
 			]
 		},
 		{
+			"id": "techno-sp_ja_JP_m805_svss.tsnvoice",
+			"name": "ジャスパー",
+			"songSoft": "VoiSona",
+			"lyricsMode": "KANA",
+			"exportFile": "TSSPRJ",
+			"charaNameAsAlphabet": "Jasper",
+			"hasEmotion": true,
+			"voiceVersion": "2.1.0",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
