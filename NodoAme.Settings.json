@@ -1462,6 +1462,24 @@
 			]
 		},
 		{
+			"id": "techno-sp_ja_JP_f850_svss.tsnvoice",
+			"name": "雨衣",
+			"songSoft": "VoiSona",
+			"lyricsMode": "KANA",
+			"exportFile": "TSSPRJ",
+			"charaNameAsAlphabet": "Ui",
+			"hasEmotion": false,
+			"voiceVersion": "2.1.0",
+			"songExportPreset": [
+				{
+					"id": 1,
+					"clipVol": 4.3,
+					"trackAlp": -0.10,
+					"trackHus": 0.37
+				}
+			]
+		},
+		{
 			"id":"A",
 			"name":"さとうささら",
 			"songSoft":"CeVIO CS",
