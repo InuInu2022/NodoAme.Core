@@ -7,6 +7,8 @@
     },
     "dotnet.defaultSolution": "NodoAme.sln",
     "cSpell.words": [
-        "Nodo"
+        "Nodo",
+        "SOUNDFILE",
+        "talksofts"
     ]
 }
