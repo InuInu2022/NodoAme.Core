@@ -29,7 +29,7 @@ public static class PhonemeConverter{
 	public static async ValueTask<string> ConvertAsync(
 		ITalkWrapper talkEngine,
 		string sourceText,
-		bool isUseSeparaterSpace = true,
+		bool isUseSeparatorSpace = true,
 		bool isCheckJapaneseSyllabicNasal = false,
 		bool isCheckJapaneseNasalSonantGa = false,
 		Models.VowelOptions vowelOption = Models.VowelOptions.DoNothing,
@@ -44,7 +44,7 @@ public static class PhonemeConverter{
 
 		var labels = await talkEngine.GetLabelsAsync(sourceText);
 		return ConvertCore(
-			isUseSeparaterSpace,
+			isUseSeparatorSpace,
 			isCheckJapaneseSyllabicNasal,
 			isCheckJapaneseNasalSonantGa,
 			vowelOption,
