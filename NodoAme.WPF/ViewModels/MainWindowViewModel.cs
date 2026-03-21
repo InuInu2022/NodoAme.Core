@@ -204,7 +204,7 @@ public class MainWindowViewModel
 		this.Serifs = new ObservableCollection<SerifViewModel>();
 
 		this.setting = LoadSettingsAsync().Result;
-		this.japaneseRules = LoadJapanaseRuleAsync().Result;
+		this.japaneseRules = LoadJapaneseRuleAsync().Result;
 		InitTalkSofts();
 
 
@@ -452,7 +452,7 @@ public class MainWindowViewModel
 		return await LoadJsonAsync<Settings>("NodoAme.Settings.json");
 	}
 
-	private async Task<JapaneseRule> LoadJapanaseRuleAsync()
+	private async Task<JapaneseRule> LoadJapaneseRuleAsync()
 	{
 		return await LoadJsonAsync<JapaneseRule>(@"dic\japanese.json");
 	}
