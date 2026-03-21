@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -828,7 +829,9 @@ public class Wrapper : ITalkWrapper
 	/// <summary>
 	/// ファイルにエクスポートする
 	/// </summary>
-	public async ValueTask<bool> ExportFileAsync(ExportFileOption option)
+	/// <param name="option">エクスポートオプション</param>
+	public async ValueTask<bool>
+	ExportFileAsync(ExportFileOption option)
 	{
 		if (this.engine is null)
 		{
@@ -1692,21 +1695,25 @@ public class Wrapper : ITalkWrapper
 		return parameters;
 	}
 
+	static readonly char[] InvalidChars = [
+		.. Path.GetInvalidFileNameChars(),
+		.. Path.GetInvalidPathChars()
+	];
+
 	private static string GetSafeFileName(string serifText)
 	{
-		var illigalStr = Path.GetInvalidFileNameChars();
-		illigalStr = illigalStr.Concat(Path.GetInvalidPathChars()).ToArray<char>();
-		return string.Concat(serifText.Where(c => !illigalStr.Contains(c)));
+		return string.Concat(
+			serifText.Where(c => !InvalidChars.Contains(c)));
 	}
 
 	private static void MakeLabFile(dynamic phs)
 	{
-		var lab = "";
+		var builder = new StringBuilder();
 		foreach (var ph in phs)
 		{
-			lab += $"{ph.StartTime * SEC_RATE} {ph.EndTime * SEC_RATE} {ph.Phoneme}\n";
+			builder.Append($"{ph.StartTime * SEC_RATE} {ph.EndTime * SEC_RATE} {ph.Phoneme}\n");
 		}
-		Debug.WriteLine("lab:\n" + lab);
+		Debug.WriteLine("lab:\n" + builder.ToString());
 		//TODO:.labファイル出力
 	}
 }
