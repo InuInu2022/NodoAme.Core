@@ -1,4 +1,10 @@
 using System.Text.RegularExpressions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using NodoAme.Models;
+using WanaKanaNet;
 
 namespace NodoAme;
 
@@ -9,6 +15,8 @@ public static class PhonemeConverter{
 
 	static readonly char[] SEP = ['^', '-', '+', '='];
 	static readonly char[] separator = [','];
+
+	static readonly Regex regex = new(@"^\s+", RegexOptions.Compiled);
 
 	public static List<string>? CurrentPhonemes { get; private set; }
 
@@ -34,7 +42,7 @@ public static class PhonemeConverter{
 		bool isConvertToHiragana = false
 	)
 	{
-		if (Regex.IsMatch(sourceText, @"^\s+"))
+		if (regex.IsMatch(sourceText))
 		{
 			return "";
 		}
