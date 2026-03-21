@@ -71,7 +71,7 @@ public static class PhonemeConverter{
 	}
 
 	private static string ConvertCore(
-		bool isUseSeparaterSpace,
+		bool isUseSeparatorSpace,
 		bool isCheckJapaneseSyllabicNasal,
 		bool isCheckJapaneseNasalSonantGa,
 		VowelOptions vowelOption,
@@ -168,9 +168,9 @@ public static class PhonemeConverter{
 		{
 			true => ChangeSeparater(
 				ConvertToKana(string.Concat(CurrentPhonemes)),
-				isUseSeparaterSpace
+				isUseSeparatorSpace
 			),
-			false => ChangeSeparater(isUseSeparaterSpace)
+			false => ChangeSeparater(isUseSeparatorSpace)
 		};
 	}
 
