@@ -5,5 +5,8 @@
         "activityBar.background": "#FFD700",
         "activityBar.foreground": "#000000"
     },
-    "dotnet.defaultSolution": "NodoAme.sln"
+    "dotnet.defaultSolution": "NodoAme.sln",
+    "cSpell.words": [
+        "Nodo"
+    ]
 }
