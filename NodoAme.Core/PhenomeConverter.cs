@@ -54,7 +54,7 @@ public static class PhonemeConverter{
 
 	public static async ValueTask<string> ConvertAsync(
 		IList<string> labels,
-		bool isUseSeparaterSpace = true,
+		bool isUseSeparatorSpace = true,
 		bool isCheckJapaneseSyllabicNasal = false,
 		bool isCheckJapaneseNasalSonantGa = false,
 		Models.VowelOptions vowelOption = Models.VowelOptions.DoNothing,
@@ -62,7 +62,7 @@ public static class PhonemeConverter{
 	){
 		return await Task.Run(()
 			=> ConvertCore(
-				isUseSeparaterSpace,
+				isUseSeparatorSpace,
 				isCheckJapaneseSyllabicNasal,
 				isCheckJapaneseNasalSonantGa,
 				vowelOption,
