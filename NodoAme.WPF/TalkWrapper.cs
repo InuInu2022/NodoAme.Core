@@ -17,6 +17,8 @@ using NAudio.MediaFoundation;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using NLog;
+
+using NodoAme.Core.Services;
 using NodoAme.Models;
 using SharpOpenJTalk;
 
@@ -621,6 +623,7 @@ public class Wrapper : ITalkWrapper
 					time = engine.GetTextDuration(text);
 					var state = engine.Speak(text);
 
+					/*
 					if (withSave)
 					{
 						var dialog = new SaveFileDialog
@@ -631,6 +634,7 @@ public class Wrapper : ITalkWrapper
 						};
 						dialog.ShowDialog();
 					}
+					*/
 					//state.Wait();
 					break;
 				}
@@ -1278,13 +1282,22 @@ public class Wrapper : ITalkWrapper
 	)
 	{
 		logger.Info($"export start: '{exportPath}', {trackFileName}");
-		var safeName = GetSafeFileName(trackFileName);
-		var outDirPath = exportPath;
+		var safeName = FileNameService.GetSafeName(trackFileName);
+		var outDirPath = Path.GetFullPath(exportPath);
 		var outFile = fileType switch
 		{
-			ExportFileType.CCS => $"{GetSafeFileName(cast.Id!)}_{safeName}.ccst",
-			ExportFileType.TSSPRJ => $"{GetSafeFileName(cast.CharaNameAsAlphabet!)}_{safeName}.tssprj",
-			_ => $"{GetSafeFileName(cast.Id!)}_{safeName}.ccst"
+			ExportFileType.CCS => FileNameService.GetSafeFileName(
+				$"{FileNameService.GetSafeName(cast.Id!)}_{safeName}",
+				(outDirPath, "ccst")
+			) + ".ccst",
+			ExportFileType.TSSPRJ => FileNameService.GetSafeFileName(
+				$"{FileNameService.GetSafeName(cast.CharaNameAsAlphabet!)}_{safeName}",
+				(outDirPath, "tssprj")
+			) + ".tssprj",
+			_ => FileNameService.GetSafeFileName(
+				$"{FileNameService.GetSafeName(cast.Id!)}_{safeName}",
+				(outDirPath, "ccst")
+			) + ".ccst"
 		};
 		if (!Directory.Exists(outDirPath))
 		{
@@ -1294,7 +1307,7 @@ public class Wrapper : ITalkWrapper
 			}
 			catch (System.Exception e)
 			{
-				logger.Warn($"error dialog opend: {e?.Message}");
+				logger.Warn($"error dialog opened: {e?.Message}");
 				MessageDialog.Show(
 					$"「{outDirPath}」に新しくフォルダを作ることができませんでした。保存先はオプションで設定できます。\n詳細：{e?.Message}",
 					"フォルダの作成に失敗！",
@@ -1313,6 +1326,8 @@ public class Wrapper : ITalkWrapper
 		try
 		{
 			outPath = Path.Combine(outDirPath, outFile);
+
+			var len = outPath.Length;
 		}
 		catch (Exception e)
 		{
@@ -1477,7 +1492,7 @@ public class Wrapper : ITalkWrapper
 		string SongCastName
 	)
 	{
-		var safeName = GetSafeFileName(serifText);
+		var safeName = FileNameService.GetSafeName(serifText);
 		var outDirPath = exportPath;
 
 		fileNamePattern = string.IsNullOrEmpty(fileNamePattern) ? UserSettings.SERIF_FILE_NAME : fileNamePattern;
@@ -1508,7 +1523,11 @@ public class Wrapper : ITalkWrapper
 				return false;
 			}
 		}
-		var outPath = Path.Combine(outDirPath, outFile);
+		var outPath = Path.Combine(outDirPath,
+			FileNameService.GetSafeFileName(
+				Path.GetFileNameWithoutExtension(outFile),
+				(outDirPath, "txt")
+			)) + ".txt";
 
 		try
 		{
@@ -1519,10 +1538,14 @@ public class Wrapper : ITalkWrapper
 			);
 			await writer.WriteAsync(serifText);
 		}
-		catch (System.Exception e)
+		catch (Exception e)
 		{
 			MessageDialog.Show(
-				$"セリフファイルの保存に失敗しました。ファイル「{outFile}」を「{outDirPath}」に保存できませんでした。\n詳細：{e.Message}",
+				$"""
+				セリフファイルの保存に失敗しました。
+				ファイル「{outFile}」を「{outDirPath}」に保存できませんでした。\
+				詳細：{e.Message}
+				""",
 				"セリフファイルの保存に失敗！",
 
 				MessageDialogType.Error
@@ -1693,17 +1716,6 @@ public class Wrapper : ITalkWrapper
 		));
 
 		return parameters;
-	}
-
-	static readonly char[] InvalidChars = [
-		.. Path.GetInvalidFileNameChars(),
-		.. Path.GetInvalidPathChars()
-	];
-
-	private static string GetSafeFileName(string serifText)
-	{
-		return string.Concat(
-			serifText.Where(c => !InvalidChars.Contains(c)));
 	}
 
 	private static void MakeLabFile(dynamic phs)
