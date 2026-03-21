@@ -1258,7 +1258,7 @@ public class MainWindowViewModel
 		return await PhonemeConverter.ConvertAsync(
 			talkEngine: talkEngine,
 			sourceText: sourceText,
-			isUseSeparaterSpace: IsUseSeparaterSpace,
+			isUseSeparatorSpace: IsUseSeparaterSpace,
 			isCheckJapaneseSyllabicNasal: IsCheckJapaneseSyllabicNasal,
 			isCheckJapaneseNasalSonantGa: IsCheckJananeseNasalGa,
 			vowelOption: VowelOption,
@@ -1442,7 +1442,7 @@ public class MainWindowViewModel
 	{
 		if (PhonemeConverter.CurrentPhonemes is not null)
 		{
-			ConvertedText = PhonemeConverter.ChangeSeparater(useSpace);
+			ConvertedText = PhonemeConverter.ChangeSeparator(useSpace);
 		}
 
 		if (UserSettings is not null)

@@ -279,7 +279,7 @@ public class SerifViewModel
 			.ConvertAsync(
 				talkEngine: CurrentEngine,
 				sourceText: serifOrPath,
-				isUseSeparaterSpace: ParentVM.IsUseSeparaterSpace,
+				isUseSeparatorSpace: ParentVM.IsUseSeparaterSpace,
 				isCheckJapaneseSyllabicNasal: ParentVM.IsCheckJapaneseSyllabicNasal,
 				isCheckJapaneseNasalSonantGa: ParentVM.IsCheckJananeseNasalGa,
 				vowelOption: ParentVM.VowelOption,
