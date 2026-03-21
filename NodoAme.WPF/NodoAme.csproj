@@ -5,8 +5,6 @@
         <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
         <!-- <TargetFrameworks>net5.0-windows10.0.18362.0</TargetFrameworks> -->
         <!-- PublishSingleFile>true</PublishSingleFile -->
-        <LangVersion>10.0</LangVersion>
-        <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>..\img\Fps.
 hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
@@ -97,20 +95,20 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <PackageReference Include="FluentWPF" Version="0.10.2" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="ModernWpfUI" Version="0.9.6" />
-        <PackageReference Include="NAudio" Version="2.2.1" />
-        <PackageReference Include="SharpOpenJTalk" Version="1.4.0" />
-        <PackageReference Include="System.Text.Json" Version="9.0.9" />
+        <PackageReference Include="NAudio" Version="2.3.0" />
+        <PackageReference Include="SharpOpenJTalk" Version="2.0.3" />
+        <PackageReference Include="System.Text.Json" Version="10.0.5" />
         <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0" />
         <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
-        <PackageReference Include="RestSharp" Version="112.1.0" />
-        <PackageReference Include="NLog" Version="6.0.4" />
-        <PackageReference Include="MinVer" Version="6.0.0">
+        <PackageReference Include="RestSharp" Version="114.0.0" />
+        <PackageReference Include="NLog" Version="6.1.1" />
+        <PackageReference Include="MinVer" Version="7.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.5" />
         <PackageReference Include="WanaKana-net" Version="1.0.0" />
         <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
         <PackageReference Include="FontAwesome6.Fonts" Version="2.5.1" />

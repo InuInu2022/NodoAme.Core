@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>10.0</LangVersion>
-    <Nullable>enable</Nullable>
     <DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
@@ -21,13 +19,13 @@
     <PackageReference Include="DotnetWorld" Version="1.2.5" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NAudio" Version="2.2.1" NoWarn="NU1701" />
-    <PackageReference Include="NAudio.Core" Version="2.2.1" />
-    <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
-    <PackageReference Include="NLog" Version="6.0.4" />
+    <PackageReference Include="NAudio" Version="2.3.0" NoWarn="NU1701" />
+    <PackageReference Include="NAudio.Core" Version="2.3.0" />
+    <PackageReference Include="NAudio.WinMM" Version="2.3.0" />
+    <PackageReference Include="NLog" Version="6.1.1" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
-    <PackageReference Include="System.Text.Json" Version="9.0.9" />
+    <PackageReference Include="System.Text.Json" Version="10.0.5" />
     <PackageReference Include="WanaKana-net" Version="1.0.0" />
   </ItemGroup>
 
