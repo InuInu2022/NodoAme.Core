@@ -21,8 +21,12 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="NAudio" Version="2.3.0" NoWarn="NU1701" />
     <PackageReference Include="NAudio.Core" Version="2.3.0" />
-    <PackageReference Include="NAudio.WinMM" Version="2.3.0" />
+    <PackageReference Include="NAudio.WinMM" Version="2.3.0" NoWarn="NU1701" />
     <PackageReference Include="NLog" Version="6.1.1" />
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
     <PackageReference Include="System.Text.Json" Version="10.0.5" />
