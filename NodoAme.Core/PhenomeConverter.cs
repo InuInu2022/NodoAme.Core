@@ -1,21 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using WanaKanaNet;
-using System.Linq;
-using NodoAme.Models;
 
 namespace NodoAme;
 
 public static class PhonemeConverter{
-	private const int PREV_PHENOME_IDY = 1;
-	private const int CURRENT_PHENOME_IDY = 2;
-	private const int NEXT_PHENOME_IDY = 3;
+	const int PREV_PHONEME_IDY = 1;
+	const int CURRENT_PHONEME_IDY = 2;
+	const int NEXT_PHONEME_IDY = 3;
 
-	private static readonly char[] SEP = { '^', '-', '+', '=' };
+	static readonly char[] SEP = ['^', '-', '+', '='];
+	static readonly char[] separator = [','];
 
 	public static List<string>? CurrentPhonemes { get; private set; }
+
+
 
 	/// <summary>
 	/// 文字列から音素抽出
@@ -81,14 +78,14 @@ public static class PhonemeConverter{
 		var pList = new List<string>();
 		foreach (var label in labels)
 		{
-			//phonome only
-			var phenoms = GetPhonemeFromContextLabel(label);
-			if (phenoms.Length - 1 < CURRENT_PHENOME_IDY)
+			//phoneme only
+			var phonemes = GetPhonemeFromContextLabel(label);
+			if (phonemes.Length - 1 < CURRENT_PHONEME_IDY)
 			{
 				continue;
 			}
 
-			var p3 = phenoms[CURRENT_PHENOME_IDY];
+			var p3 = phonemes[CURRENT_PHONEME_IDY];
 
 			switch (p3)
 			{
@@ -98,7 +95,6 @@ public static class PhonemeConverter{
 
 				case "pau":
 					{
-						//phenome += "   ";
 						pList.Add(" ");
 						break;
 					}
@@ -107,15 +103,12 @@ public static class PhonemeConverter{
 					{
 						if (isCheckJapaneseSyllabicNasal)
 						{
-							//phenome += PhenomeConverter.CheckJapaneseSyllabicNasal(phenoms);
-							pList.Add(PhonemeConverter.CheckJapaneseSyllabicNasal(phenoms));
+							pList.Add(PhonemeConverter.CheckJapaneseSyllabicNasal(phonemes));
 						}
 						else
 						{
-							//phenome += $"{p3}";
 							pList.Add(p3);
 						}
-						//phenome += " ";
 						break;
 					}
 
@@ -123,7 +116,7 @@ public static class PhonemeConverter{
 					{
 						if (isCheckJapaneseNasalSonantGa)
 						{
-							pList.Add(PhonemeConverter.CheckJapaneseNasalSonantGa(phenoms));
+							pList.Add(PhonemeConverter.CheckJapaneseNasalSonantGa(phonemes));
 						}
 						else
 						{
@@ -155,8 +148,6 @@ public static class PhonemeConverter{
 				default:
 					{
 						pList.Add(p3);
-						//phenome += $"{p3}";
-						//phenome += " ";
 						break;
 					}
 			}
@@ -166,11 +157,11 @@ public static class PhonemeConverter{
 
 		return isConvertToHiragana switch
 		{
-			true => ChangeSeparater(
+			true => ChangeSeparator(
 				ConvertToKana(string.Concat(CurrentPhonemes)),
 				isUseSeparatorSpace
 			),
-			false => ChangeSeparater(isUseSeparatorSpace)
+			false => ChangeSeparator(isUseSeparatorSpace)
 		};
 	}
 
@@ -198,18 +189,18 @@ public static class PhonemeConverter{
 		return p[0].Split(SEP);
 	}
 
-	public static string ChangeSeparater(bool isUseSeparaterSpace){
+	public static string ChangeSeparator(bool isUseSeparatorSpace){
 		//join with space
-		return isUseSeparaterSpace
+		return isUseSeparatorSpace
 			? string.Join(" ", CurrentPhonemes)
 			: string.Concat(CurrentPhonemes);
 	}
 
-	public static string ChangeSeparater(
+	public static string ChangeSeparator(
 		string baseText,
-		bool isUseSeparaterSpace
+		bool isUseSeparatorSpace
 	){
-		if (isUseSeparaterSpace)
+		if (isUseSeparatorSpace)
 		{
 			//return String.Join(" ", CurrentPhonemes);
 			var s = baseText.ToCharArray().Select(c => new string(c,1)).ToArray();
@@ -233,12 +224,12 @@ public static class PhonemeConverter{
 	/// <returns></returns>
 	private static string CheckJapaneseSyllabicNasal(string[] phenoms)
 	{
-		return phenoms[NEXT_PHENOME_IDY] switch
+		return phenoms[NEXT_PHONEME_IDY] switch
 		{
 			"p" or "py" or "b" or "by" or "m" or "my" => "m",
 			"t" or "ty" or "ch" or "ts" or "d" or "jy" or "n" or "ny" or "r" or "ry" => "n",
 			"k" or "ky" or "g" or "gy" => "n,g",
-			_ => phenoms[CURRENT_PHENOME_IDY],
+			_ => phenoms[CURRENT_PHONEME_IDY],
 		};
 	}
 
@@ -256,7 +247,7 @@ public static class PhonemeConverter{
 		if (isSimple)
 		{
 			//シンプルルール：語頭はg, 語中はng
-			s = phenoms[PREV_PHENOME_IDY] switch
+			s = phenoms[PREV_PHONEME_IDY] switch
 			{
 				//空白もしくは無音の場合、語頭とみなす
 				"pau" or "sil" => "g",
@@ -332,14 +323,14 @@ public static class PhonemeConverter{
 		string newPhoneme
 	){
 		label.Phoneme = newPhoneme;
-		return new List<Label> { label };
+		return [label];
 	}
 
 	public static List<Label> SplitLabel(
 		this Label label,
-		string splited
+		string splitted
 	){
-		var a = splited.Split(new char[]{','});
+		var a = splitted.Split(separator);
 		var num = a.Length;
 
 		var start = label.StartTime ?? 0;
