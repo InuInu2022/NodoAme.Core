@@ -17,8 +17,8 @@ public record ExportFileOption
 		CastId = castId;
 	}
 
-	public required string SerifText { get; set; }
-	public required string CastId { get; set; }
+	public string SerifText { get; init; }
+	public string CastId { get; init; }
 	public double Alpha { get; set; }
 	public bool IsExportAsTrack { get; set; } = true;
 	public bool IsOpenCeVIO { get; set; } = false;
