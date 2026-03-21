@@ -43,6 +43,9 @@ public class UserSettings
 	public bool IsExportAsTrac { get; set; } = true;
 	public bool IsOpenFolderWhenExport { get; set; } = true;
 
+	public bool IsUseShortFileName { get; set; }
+	public bool IsOverrideSameName { get; set; } = true;
+
 	#endregion export_serif_text_options
 
 	#region display_phonemes_options

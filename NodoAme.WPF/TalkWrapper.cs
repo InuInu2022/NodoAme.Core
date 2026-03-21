@@ -1074,14 +1074,15 @@ public class Wrapper : ITalkWrapper
 			option.IsOpenCeVIO,
 			option.FileType,
 			option.Cast,
-			option.IsOpenFolder
+			option.IsOpenFolder,
+			option: option
 		);
 
 		sw.Stop();
 		Debug.WriteLine($"TIME[end export file.]:{sw.ElapsedMilliseconds}");
 		//sw.Restart();
 
-		logger.Info($"Export file sucess!{option.ExportPath}:{option.SerifText}");
+		logger.Info($"Export file success!{option.ExportPath}:{option.SerifText}");
 		return true;//new ValueTask<bool>(true);
 	}
 
@@ -1278,7 +1279,8 @@ public class Wrapper : ITalkWrapper
 		bool isOpenCeVIO,
 		ExportFileType fileType,
 		SongCast cast,
-		bool IsOpenFolder
+		bool IsOpenFolder,
+		ExportFileOption option
 	)
 	{
 		logger.Info($"export start: '{exportPath}', {trackFileName}");
@@ -1288,15 +1290,18 @@ public class Wrapper : ITalkWrapper
 		{
 			ExportFileType.CCS => FileNameService.GetSafeFileName(
 				$"{FileNameService.GetSafeName(cast.Id!)}_{safeName}",
-				(outDirPath, "ccst")
+				(outDirPath, "ccst"),
+				option
 			) + ".ccst",
 			ExportFileType.TSSPRJ => FileNameService.GetSafeFileName(
 				$"{FileNameService.GetSafeName(cast.CharaNameAsAlphabet!)}_{safeName}",
-				(outDirPath, "tssprj")
+				(outDirPath, "tssprj"),
+				option
 			) + ".tssprj",
 			_ => FileNameService.GetSafeFileName(
 				$"{FileNameService.GetSafeName(cast.Id!)}_{safeName}",
-				(outDirPath, "ccst")
+				(outDirPath, "ccst"),
+				option
 			) + ".ccst"
 		};
 		if (!Directory.Exists(outDirPath))
@@ -1421,6 +1426,7 @@ public class Wrapper : ITalkWrapper
 	/// <returns></returns>
 	public async ValueTask<bool> ExportSpecialFileAsync(
 		SongCast cast,
+		ExportFileOption option,
 		bool isExportAsTrack = true,
 		bool isOpenCeVIO = false,
 		string exportPath = "",
@@ -1472,7 +1478,8 @@ public class Wrapper : ITalkWrapper
 			isOpenCeVIO,
 			fileType,
 			cast,
-			isOpenFolder
+			isOpenFolder,
+			option
 		);
 
 		return true;//new ValueTask<bool>(true);
@@ -1489,7 +1496,8 @@ public class Wrapper : ITalkWrapper
 		string serifText,
 		string exportPath,
 		string fileNamePattern,
-		string SongCastName
+		string SongCastName,
+		ExportFileOption option
 	)
 	{
 		var safeName = FileNameService.GetSafeName(serifText);
@@ -1526,7 +1534,8 @@ public class Wrapper : ITalkWrapper
 		var outPath = Path.Combine(outDirPath,
 			FileNameService.GetSafeFileName(
 				Path.GetFileNameWithoutExtension(outFile),
-				(outDirPath, "txt")
+				(outDirPath, "txt"),
+				option
 			)) + ".txt";
 
 		try

@@ -23,6 +23,10 @@ public record ExportFileOption
 	public bool IsExportAsTrack { get; set; } = true;
 	public bool IsOpenCeVIO { get; set; } = false;
 	public bool IsOpenFolder { get; set; } = false;
+
+	public bool IsOverrideSameName { get; set; } = false;
+	public bool IsUseShortFileName { get; set; } = false;
+
 	public required string ExportPath { get; set; } = "";
 	public ExportLyricsMode ExportMode { get; set; }
 		= ExportLyricsMode.KANA;

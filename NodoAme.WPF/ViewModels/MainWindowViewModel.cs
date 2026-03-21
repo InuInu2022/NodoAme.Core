@@ -25,6 +25,7 @@ using NodoAme.Models;
 using System.Diagnostics.CodeAnalysis;
 using CodingSeb.Localization;
 using Windows.System;
+using NodoAme.Core.Services;
 
 namespace NodoAme.ViewModels;
 
@@ -159,6 +160,9 @@ public class MainWindowViewModel
 	public SongExportPresets SongExportPreset { get; set; }
 		= SongExportPresets.NONE;
 	public bool IsEnabledSongExportPreset { get; private set; }
+
+	public bool IsUseShortFileName { get; set; }
+	public bool IsOverrideSameName { get; set; }
 
 	#endregion
 
@@ -322,6 +326,8 @@ public class MainWindowViewModel
 		IsOpenFolderWhenExport = UserSettings.IsOpenFolderWhenExport;
 		IsExportAsTrac = UserSettings.IsExportAsTrac;
 		IsExportSerifText = UserSettings.IsExportSerifText;
+		IsUseShortFileName = UserSettings.IsUseShortFileName;
+		IsOverrideSameName = UserSettings.IsOverrideSameName;
 		PathToExportSerifTextDir = UserSettings.PathToExportSerifTextDir;
 		DefaultExportSerifTextFileName = UserSettings.DefaultExportSerifTextFileName;
 		SongExportLyricsMode = UserSettings.SongExportLyricsMode;
@@ -1109,27 +1115,31 @@ public class MainWindowViewModel
 		Debug.WriteLine("Export!");
 		var exportFileType = CurrentExportFileType;
 
+		var option = new ExportFileOption(serifText, castId)
+		{
+			Alpha = alpha,
+			IsExportAsTrack = isTrack,
+			IsOpenCeVIO = IsOpenCeVIOWhenExport,
+			IsOpenFolder = IsOpenFolderWhenExport,
+			ExportPath = PathToSaveDirectory,
+			ExportMode = SongExportLyricsMode,
+			Cast = songCast,
+			NoteAdaptMode = AdaptingNoteToPitchMode,
+			NoteSplitMode = NoteSplitMode,
+			FileType = (exportFileType != 0) ? exportFileType : ExportFileType.CCS,
+			BreathSuppress = BreathSuppress,
+			SongVoiceStyles = SongVoiceStyleParams,
+			NoPitch = NoPitchMode,
+			NoSoundVowelsModes = NoSoundVowelMode,
+			Dynamics = ExportScoreDynamics,
+			Tempo = ExportFileTempo,
+			SongExportPreset = this.SongExportPreset,
+			IsUseShortFileName = IsUseShortFileName,
+			IsOverrideSameName = IsOverrideSameName
+		};
+
 		await this.talkEngine.ExportFileAsync(
-			new(serifText, castId)
-			{
-				Alpha = alpha,
-				IsExportAsTrack = isTrack,
-				IsOpenCeVIO = IsOpenCeVIOWhenExport,
-				IsOpenFolder = IsOpenFolderWhenExport,
-				ExportPath = PathToSaveDirectory,
-				ExportMode = SongExportLyricsMode,
-				Cast = songCast,
-				NoteAdaptMode = AdaptingNoteToPitchMode,
-				NoteSplitMode = NoteSplitMode,
-				FileType = (exportFileType != 0) ? exportFileType : ExportFileType.CCS,
-				BreathSuppress = BreathSuppress,
-				SongVoiceStyles = SongVoiceStyleParams,
-				NoPitch = NoPitchMode,
-				NoSoundVowelsModes = NoSoundVowelMode,
-				Dynamics = ExportScoreDynamics,
-				Tempo = ExportFileTempo,
-				SongExportPreset = this.SongExportPreset
-			}
+			option
 		);
 
 		if (IsExportSerifText)
@@ -1138,12 +1148,19 @@ public class MainWindowViewModel
 				serifText,
 				PathToExportSerifTextDir!,
 				DefaultExportSerifTextFileName!,
-				songCast?.Name ?? "ANYONE"
+				songCast?.Name ?? "ANYONE",
+				new(serifText, castId)
+				{
+					ExportPath = PathToExportSerifTextDir!,
+					IsUseShortFileName = IsUseShortFileName,
+					IsOverrideSameName = IsOverrideSameName,
+				}
 			);
 		}
 
 		MainWindow.Logger.Info($"File export finished: {PathToSaveDirectory}\n{serifText}");
-		//return new ValueTask();
+		ExportMapService.Export(option.ExportPath);
+		ExportMapService.Clear();
 	}
 
 	public async ValueTask ExportPreviewWavFromListAsync(string serifText)
@@ -1183,6 +1200,16 @@ public class MainWindowViewModel
 			);
 			await talkEngine.ExportSpecialFileAsync(
 				ExportSongCastItems![ExportSongCastSelected]!,
+				option: new("", "")
+				{
+					ExportPath = PathToSaveDirectory,
+					IsUseShortFileName = IsUseShortFileName,
+					IsOverrideSameName = IsOverrideSameName,
+					IsOpenCeVIO = IsOpenCeVIOWhenExport,
+					IsOpenFolder = IsOpenFolderWhenExport,
+					IsExportAsTrack = IsExportAsTrac,
+					ExportMode = SongExportLyricsMode,
+				},
 				IsExportAsTrac,
 				IsOpenCeVIOWhenExport,
 				PathToSaveDirectory,
@@ -1452,6 +1479,32 @@ public class MainWindowViewModel
 		}
 
 		return new ValueTask();
+	}
+
+	[PropertyChanged(nameof(IsUseShortFileName))]
+	[SuppressMessage("","IDE0051")]
+	private ValueTask IsUseShortFileNameChangedAsync(bool value)
+	{
+		if (UserSettings is not null)
+		{
+			UserSettings.IsUseShortFileName = value;
+			var _ = UserSettings.SaveAsync();
+		}
+
+		return default;
+	}
+
+	[PropertyChanged(nameof(IsOverrideSameName))]
+	[SuppressMessage("","IDE0051")]
+	private ValueTask IsOverrideSameNameChangedAsync(bool value)
+	{
+		if (UserSettings is not null)
+		{
+			UserSettings.IsOverrideSameName = value;
+			var _ = UserSettings.SaveAsync();
+		}
+
+		return default;
 	}
 
 	[PropertyChanged(nameof(AdaptingNoteToPitchMode))]

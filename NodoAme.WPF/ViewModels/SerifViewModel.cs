@@ -6,6 +6,8 @@ using System.Windows.Input;
 using Epoxy;
 using Epoxy.Synchronized;
 using System;
+using NodoAme.Models;
+using NodoAme.Core.Services;
 
 namespace NodoAme.ViewModels;
 
@@ -325,30 +327,30 @@ public class SerifViewModel
 			serif = "";
 		}
 
-		await engine!.ExportFileAsync(
-			new(serif, castId)
-			{
-				Alpha = alpha,
-				IsExportAsTrack = isTrack,
-				IsOpenCeVIO = ParentVM!.IsOpenCeVIOWhenExport,
-				IsOpenFolder = ParentVM!.IsOpenFolderWhenExport,
-				ExportPath = ParentVM!.PathToSaveDirectory,
-				ExportMode = ParentVM!.SongExportLyricsMode,
-				Cast = songCast,
-				NoteAdaptMode = ParentVM!.AdaptingNoteToPitchMode,
-				NoteSplitMode = ParentVM!.NoteSplitMode,
-				FileType = (exportFileType != 0) ? exportFileType : Models.ExportFileType.CCS,
-				BreathSuppress = ParentVM!.BreathSuppress,
-				SongVoiceStyles = ParentVM!.SongVoiceStyleParams,
-				NoPitch = ParentVM!.NoPitchMode,
-				NoSoundVowelsModes = ParentVM!.NoSoundVowelMode,
-				Dynamics = ParentVM!.ExportScoreDynamics,
-				Tempo = ParentVM!.ExportFileTempo,
-				SongExportPreset = ParentVM!.SongExportPreset,
-				SoundFilePath = sourcePath,
-				LabelFilePath = Path.ChangeExtension(sourcePath, "lab")
-			}
-		);
+		var option = new ExportFileOption(serif, castId)
+		{
+			Alpha = alpha,
+			IsExportAsTrack = isTrack,
+			IsOpenCeVIO = ParentVM!.IsOpenCeVIOWhenExport,
+			IsOpenFolder = ParentVM!.IsOpenFolderWhenExport,
+			ExportPath = ParentVM!.PathToSaveDirectory,
+			ExportMode = ParentVM!.SongExportLyricsMode,
+			Cast = songCast,
+			NoteAdaptMode = ParentVM!.AdaptingNoteToPitchMode,
+			NoteSplitMode = ParentVM!.NoteSplitMode,
+			FileType = (exportFileType != 0) ? exportFileType : Models.ExportFileType.CCS,
+			BreathSuppress = ParentVM!.BreathSuppress,
+			SongVoiceStyles = ParentVM!.SongVoiceStyleParams,
+			NoPitch = ParentVM!.NoPitchMode,
+			NoSoundVowelsModes = ParentVM!.NoSoundVowelMode,
+			Dynamics = ParentVM!.ExportScoreDynamics,
+			Tempo = ParentVM!.ExportFileTempo,
+			SongExportPreset = ParentVM!.SongExportPreset,
+			SoundFilePath = sourcePath,
+			LabelFilePath = Path.ChangeExtension(sourcePath, "lab")
+		};
+
+		await engine!.ExportFileAsync(option);
 
 		if (ParentVM!.IsExportSerifText)
 		{
@@ -356,11 +358,14 @@ public class SerifViewModel
 				serif,
 				ParentVM!.PathToExportSerifTextDir!,
 				ParentVM!.DefaultExportSerifTextFileName!,
-				songCast?.Name ?? "ANYONE"
+				songCast?.Name ?? "ANYONE",
+				option
 			);
 		}
 
 		MainWindow.Logger.Info($"File export finished: {ParentVM!.PathToSaveDirectory}\n{serif}");
+		ExportMapService.Export(option.ExportPath);
+		ExportMapService.Clear();
 	}
 
 	[PropertyChanged(nameof(SourceText))]

@@ -1065,6 +1065,14 @@
                      Content="{Tr &apos;UI.Options.SaveOptions.IsOpenFolderWhenExport&apos;}"
                      IsChecked="{Binding IsOpenFolderWhenExport}"
                      Margin="10,0,10,0"/>
+                  <CheckBox
+                              Content="{Tr &apos;UI.Options.SaveOptions.IsOverrideSameNameFile&apos;}"
+                              IsChecked="{Binding IsOverrideSameName}"
+                              Margin="10,0,10,0" />
+                  <CheckBox
+                     Content="{Tr &apos;UI.Options.SaveOptions.IsUseShortFileName&apos;}"
+                              IsChecked="{Binding IsUseShortFileName}"
+                              Margin="10,0,10,0" />
                 </WrapPanel>
               </Border><!-- ///////////////// Export serif file save option ///////////////// -->
               <Border

@@ -20,10 +20,12 @@ public interface ITalkWrapper
 		string serifText,
 		string exportPath,
 		string fileNamePattern,
-		string SongCastName);
+		string SongCastName,
+		ExportFileOption option);
 
 	ValueTask<bool> ExportSpecialFileAsync(
 		SongCast cast,
+		ExportFileOption option,
 		bool isExportAsTrack = true,
 		bool isOpenCeVIO = false,
 		string exportPath = "",

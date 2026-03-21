@@ -1,6 +1,8 @@
 using System.IO;
 using System.Linq;
 
+using NodoAme.Models;
+
 namespace NodoAme.Core.Services;
 
 public static class FileNameService
@@ -27,7 +29,10 @@ public static class FileNameService
 	/// <param name="serifText"></param>
 	/// <param name="pathInfo"></param>
 	/// <returns></returns>
-	public static string GetSafeFileName(string serifText, (string Dir, string Ext) pathInfo)
+	public static string GetSafeFileName(
+		string serifText,
+		(string Dir, string Ext) pathInfo,
+		ExportFileOption option)
 	{
 		const int maxPath = 260;
 		const int offset = 10;
@@ -42,6 +47,10 @@ public static class FileNameService
 		}
 		catch (PathTooLongException)
 		{
+			if(option.IsUseShortFileName)
+			{
+				fileName = "track";
+			}
 			//パスが長すぎる場合は、ファイル名を短くして再度結合を試みる
 			var excessLength =
 				(
@@ -64,17 +73,23 @@ public static class FileNameService
 		}
 
 		//同名ファイルチェック
+		if(option.IsOverrideSameName){
+			ExportMapService.Add($"{fileName}.{pathInfo.Ext}", serifText);
+			return fileName;
+		}
 		if (FileExists(pathInfo, fileName))
 		{
-			var i = 2;
+			var i = option.IsUseShortFileName ? 1 : 2;
 			string newFileName;
 			do
 			{
-				newFileName = $"{fileName}_{i:D4}";
+				newFileName = $"{fileName}_{i:D3}";
 				i++;
 			} while (FileExists(pathInfo, newFileName));
+			ExportMapService.Add($"{newFileName}.{pathInfo.Ext}", serifText);
 			return newFileName;
 		}
+		ExportMapService.Add($"{fileName}.{pathInfo.Ext}", serifText);
 		return fileName;
 
 		static bool FileExists((string Dir, string Ext) pathInfo, string fileName) =>
