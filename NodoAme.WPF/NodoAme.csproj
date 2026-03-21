@@ -112,6 +112,10 @@ hu-Free-Christmas-Flat-Circle-Candy.ico</ApplicationIcon>
         <PackageReference Include="WanaKana-net" Version="1.0.0" />
         <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
         <PackageReference Include="FontAwesome6.Fonts" Version="2.5.1" />
+        <PackageReference Include="PolySharp" Version="1.15.0">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\NodoAme.Core\NodoAme.Core.csproj" />
