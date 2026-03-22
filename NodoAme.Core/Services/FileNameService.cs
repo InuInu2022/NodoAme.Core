@@ -51,24 +51,27 @@ public static class FileNameService
 			{
 				fileName = "track";
 			}
-			//パスが長すぎる場合は、ファイル名を短くして再度結合を試みる
-			var excessLength =
-				(
-					Path.GetFullPath(pathInfo.Dir).Length
-					+ Path.DirectorySeparatorChar.ToString().Length
-					+ fileName.Length
-					+ 1 //ドット
-					+ pathInfo.Ext.Length
-				)
-				- maxPath
-				+ offset;
-			if (excessLength < fileName.Length)
-			{
-				fileName = fileName[..^excessLength];
-			}
 			else
 			{
-				fileName = fileName[..1]; //最低限1文字は残す
+				//パスが長すぎる場合は、ファイル名を短くして再度結合を試みる
+				var excessLength =
+					(
+						Path.GetFullPath(pathInfo.Dir).Length
+						+ Path.DirectorySeparatorChar.ToString().Length
+						+ fileName.Length
+						+ 1 //ドット
+						+ pathInfo.Ext.Length
+					)
+					- maxPath
+					+ offset;
+				if (excessLength < fileName.Length)
+				{
+					fileName = fileName[..^excessLength];
+				}
+				else
+				{
+					fileName = fileName[..1]; //最低限1文字は残す
+				}
 			}
 		}
 
