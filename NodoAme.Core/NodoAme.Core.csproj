@@ -30,6 +30,10 @@
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
     <PackageReference Include="System.Text.Json" Version="10.0.5" />
+    <PackageReference Include="ThrowsAnalyzer" Version="1.0.0-beta.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="WanaKana-net" Version="1.0.0" />
   </ItemGroup>
 
