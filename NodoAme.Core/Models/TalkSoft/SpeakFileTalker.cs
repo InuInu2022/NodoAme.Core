@@ -17,18 +17,50 @@ public class SpeakFileTalker: IDisposable,ITalkManager
 		return await Task.Run(() => new SpeakFileTalker());
 	}
 
+	/// <summary>
+	/// GetPhonemesAsync
+	/// </summary>
+	/// <param name="path"></param>
+	/// <returns></returns>
 	public async ValueTask<Label[]> GetPhonemesAsync(string path)
 	{
-		var (labels, _) = await GetPhonemesAndLengthAsync(path);
+		Label[] labels;
+		try
+		{
+			(labels, _) = await GetPhonemesAndLengthAsync(path);
+
+		}
+		catch (FileNotFoundException ex)
+		{
+			logger.Error(ex, $"file {path}が見つかりません。");
+			//Force async execution
+			await Task.Yield();
+			throw;
+		}
+		catch (Exception ex)
+		{
+			logger.Error(ex, $"file {path}の処理中にエラーが発生しました。");
+			//Force async execution
+			await Task.Yield();
+			throw;
+		}
 		return labels;
 	}
 
+	/// <summary>
+	///
+	/// </summary>
+	/// <param name="path"></param>
+	/// <returns></returns>
+	/// <exception cref="FileNotFoundException">Thrown when an error occurs</exception>
 	public async ValueTask<(Label[] labels, double length)> GetPhonemesAndLengthAsync(string path)
 	{
 		if (path is null || !File.Exists(path))
 		{
 			var msg = $"file {path}が見つかりません。";
 			logger.Error(msg);
+			//Force async execution
+			await Task.Yield();
 			throw new FileNotFoundException(msg);
 		}
 
@@ -45,7 +77,7 @@ public class SpeakFileTalker: IDisposable,ITalkManager
 			.ToArray();
 		var length = lab.Lines
 			//labファイル内とAPI経由では時間が異なる
-			.Select(v => v.Length / 10000000)	//TODO: check length rate
+			.Select(v => v.Length / 10000000)   //TODO: check length rate
 			.Sum();
 		return (labels, length);
 	}
@@ -55,7 +87,6 @@ public class SpeakFileTalker: IDisposable,ITalkManager
 		if(path is null || !File.Exists(path)){
 			var msg = $"file {path}が見つかりません。";
 			logger.Error(msg);
-			//throw new FileNotFoundException(msg);
 			return -1;
 		}
 
