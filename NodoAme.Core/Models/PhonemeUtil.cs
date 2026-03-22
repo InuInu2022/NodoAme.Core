@@ -9,10 +9,10 @@ public static class PhonemeUtil
 	public const string SIL = "sil";
 	public const string INVALID_PH = "xx";
 
-	public static Regex VOWELS_JA = new("[aiueoAIUEO]", RegexOptions.Compiled);
-	public static Regex NOSOUND_VOWELS = new("[AIUEO]", RegexOptions.Compiled);
-	public static Regex NO_CONSONANT = new($"{INVALID_PH}|{CL}|{PAU}|{SIL}", RegexOptions.Compiled);
-	public static Regex NASAL_JA = new("[nmN]|ng", RegexOptions.Compiled);
+	public static readonly Regex VOWELS_JA = new("[aiueoAIUEO]", RegexOptions.Compiled);
+	public static readonly Regex NOSOUND_VOWELS = new("[AIUEO]", RegexOptions.Compiled);
+	public static readonly Regex NO_CONSONANT = new($"{INVALID_PH}|{CL}|{PAU}|{SIL}", RegexOptions.Compiled);
+	public static readonly Regex NASAL_JA = new("[nmN]|ng", RegexOptions.Compiled);
 
 	/// <summary>
 	/// 音素テキストが母音かどうか
