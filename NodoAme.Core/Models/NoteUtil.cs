@@ -1,13 +1,15 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace NodoAme.Models;
 
 public static class NoteUtil
 {
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int FreqToMidiNoteNumber(double freq)
 	{
-		int midinote = (int)Math.Round(69.0 + (12.0 * Math.Log(freq / 440.0, 2)));
-		return midinote;
+		int midiNote = (int)Math.Round(69.0 + (12.0 * Math.Log(freq / 440.0, 2)));
+		return midiNote;
 	}
 
 	public static (int octave, int step) FreqToPitchOctaveAndStep(double freq)
@@ -23,6 +25,7 @@ public static class NoteUtil
 	/// </summary>
 	/// <param name="serifLen">serif duration seconds.</param>
 	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static double GetTickDuration(double serifLen)
 	{
 		return 960 / 0.4 * serifLen;
@@ -30,6 +33,7 @@ public static class NoteUtil
 
 	///<inheritdoc cref="GetTickDuration(double)"/>
     /// <param name="tempo">tempo, BPM</param>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static double GetTickDuration(
 		double serifLen,
 		double tempo)
