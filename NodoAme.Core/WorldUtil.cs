@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using DotnetWorld.API;
@@ -29,7 +30,7 @@ public static class WorldUtil
 {
 	private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-	public enum Estimaion
+	public enum Estimation
 	{
 		/// <summary>
 		/// デフォルトの推定法。やや時間がかかるがより正確。
@@ -50,15 +51,16 @@ public static class WorldUtil
 	/// <param name="audioLength"></param>
 	/// <param name="wParam"></param>
 	/// <returns></returns>
+	/// <exception cref="NotSupportedException"></exception>
 	public static WorldParameters EstimateF0(
-		Estimaion estimationType,
+		Estimation estimationType,
 		IEnumerable<double> x,
 		int audioLength,
 		WorldParameters wParam
 	)
 	{
-		if(estimationType != Estimaion.Harvest){
-			throw new NotSupportedException();
+		if(estimationType != Estimation.Harvest){
+			throw new NotSupportedException("Only Harvest estimation is supported.");
 		}
 
 		var opt = new HarvestOption();
@@ -158,9 +160,18 @@ public static class WorldUtil
 					.Warn($"A wav file '{filename}' length is too long.:{ex.Message}");
 			}
 
-			byte[] buffer = new byte[audioLength];
+			//byte[] buffer = new byte[audioLength];
+			byte [] buffer = ArrayPool<byte>.Shared.Rent(audioLength);
 			rd.Position = 0;
-    		var readed = rd.Read(buffer, 0, buffer.Length);
+			try
+			{
+				rd.Read(buffer, 0, buffer.Length);
+			}
+			finally
+			{
+				ArrayPool<byte>.Shared.Return(buffer);
+			}
+    		//var read = rd.Read(buffer, 0, buffer.Length);
 
 			double[] samples = new double[audioLength / rd.BlockAlign];
 			rd.Position = 0;
