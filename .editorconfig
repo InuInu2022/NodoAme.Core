@@ -387,3 +387,6 @@ dotnet_naming_style.s_camelcase.required_prefix = s_
 dotnet_naming_style.s_camelcase.required_suffix =
 dotnet_naming_style.s_camelcase.word_separator =
 dotnet_naming_style.s_camelcase.capitalization = camel_case
+
+# IDE0040: アクセシビリティ修飾子を追加します
+dotnet_diagnostic.IDE0040.severity = silent
