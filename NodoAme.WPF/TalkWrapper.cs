@@ -1712,7 +1712,7 @@ public class Wrapper : ITalkWrapper
 		var parameters = new WorldParameters(fs);
 		//ピッチ推定
 		await Task.Run(() => WorldUtil.EstimateF0(
-			WorldUtil.Estimaion.Harvest,
+			WorldUtil.Estimation.Harvest,
 			x,
 			len,
 			parameters

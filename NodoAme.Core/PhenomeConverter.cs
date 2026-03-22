@@ -37,7 +37,7 @@ public static class PhonemeConverter{
 		bool isUseSeparatorSpace = true,
 		bool isCheckJapaneseSyllabicNasal = false,
 		bool isCheckJapaneseNasalSonantGa = false,
-		Models.VowelOptions vowelOption = Models.VowelOptions.DoNothing,
+		VowelOptions vowelOption = VowelOptions.DoNothing,
 		bool isDebugOutput = false,
 		bool isConvertToHiragana = false
 	)
@@ -62,7 +62,7 @@ public static class PhonemeConverter{
 		bool isUseSeparatorSpace = true,
 		bool isCheckJapaneseSyllabicNasal = false,
 		bool isCheckJapaneseNasalSonantGa = false,
-		Models.VowelOptions vowelOption = Models.VowelOptions.DoNothing,
+		Models.VowelOptions vowelOption = VowelOptions.DoNothing,
 		bool isConvertToHiragana = false
 	){
 		return await Task.Run(()
@@ -111,7 +111,7 @@ public static class PhonemeConverter{
 					{
 						if (isCheckJapaneseSyllabicNasal)
 						{
-							pList.Add(PhonemeConverter.CheckJapaneseSyllabicNasal(phonemes));
+							pList.Add(CheckJapaneseSyllabicNasal(phonemes));
 						}
 						else
 						{
@@ -124,7 +124,7 @@ public static class PhonemeConverter{
 					{
 						if (isCheckJapaneseNasalSonantGa)
 						{
-							pList.Add(PhonemeConverter.CheckJapaneseNasalSonantGa(phonemes));
+							pList.Add(CheckJapaneseNasalSonantGa(phonemes));
 						}
 						else
 						{
@@ -137,11 +137,11 @@ public static class PhonemeConverter{
 				case "U":
 				case "I":
 					{
-						if (vowelOption == Models.VowelOptions.Small)
+						if (vowelOption == VowelOptions.Small)
 						{
 							pList.Add(p3.ToLower());
 						}
-						else if (vowelOption == Models.VowelOptions.Remove)
+						else if (vowelOption == VowelOptions.Remove)
 						{
 							//pList.Add("");
 						}
@@ -173,6 +173,11 @@ public static class PhonemeConverter{
 		};
 	}
 
+	static readonly WanaKanaOptions kanaOption = new()
+	{
+		CustomKanaMapping = new Dictionary<string, string>() { { "cl", "っ" } },
+	};
+
 	/// <summary>
 	/// かなに変換
 	/// </summary>
@@ -180,13 +185,6 @@ public static class PhonemeConverter{
 	/// <returns>かな文字列</returns>
 	public static string ConvertToKana(string phonemes)
 	{
-		var kanaOption = new WanaKanaOptions
-		{
-			CustomKanaMapping = new Dictionary<string, string>()
-				{
-					{"cl","っ"}
-				}
-		};
 		return WanaKana.ToHiragana(phonemes, kanaOption);
 	}
 
