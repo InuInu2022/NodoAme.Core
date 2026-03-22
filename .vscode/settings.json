@@ -7,10 +7,13 @@
     },
     "dotnet.defaultSolution": "NodoAme.sln",
     "cSpell.words": [
-        "ccst",
-        "Nodo",
-        "SOUNDFILE",
-        "Susuru",
-        "talksofts"
+      "CASTNAME",
+      "ccst",
+      "Nodo",
+      "SOUNDFILE",
+      "Susuru",
+      "talksofts",
+      "TRACKNAME",
+      "Tssproj"
     ]
 }
